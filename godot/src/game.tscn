@@ -1,3 +1,8 @@
-[gd_scene format=3 uid="uid://di8g8e6s34cik"]
+[gd_scene load_steps=2 format=3 uid="uid://di8g8e6s34cik"]
+
+[ext_resource type="Script" path="res://src/grid.gd" id="1_dvkrg"]
 
 [node name="Game" type="Node2D"]
+
+[node name="Grid" type="Node2D" parent="."]
+script = ExtResource("1_dvkrg")
