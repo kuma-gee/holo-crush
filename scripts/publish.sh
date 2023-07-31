@@ -5,7 +5,7 @@
 # github-cli
 # butler
 
-GAME="##VAR_GAME_NAME"
+GAME="holo-crush"
 VERSION="$1"
 
 ARGS=("$@")
