@@ -3,9 +3,13 @@
 [ext_resource type="Script" path="res://src/piece/piece.gd" id="1_pju4m"]
 [ext_resource type="Texture2D" uid="uid://bwve2nq30wldn" path="res://icon.svg" id="2_cnm5w"]
 
-[node name="Ina" type="Node2D"]
+[node name="Ina" type="Control"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 3
+anchors_preset = 0
 script = ExtResource("1_pju4m")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 modulate = Color(0.537255, 0, 0.658824, 1)
 texture = ExtResource("2_cnm5w")
+offset = Vector2(64, 64)
