@@ -1,0 +1,4 @@
+build/
+*.css*
+_sprites/
+.godot/
