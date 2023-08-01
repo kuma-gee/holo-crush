@@ -1,16 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://di8g8e6s34cik"]
+[gd_scene load_steps=6 format=3 uid="uid://di8g8e6s34cik"]
 
 [ext_resource type="Script" path="res://src/grid/grid.gd" id="1_o8g41"]
+[ext_resource type="Script" path="res://src/game.gd" id="1_vav6y"]
 [ext_resource type="PackedScene" uid="uid://diptf1fbeqwco" path="res://src/grid/slot.tscn" id="2_4abeq"]
 [ext_resource type="Script" path="res://src/grid/data.gd" id="3_3oo0b"]
 
-[node name="Game" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ymwg1"]
+bg_color = Color(0, 0, 0, 0.784314)
+
+[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_vav6y")
+input_blocker = NodePath("CenterContainer/MarginContainer/MarginContainer/InputBlocker")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -20,13 +26,32 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Grid" type="GridContainer" parent="CenterContainer" node_paths=PackedStringArray("data")]
+[node name="MarginContainer" type="PanelContainer" parent="CenterContainer"]
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ymwg1")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Grid" type="GridContainer" parent="CenterContainer/MarginContainer/MarginContainer" node_paths=PackedStringArray("data")]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
 script = ExtResource("1_o8g41")
 slot_scene = ExtResource("2_4abeq")
-data = NodePath("../../Data")
+data = NodePath("../../../../Data")
+
+[node name="InputBlocker" type="Control" parent="CenterContainer/MarginContainer/MarginContainer"]
+layout_mode = 2
 
 [node name="Data" type="Node" parent="."]
 script = ExtResource("3_3oo0b")
 width = 4
 height = 4
+
+[connection signal="moving" from="CenterContainer/MarginContainer/MarginContainer/Grid" to="." method="_on_grid_moving"]
+[connection signal="moving_finished" from="CenterContainer/MarginContainer/MarginContainer/Grid" to="." method="_on_grid_moving_finished"]

@@ -1,5 +1,7 @@
 extends GridContainer
 
+signal moving
+signal moving_finished
 
 const PIECE_MAP := {
 	Piece.Type.INA: preload("res://src/piece/ina.tscn"),
@@ -65,9 +67,11 @@ func add_piece(slot: Slot, piece: Piece):
 	slot.capture()
 
 func _moved(pos: Vector2i, dest: Vector2i):
-	var piece = _get_slot(pos)
+	moving.emit()
+	var slot = _get_slot(pos)
 	var other = _get_slot(dest)
-	piece.move(other)
+	await slot.move(other)
+	moving_finished.emit()
 
 func _failed_move(pos: Vector2i, dir: Vector2i):
 	var slot = _get_slot(pos)
