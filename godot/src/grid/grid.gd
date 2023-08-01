@@ -19,8 +19,9 @@ var pieces = PIECE_MAP.keys()
 
 func _ready():
 	_init_slots()
-	data.created.connect(_spawn_pieces)
+	data.created.connect(_create_pieces)
 	data.moved.connect(_moved)
+	data.failed_move.connect(_failed_move)
 	
 	data.create_data(pieces)
 
@@ -30,10 +31,12 @@ func _init_slots():
 		var slot = slot_scene.instantiate()
 		add_child(slot)
 
+# Should not be called with invalid position, ty
 func _get_slot(pos: Vector2i):
-	return get_child(pos.y * columns + pos.x)
+	var idx = pos.y * columns + pos.x
+	return get_child(idx)
 
-func _spawn_pieces():
+func _create_pieces():
 	for x in data.width:
 		for y in data.height:
 			var piece = data.get_value(x, y)
@@ -42,13 +45,19 @@ func _spawn_pieces():
 
 			var pos = Vector2i(x, y)
 			var slot = _get_slot(pos)
-			slot.piece = node
-			get_tree().current_scene.add_child.call_deferred(node)
-			slot.capture.call_deferred()
-			
+			add_piece.call_deferred(slot, node)
 			node.swiped.connect(func(dir): data.move(pos, pos + dir))
+
+func add_piece(slot: Slot, piece: Piece):
+	slot.piece = piece
+	get_tree().current_scene.add_child(piece)
+	slot.capture()
 
 func _moved(pos: Vector2i, dest: Vector2i):
 	var piece = _get_slot(pos)
 	var other = _get_slot(dest)
 	piece.move(other)
+
+func _failed_move(pos: Vector2i, dir: Vector2i):
+	var slot = _get_slot(pos)
+	slot.failed_move(dir)

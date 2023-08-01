@@ -1,6 +1,7 @@
 class_name Data
 extends Node
 
+signal failed_move(pos, dir)
 signal moved(pos, dest)
 signal created()
 
@@ -47,11 +48,24 @@ func get_match_count(x: int, y: int):
 	return 0
 
 func get_value(x: int, y: int):
+	if x < 0 or x >= width:
+		return null
+	
+	if y < 0 or y >= height:
+		return null
+
 	return _data[x][y]
 
 func move(pos: Vector2i, dest: Vector2i):
 	var piece = get_value(pos.x, pos.y)
+	if piece == null:
+		return # Invalid move, no animation needed either
+
 	var other = get_value(dest.x, dest.y)
+	if other == null:
+		failed_move.emit(pos, dest - pos)
+		return
+
 	_data[pos.x][pos.y] = other
 	_data[dest.x][dest.y] = piece
 	moved.emit(pos, dest)

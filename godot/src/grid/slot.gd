@@ -3,6 +3,9 @@ extends ColorRect
 
 var piece: Piece
 
+func failed_move(dir: Vector2i):
+	piece.slight_move(dir)
+
 func move(other_slot: Slot):
 	var other = other_slot.piece
 	var piece_pos = piece.global_position

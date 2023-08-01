@@ -22,7 +22,7 @@ func _calculate_swipe(swipe_end):
 	var swipe: Vector2 = swipe_end - swipe_start
 	
 	if swipe.length() > swipe_threshold:
-		var dir = swipe.normalized().round()
+		var dir = Vector2i(swipe.normalized().round())
 		if dir.length() > 1:
 			dir.y = 0
 		swiped.emit(dir)
