@@ -15,6 +15,8 @@ const PIECE_MAP := {
 @export var data: Data
 
 var pieces = PIECE_MAP.keys()
+var matches = []
+var is_moving = false
 
 # https://www.youtube.com/watch?v=YhykrMFHOV4&list=PL4vbr3u7UKWqwQlvwvgNcgDL1p_3hcNn2
 # https://medium.com/@thrivevolt/making-a-grid-inventory-system-with-godot-727efedb71f7
@@ -66,17 +68,28 @@ func add_piece(slot: Slot, piece: Piece):
 	get_tree().current_scene.add_child(piece)
 	slot.capture()
 
-func _moved(pos: Vector2i, dest: Vector2i):
-	moving.emit()
-	var slot = _get_slot(pos)
-	var other = _get_slot(dest)
-	await slot.move(other)
-	moving_finished.emit()
-
 func _failed_move(pos: Vector2i, dir: Vector2i):
 	var slot = _get_slot(pos)
 	slot.failed_move(dir)
 
+func _moved(pos: Vector2i, dest: Vector2i):
+	moving.emit()
+	is_moving = true
+	
+	var slot = _get_slot(pos)
+	var other = _get_slot(dest)
+	await slot.move(other)
+	print("move finish")
+	
+	moving_finished.emit()
+	is_moving = false
+	_process_matched()
+
 func _matched(pos: Array):
-	for p in pos:
-		_get_slot(p).matched()
+	matches.append(pos)
+
+func _process_matched():
+	for matched in matches:
+		for p in matched:
+			_get_slot(p).matched()
+	

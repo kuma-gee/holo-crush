@@ -12,8 +12,8 @@ func failed_move(dir: Vector2i):
 
 func move(other_slot: Slot):
 	var other = other_slot.piece
-	var piece_pos = global_position
-	piece.move(other_slot.global_position)
+	var piece_pos = get_pos()
+	piece.move(other_slot.get_pos())
 	await other.move(piece_pos)
 
 	other_slot.piece = piece
@@ -21,10 +21,13 @@ func move(other_slot: Slot):
 
 func capture():
 	if piece:
-		piece.global_position = global_position
+		piece.global_position = get_pos()
+
+func get_pos():
+	return global_position + custom_minimum_size / 2
 
 func matched():
-	piece.modulate = Color(1, 1, 1, 0.5)
+	await piece.matched()
 
 
 func _on_swipe_control_pressed():
