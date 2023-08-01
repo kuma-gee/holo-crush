@@ -34,11 +34,7 @@ func _calculate_swipe(swipe_end):
 		var dir = swipe.normalized().round()
 		if dir.length() > 1:
 			dir.y = 0
-		print("Swipe for ", Type.keys()[type])
 		swiped.emit(dir)
 
 func move(dest: Vector2):
 	create_tween().tween_property(self, "global_position", dest, 0.5)#.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_BOUNCE)
-
-func type_name():
-	return Type.keys()[type]
