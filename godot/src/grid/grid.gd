@@ -27,8 +27,8 @@ func _ready():
 
 func _init_slots():
 	columns = data.width
-	for x in range(data.width):
-		for y in range(data.height):
+	for y in range(data.height):
+		for x in range(data.width):
 			var pos = Vector2i(x, y)
 			var slot = slot_scene.instantiate() as Slot
 			add_child(slot)

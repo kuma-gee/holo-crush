@@ -14,17 +14,17 @@ func create_data(pieces: Array):
 	_data = []
 	_data.resize(width)
 
-	for x in width:
-		_data[x] = []
-		_data[x].resize(height)
+	for y in height:
+		_data[y] = []
+		_data[y].resize(height)
 
-		for y in height:
+		for x in width:
 			var piece = pieces.pick_random()
 			var loops = 0
 			while loops < 100: 
 				piece = pieces.pick_random()
 				loops += 1
-				_data[x][y] = piece 
+				_set_value(x, y, piece)
 				
 				if get_match_count(x, y) == 0:
 					break
@@ -54,7 +54,10 @@ func get_value(x: int, y: int):
 	if y < 0 or y >= height:
 		return null
 
-	return _data[x][y]
+	return _data[y][x]
+
+func _set_value(x: int, y: int, value):
+	_data[y][x] = value
 
 func move(pos: Vector2i, dest: Vector2i):
 	var piece = get_value(pos.x, pos.y)
@@ -66,6 +69,6 @@ func move(pos: Vector2i, dest: Vector2i):
 		failed_move.emit(pos, dest - pos)
 		return
 
-	_data[pos.x][pos.y] = other
-	_data[dest.x][dest.y] = piece
+	_set_value(pos.x, pos.y, other)
+	_set_value(pos.x, pos.y, piece)
 	moved.emit(pos, dest)

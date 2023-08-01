@@ -13,7 +13,7 @@ enum Type {
 @export var slight_move_distance := 10
 
 func move(dest: Vector2):
-	create_tween().tween_property(self, "global_position", dest, 0.5)#.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_BOUNCE)
+	create_tween().tween_property(self, "global_position", dest, 0.5).set_trans(Tween.TRANS_BACK)
 
 func slight_move(dir: Vector2):
 	var tw = create_tween()

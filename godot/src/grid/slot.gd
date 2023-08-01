@@ -12,8 +12,8 @@ func failed_move(dir: Vector2i):
 
 func move(other_slot: Slot):
 	var other = other_slot.piece
-	var piece_pos = piece.global_position
-	piece.move(other.global_position)
+	var piece_pos = global_position
+	piece.move(other_slot.global_position)
 	other.move(piece_pos)
 
 	other_slot.piece = piece
