@@ -89,7 +89,19 @@ func _matched(pos: Array):
 	matches.append(pos)
 
 func _process_matched():
+#	var called = 0
+#	var finished = 0
+#	var check_done = func():
+#		finished += 1
+#		print("finished ", finished)
+#		if finished >= called:
+#			data.collapse_columns()
+#			print("done")
+	
 	for matched in matches:
 		for p in matched:
-			_get_slot(p).matched()
+			var slot = _get_slot(p) as Slot
+			slot.matched()
+			#called += 1
+			#slot.match_done.connect(check_done)
 	

@@ -78,6 +78,12 @@ func get_value(x: int, y: int):
 func _set_value(x: int, y: int, value):
 	_data[y][x] = value
 
+func _swap_value(p1: Vector2, p2: Vector2):
+	var temp = get_value(p2.x, p2.y)
+	_set_value(p2.x, p2.y, get_value(p1.x, p1.y))
+	_set_value(p1.x, p1.y, temp)
+	moved.emit(p1, p2)
+
 func move(pos: Vector2i, dest: Vector2i):
 	var piece = get_value(pos.x, pos.y)
 	if piece == null:
@@ -88,9 +94,7 @@ func move(pos: Vector2i, dest: Vector2i):
 		failed_move.emit(pos, dest - pos)
 		return
 
-	_set_value(pos.x, pos.y, other)
-	_set_value(dest.x, dest.y, piece)
-	moved.emit(pos, dest)
+	_swap_value(pos, dest)
 	_check_matches()
 	
 	print("------------------------")
@@ -105,4 +109,12 @@ func _check_matches():
 				for m in matches:
 					_set_value(m.x, m.y, null)
 				matched.emit(matches)
-			
+
+func collapse_columns():
+	for y in height:
+		for x in width:
+			if get_value(x, y) == null:
+				for yy in range(y-1, -1, -1):
+					if get_value(x, yy) != null:
+						_swap_value(Vector2(x, yy), Vector2(x, y))
+						break

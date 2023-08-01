@@ -1,6 +1,7 @@
 class_name Slot
 extends Control
 
+signal match_done
 signal pressed
 signal swiped(pos, dir)
 
@@ -28,6 +29,7 @@ func get_pos():
 
 func matched():
 	await piece.matched()
+	match_done.emit()
 
 
 func _on_swipe_control_pressed():
