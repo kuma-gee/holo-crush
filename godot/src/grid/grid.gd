@@ -14,16 +14,24 @@ const PIECE_MAP := {
 
 var pieces = PIECE_MAP.keys()
 
-# https://www.youtube.com/watch?v=RO5pXiN6UnI
+# https://www.youtube.com/watch?v=YhykrMFHOV4&list=PL4vbr3u7UKWqwQlvwvgNcgDL1p_3hcNn2
 # https://medium.com/@thrivevolt/making-a-grid-inventory-system-with-godot-727efedb71f7
 
 func _ready():
+	get_tree().get_root().size_changed.connect(_update_slots)
+	
 	_init_slots()
 	data.created.connect(_create_pieces)
 	data.moved.connect(_moved)
 	data.failed_move.connect(_failed_move)
+	data.matched.connect(_matched)
 	
 	data.create_data(pieces)
+
+func _update_slots():
+	await get_tree().create_timer(0.1).timeout
+	for child in get_children():
+		child.capture()
 
 func _init_slots():
 	columns = data.width
@@ -64,3 +72,7 @@ func _moved(pos: Vector2i, dest: Vector2i):
 func _failed_move(pos: Vector2i, dir: Vector2i):
 	var slot = _get_slot(pos)
 	slot.failed_move(dir)
+
+func _matched(pos: Array):
+	for p in pos:
+		_get_slot(p).matched()

@@ -23,6 +23,9 @@ func capture():
 	if piece:
 		piece.global_position = global_position
 
+func matched():
+	piece.modulate = Color(1, 1, 1, 0.5)
+
 
 func _on_swipe_control_pressed():
 	pressed.emit()
