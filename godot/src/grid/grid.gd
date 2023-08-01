@@ -1,7 +1,7 @@
 extends GridContainer
 
 
-const PIECE_MAP = {
+const PIECE_MAP := {
 	Piece.Type.INA: preload("res://src/piece/ina.tscn"),
 	Piece.Type.AME: preload("res://src/piece/ame.tscn"),
 	Piece.Type.GURA: preload("res://src/piece/gura.tscn"),
@@ -19,9 +19,10 @@ var pieces = PIECE_MAP.keys()
 
 func _ready():
 	_init_slots()
-	data.create_data(pieces)
 	data.created.connect(_spawn_pieces)
 	data.moved.connect(_moved)
+	
+	data.create_data(pieces)
 
 func _init_slots():
 	columns = data.width
@@ -29,7 +30,7 @@ func _init_slots():
 		var slot = slot_scene.instantiate()
 		add_child(slot)
 
-func _get_slot(pos: Vector2):
+func _get_slot(pos: Vector2i):
 	return get_child(pos.y * columns + pos.x)
 
 func _spawn_pieces():
@@ -38,13 +39,16 @@ func _spawn_pieces():
 			var piece = data.get_value(x, y)
 			var scene = PIECE_MAP[piece]
 			var node = scene.instantiate()
-			get_tree().current_scene.add_child(node)
 
-			var pos = Vector2(x, y)
-			_get_slot(pos).piece = node
+			var pos = Vector2i(x, y)
+			var slot = _get_slot(pos)
+			slot.piece = node
+			get_tree().current_scene.add_child.call_deferred(node)
+			slot.capture.call_deferred()
+			
 			node.swiped.connect(func(dir): data.move(pos, pos + dir))
 
-func _moved(pos: Vector2, dest: Vector2):
+func _moved(pos: Vector2i, dest: Vector2i):
 	var piece = _get_slot(pos)
 	var other = _get_slot(dest)
 	piece.move(other)

@@ -1,5 +1,5 @@
 class_name Slot
-extends Control
+extends ColorRect
 
 var piece: Piece
 
@@ -11,3 +11,7 @@ func move(other_slot: Slot):
 
 	other_slot.piece = piece
 	piece = other
+
+func capture():
+	if piece:
+		piece.global_position = global_position
