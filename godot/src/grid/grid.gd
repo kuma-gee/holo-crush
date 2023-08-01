@@ -27,9 +27,13 @@ func _ready():
 
 func _init_slots():
 	columns = data.width
-	for _i in range(data.width * data.height):
-		var slot = slot_scene.instantiate()
-		add_child(slot)
+	for x in range(data.width):
+		for y in range(data.height):
+			var pos = Vector2i(x, y)
+			var slot = slot_scene.instantiate() as Slot
+			add_child(slot)
+			slot.pos = pos
+			slot.swiped.connect(func(pos, dir): data.move(pos, pos + dir))
 
 # Should not be called with invalid position, ty
 func _get_slot(pos: Vector2i):
@@ -46,7 +50,6 @@ func _create_pieces():
 			var pos = Vector2i(x, y)
 			var slot = _get_slot(pos)
 			add_piece.call_deferred(slot, node)
-			node.swiped.connect(func(dir): data.move(pos, pos + dir))
 
 func add_piece(slot: Slot, piece: Piece):
 	slot.piece = piece

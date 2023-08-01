@@ -1,7 +1,11 @@
 class_name Slot
-extends ColorRect
+extends Control
+
+signal pressed
+signal swiped(pos, dir)
 
 var piece: Piece
+var pos: Vector2i
 
 func failed_move(dir: Vector2i):
 	piece.slight_move(dir)
@@ -18,3 +22,11 @@ func move(other_slot: Slot):
 func capture():
 	if piece:
 		piece.global_position = global_position
+
+
+func _on_swipe_control_pressed():
+	pressed.emit()
+
+
+func _on_swipe_control_swiped(dir):
+	swiped.emit(pos, dir)
