@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://di8g8e6s34cik"]
+[gd_scene load_steps=4 format=3 uid="uid://di8g8e6s34cik"]
 
-[ext_resource type="Script" path="res://src/grid.gd" id="1_dvkrg"]
+[ext_resource type="Script" path="res://src/grid/grid.gd" id="1_o8g41"]
+[ext_resource type="PackedScene" uid="uid://diptf1fbeqwco" path="res://src/grid/slot.tscn" id="2_4abeq"]
+[ext_resource type="Script" path="res://src/grid/data.gd" id="3_3oo0b"]
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -18,8 +20,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Grid" type="GridContainer" parent="CenterContainer"]
+[node name="Grid" type="GridContainer" parent="CenterContainer" node_paths=PackedStringArray("data")]
 layout_mode = 2
-columns = 9
-script = ExtResource("1_dvkrg")
-rows = 9
+script = ExtResource("1_o8g41")
+slot_scene = ExtResource("2_4abeq")
+data = NodePath("../../Data")
+
+[node name="Data" type="Node" parent="."]
+script = ExtResource("3_3oo0b")

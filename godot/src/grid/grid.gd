@@ -9,7 +9,6 @@ const PIECE_MAP = {
 	Piece.Type.CALLI: preload("res://src/piece/calli.tscn"),
 }
 
-@export var piece_size := 128
 @export var slot_scene: PackedScene
 @export var data: Data
 
@@ -31,7 +30,7 @@ func _init_slots():
 		add_child(slot)
 
 func _get_slot(pos: Vector2):
-	return get_child(pos.y * width + pos.x)
+	return get_child(pos.y * columns + pos.x)
 
 func _spawn_pieces():
 	for x in data.width:
@@ -46,6 +45,6 @@ func _spawn_pieces():
 			node.swiped.connect(func(dir): data.move(pos, pos + dir))
 
 func _moved(pos: Vector2, dest: Vector2):
-	const piece = _get_slot(pos)
-	const other = _get_slot(dest)
+	var piece = _get_slot(pos)
+	var other = _get_slot(dest)
 	piece.move(other)
