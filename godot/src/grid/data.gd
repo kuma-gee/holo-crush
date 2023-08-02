@@ -9,9 +9,12 @@ signal filled(pos)
 signal created()
 signal matched(pos)
 
+signal update()
+
 @export var width := 9
 @export var height := 9
 @export var min_match := 3
+@export var debug := false
 
 var _data: Array = []
 var _pieces: Array = []
@@ -43,6 +46,13 @@ func refill_data():
 			while get_matches(x, y).size() > 0 and loops < 100: 
 				loops += 1
 				_fill_random(x, y)
+	_print()
+
+func _print():
+	if debug:
+		for x in _data:
+			print(x)
+		print("---------------------------")
 
 func get_matches(x: int, y: int):
 	var piece = get_value(x, y)
@@ -117,6 +127,7 @@ func check_matches():
 				has_matched = true
 
 	if has_matched:
+		update.emit()
 		collapse_columns()
 
 	return has_matched
@@ -130,13 +141,14 @@ func collapse_columns(check = true, fill = true):
 				if yy == null:
 					break;
 
-				_swap_value(Vector2i(x, y), Vector2i(x, yy))
-				moved.emit(Vector2i(x, y), Vector2i(x, yy))
+				_swap_value(Vector2i(x, yy), Vector2i(x, y))
+				moved.emit(Vector2i(x, yy), Vector2i(x, y))
 				y = yy
 			else:
 				y -= 1
 
 	if fill:
+		update.emit()
 		fill_empty()
 
 	if check:
@@ -154,6 +166,9 @@ func fill_empty():
 			if get_value(x, y) == null:
 				_fill_random(x, y)
 				filled.emit(Vector2i(x, y))
+	
+	update.emit()
+	_print()
 
 func _fill_random(x: int, y: int):
 	var piece = _pieces.pick_random()

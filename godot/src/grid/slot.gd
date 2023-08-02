@@ -2,6 +2,9 @@ class_name Slot
 extends Control
 
 signal match_done
+signal move_done
+signal swap_done
+
 signal pressed
 signal swiped(pos, dir)
 
@@ -18,10 +21,25 @@ func swap(other_slot: Slot):
 		var piece_pos = get_pos()
 		if other:
 			other.move(piece_pos)
-		await piece.move(other_slot.get_pos())
+		piece.move(other_slot.get_pos())
+		piece.move_done.connect(func(): swap_done.emit())
 
 		other_slot.piece = piece
 		piece = other
+
+func move(slot: Slot):
+	if piece == null:
+		return
+	
+	if slot.piece != null:
+		# Please don't happen
+		print("Other slot still has a piece. Cannot move there.")
+		return
+	
+	piece.move(slot.get_pos())
+	piece.move_done.connect(func(): move_done.emit())
+	slot.piece = piece
+	piece = null
 
 func capture():
 	if piece:
@@ -32,9 +50,9 @@ func get_pos():
 
 func matched():
 	if piece:
-		await piece.matched()
+		piece.matched()
+		piece.match_done.connect(func(): match_done.emit())
 		piece = null
-		match_done.emit()
 
 
 func _on_swipe_control_pressed():

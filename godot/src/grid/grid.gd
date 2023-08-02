@@ -4,6 +4,7 @@ signal processing
 signal processing_finished
 
 signal match_finished
+signal collapse_finished
 
 const PIECE_MAP := {
 	Piece.Type.INA: preload("res://src/piece/ina.tscn"),
@@ -19,6 +20,10 @@ const PIECE_MAP := {
 var pieces = PIECE_MAP.keys()
 var queue = []
 var is_processing_queue = false
+
+var moving = []
+var matches = []
+var filling = []
 
 # https://www.youtube.com/watch?v=YhykrMFHOV4&list=PL4vbr3u7UKWqwQlvwvgNcgDL1p_3hcNn2
 # https://medium.com/@thrivevolt/making-a-grid-inventory-system-with-godot-727efedb71f7
@@ -38,10 +43,29 @@ func _ready():
 	data.created.connect(func(): queue.append(_create_pieces))
 	data.swapped.connect(_swap)
 	data.invalid_swap.connect(_invalid_swap)
-	data.matched.connect(_matched)
 
+	data.matched.connect(_matched)
 	data.moved.connect(_moved)
 	data.filled.connect(_filled)
+	data.update.connect(func(): 
+		if matches.size() > 0:
+			print("Queue Match", matches)
+			var x = matches.duplicate()
+			queue.append(func(): await _remove_matched(x))
+			matches = []
+		
+		if moving.size() > 0:
+			print("Queue Move", moving)
+			var x = moving.duplicate()
+			queue.append(func(): await _move_collapsed(x))
+			moving = []
+
+		if filling.size() > 0:
+			print("Queue Fill", filling)
+			var x = filling.duplicate()
+			queue.append(func(): await _fill_pieces(x))
+			filling = []
+	)
 	
 	data.create_data(pieces)
 
@@ -70,6 +94,47 @@ func _create_pieces():
 		for y in data.height:
 			_add_piece(Vector2i(x, y))
 
+func _fill_pieces(fills):
+	print("Start fill", fills)
+	for p in fills:
+		_add_piece(p)
+
+func _move_collapsed(moves):
+	var called = 0
+	var finished = []
+
+	print("Start moving", moves)
+
+	for m in moves:
+		var slot = _get_slot(m[0])
+		slot.move(_get_slot(m[1]))
+		called += 1
+		slot.move_done.connect(func():
+			finished.append(m)
+			if finished.size() >= called:
+				collapse_finished.emit()
+		)
+	
+	await collapse_finished
+
+func _remove_matched(matched):
+	var called = 0
+	var done = []
+	
+	print("Staring match", matched)
+	for m in matched:
+		for p in m:
+			var slot = _get_slot(p) as Slot
+			slot.matched()
+			called += 1
+			slot.match_done.connect(func():
+				done.append(slot.pos)
+				if done.size() >= called:
+					match_finished.emit()
+			)
+		
+	await match_finished
+
 func _add_piece(pos: Vector2i):
 	var piece = data.get_value(pos.x, pos.y)
 	var scene = PIECE_MAP[piece]
@@ -88,32 +153,18 @@ func _swap(pos: Vector2i, dest: Vector2i):
 	queue.append(func():
 		var slot = _get_slot(pos)
 		var other = _get_slot(dest)
-		await slot.swap(other)
+		slot.swap(other)
+		await slot.swap_done
 	)
 
 func _moved(pos: Vector2i, dest: Vector2i):
-	pass
+	moving.append([pos, dest])
 
-func _matched(matches: Array):
-	queue.append(func():
-		var called = 0
-		var done = []
-		
-		for p in matches:
-			var slot = _get_slot(p) as Slot
-			slot.matched()
-			called += 1
-			slot.match_done.connect(func():
-				done.append(slot.pos)
-				if done.size() >= called:
-					match_finished.emit()
-			)
-			
-		await match_finished
-	)
+func _matched(m: Array):
+	matches.append(m)
 
 func _filled(pos: Vector2):
-	queue.append(func(): _add_piece(pos))
+	filling.append(pos)
 
 func _process(_delta):
 	if not is_processing_queue and queue.size() > 0:

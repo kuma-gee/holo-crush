@@ -156,7 +156,7 @@ func test_swap_and_collapse_vertical():
 	assert_signal_emitted_with_parameters(data, 'matched', [[Vector2i(0, 3), Vector2i(0, 2), Vector2i(0, 1)]])
 
 	assert_signal_emit_count(data, 'moved', 1)
-	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(0, 3), Vector2i(0, 0)])
+	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(0, 0), Vector2i(0, 3)])
 
 	assert_signal_emit_count(data, 'filled', 3)
 	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 0)], 2)
@@ -185,9 +185,9 @@ func test_swap_and_collapse_horizontal():
 	assert_signal_emitted_with_parameters(data, 'matched', [[Vector2i(3, 1), Vector2i(2, 1), Vector2i(1, 1)]])
 
 	assert_signal_emit_count(data, 'moved', 3)
-	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(1, 1), Vector2i(1, 0)], 0)
-	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(2, 1), Vector2i(2, 0)], 1)
-	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(3, 1), Vector2i(3, 0)], 2)
+	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(1, 0), Vector2i(1, 1)], 0)
+	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(2, 0), Vector2i(2, 1)], 1)
+	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(3, 0), Vector2i(3, 1)], 2)
 
 	assert_signal_emit_count(data, 'filled', 3)
 	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(3, 0)], 2)
