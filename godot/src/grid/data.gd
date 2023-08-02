@@ -46,10 +46,11 @@ func refill_data():
 			while get_matches(x, y).size() > 0 and loops < 100: 
 				loops += 1
 				_fill_random(x, y)
-	_print()
+	_print('Refill')
 
-func _print():
+func _print(msg = ''):
 	if debug:
+		print('------- %s --------' % msg)
 		for x in _data:
 			print(x)
 		print("---------------------------")
@@ -111,6 +112,7 @@ func swap(pos: Vector2i, dest: Vector2i):
 
 	_swap_value(pos, dest)
 	swapped.emit(pos, dest)
+	_print('Swap')
 	if not check_matches():
 		_swap_value(dest, pos)
 		swapped.emit(dest, pos)
@@ -128,6 +130,7 @@ func check_matches():
 
 	if has_matched:
 		update.emit()
+		_print('Match')
 		collapse_columns()
 
 	return has_matched
@@ -149,6 +152,7 @@ func collapse_columns(check = true, fill = true):
 
 	if fill:
 		update.emit()
+		_print('Collapse')
 		fill_empty()
 
 	if check:
@@ -168,7 +172,7 @@ func fill_empty():
 				filled.emit(Vector2i(x, y))
 	
 	update.emit()
-	_print()
+	_print('Fill')
 
 func _fill_random(x: int, y: int):
 	var piece = _pieces.pick_random()
