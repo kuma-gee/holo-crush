@@ -1,8 +1,9 @@
 class_name Data
 extends Node
 
-signal failed_move(pos, dir)
+signal invalid_move(pos, dir)
 signal moved(pos, dest)
+
 signal created()
 signal matched(pos)
 
@@ -10,13 +11,20 @@ signal matched(pos)
 @export var height := 9
 @export var min_match := 3
 
-var _data: Array[Array] = []
+var _data: Array = []
+var _pieces: Array = []
 
 # Don't touch! Only for testing
-func set_data(d: Array[Array]):
+func set_data(d):
 	_data = d
 
 func create_data(pieces: Array):
+	_pieces = pieces
+	_create_new_empty()
+	refill_data()
+	created.emit()
+
+func _create_new_empty():
 	_data = []
 	_data.resize(height)
 
@@ -24,19 +32,17 @@ func create_data(pieces: Array):
 		_data[y] = []
 		_data[y].resize(width)
 
+func refill_data():
+	for y in height:
 		for x in width:
-			var piece = pieces.pick_random()
+			var piece = _pieces.pick_random()
 			var loops = 0
 			_set_value(x, y, piece)
 			
 			while get_matches(x, y).size() > 0 and loops < 100: 
-				piece = pieces.pick_random()
+				piece = _pieces.pick_random()
 				loops += 1
 				_set_value(x, y, piece)
-
-	for x in _data:
-		print(x)
-	created.emit()
 
 func get_matches(x: int, y: int):
 	var piece = get_value(x, y)
@@ -78,7 +84,7 @@ func get_value(x: int, y: int):
 func _set_value(x: int, y: int, value):
 	_data[y][x] = value
 
-func _swap_value(p1: Vector2, p2: Vector2):
+func _swap_value(p1: Vector2i, p2: Vector2i):
 	var temp = get_value(p2.x, p2.y)
 	_set_value(p2.x, p2.y, get_value(p1.x, p1.y))
 	_set_value(p1.x, p1.y, temp)
@@ -91,17 +97,15 @@ func move(pos: Vector2i, dest: Vector2i):
 
 	var other = get_value(dest.x, dest.y)
 	if other == null:
-		failed_move.emit(pos, dest - pos)
+		invalid_move.emit(pos, dest - pos)
 		return
 
 	_swap_value(pos, dest)
-	_check_matches()
-	
-	print("------------------------")
-	for x in _data:
-		print(x)
+	if not check_matches():
+		_swap_value(dest, pos)
 
-func _check_matches():
+func check_matches():
+	var has_matched = false
 	for y in height:
 		for x in width:
 			var matches = get_matches(x, y)
@@ -109,12 +113,21 @@ func _check_matches():
 				for m in matches:
 					_set_value(m.x, m.y, null)
 				matched.emit(matches)
+				has_matched = true
 
-func collapse_columns():
+	if has_matched:
+		_collapse_columns()
+
+	return has_matched
+
+func _collapse_columns():
 	for y in height:
 		for x in width:
 			if get_value(x, y) == null:
 				for yy in range(y-1, -1, -1):
 					if get_value(x, yy) != null:
 						_swap_value(Vector2(x, yy), Vector2(x, y))
+						var piece = _pieces.pick_random()
+						_set_value(x, yy, piece)
 						break
+	check_matches()

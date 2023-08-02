@@ -18,6 +18,8 @@ var pieces = PIECE_MAP.keys()
 var matches = []
 var is_moving = false
 
+var queue = []
+
 # https://www.youtube.com/watch?v=YhykrMFHOV4&list=PL4vbr3u7UKWqwQlvwvgNcgDL1p_3hcNn2
 # https://medium.com/@thrivevolt/making-a-grid-inventory-system-with-godot-727efedb71f7
 
@@ -27,7 +29,7 @@ func _ready():
 	_init_slots()
 	data.created.connect(_create_pieces)
 	data.moved.connect(_moved)
-	data.failed_move.connect(_failed_move)
+	data.invalid_move.connect(_invalid_move)
 	data.matched.connect(_matched)
 	
 	data.create_data(pieces)
@@ -68,9 +70,9 @@ func add_piece(slot: Slot, piece: Piece):
 	get_tree().current_scene.add_child(piece)
 	slot.capture()
 
-func _failed_move(pos: Vector2i, dir: Vector2i):
+func _invalid_move(pos: Vector2i, dir: Vector2i):
 	var slot = _get_slot(pos)
-	slot.failed_move(dir)
+	slot.invalid_move(dir)
 
 func _moved(pos: Vector2i, dest: Vector2i):
 	moving.emit()
@@ -89,19 +91,22 @@ func _matched(pos: Array):
 	matches.append(pos)
 
 func _process_matched():
-#	var called = 0
-#	var finished = 0
-#	var check_done = func():
-#		finished += 1
-#		print("finished ", finished)
-#		if finished >= called:
-#			data.collapse_columns()
-#			print("done")
+	var called = 0
+	var finished = Signal()
+	var done = []
 	
 	for matched in matches:
 		for p in matched:
 			var slot = _get_slot(p) as Slot
 			slot.matched()
-			#called += 1
-			#slot.match_done.connect(check_done)
+			called += 1
+			slot.match_done.connect(func():
+				done.append(slot.pos)
+				if done.size() >= called:
+					finished.emit()
+			)
+		
+	await finished
+	
+
 	

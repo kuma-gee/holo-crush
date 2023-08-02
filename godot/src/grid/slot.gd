@@ -8,7 +8,7 @@ signal swiped(pos, dir)
 var piece: Piece
 var pos: Vector2i
 
-func failed_move(dir: Vector2i):
+func invalid_move(dir: Vector2i):
 	piece.slight_move(dir)
 
 func move(other_slot: Slot):
