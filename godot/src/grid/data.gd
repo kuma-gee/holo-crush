@@ -35,14 +35,12 @@ func _create_new_empty():
 func refill_data():
 	for y in height:
 		for x in width:
-			var piece = _pieces.pick_random()
 			var loops = 0
-			_set_value(x, y, piece)
+			_fill_random(x, y)
 			
 			while get_matches(x, y).size() > 0 and loops < 100: 
-				piece = _pieces.pick_random()
 				loops += 1
-				_set_value(x, y, piece)
+				_fill_random(x, y)
 
 func get_matches(x: int, y: int):
 	var piece = get_value(x, y)
@@ -127,7 +125,20 @@ func _collapse_columns():
 				for yy in range(y-1, -1, -1):
 					if get_value(x, yy) != null:
 						_swap_value(Vector2(x, yy), Vector2(x, y))
-						var piece = _pieces.pick_random()
-						_set_value(x, yy, piece)
 						break
+	_fill_empty()
 	check_matches()
+
+func _fill_empty():
+	for x in width:
+		while get_value(x, 0) == null:
+			_fill_random(x, 0)
+			for y in range(1, height):
+				if get_value(x, y) != null:
+					break
+
+				_swap_value(Vector2(x, y-1), Vector2(x, y))
+
+func _fill_random(x: int, y: int):
+	var piece = _pieces.pick_random()
+	_set_value(x, y, piece)

@@ -2,6 +2,7 @@ extends GridContainer
 
 signal moving
 signal moving_finished
+signal match_finished
 
 const PIECE_MAP := {
 	Piece.Type.INA: preload("res://src/piece/ina.tscn"),
@@ -92,7 +93,6 @@ func _matched(pos: Array):
 
 func _process_matched():
 	var called = 0
-	var finished = Signal()
 	var done = []
 	
 	for matched in matches:
@@ -103,10 +103,10 @@ func _process_matched():
 			slot.match_done.connect(func():
 				done.append(slot.pos)
 				if done.size() >= called:
-					finished.emit()
+					match_finished.emit()
 			)
 		
-	await finished
+	await match_finished
 	
 
 	
