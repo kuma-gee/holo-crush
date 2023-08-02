@@ -72,6 +72,23 @@ func test_collapse():
 		[0, 1, 0, 2]
 	])
 
+func test_collapse_vertical():
+	var data = _create([
+		[1, 1, 1, 0],
+		[0, 1, 2, 0],
+		[0, 1, null, 2],
+		[0, 1, null, 2]
+	])
+
+	data.collapse_columns(false, false)
+
+	assert_eq_deep(data._data, [
+		[1, 1, null, 0],
+		[0, 1, null, 0],
+		[0, 1, 1, 2],
+		[0, 1, 2, 2]
+	])
+
 
 func test_fill_empty_vertical():
 	var data = _create([
@@ -85,9 +102,9 @@ func test_fill_empty_vertical():
 	data.fill_empty()
 
 	assert_signal_emit_count(data, 'filled', 3)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 0)], 2)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 1)], 1)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 2)], 0)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 0), 1], 2)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 1), 2], 1)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 2), 2], 0)
 
 	assert_eq_deep(data._data, [
 		[1, 1, 1, 0],
@@ -108,9 +125,9 @@ func test_fill_empty_horizontal():
 	data.fill_empty()
 
 	assert_signal_emit_count(data, 'filled', 3)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(3, 0)], 2)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 0)], 1)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(1, 0)], 0)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(3, 0), 1], 2)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 0), 2], 1)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(1, 0), 2], 0)
 
 	assert_eq_deep(data._data, [
 		[1, 2, 2, 1],
@@ -159,9 +176,9 @@ func test_swap_and_collapse_vertical():
 	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(0, 0), Vector2i(0, 3)])
 
 	assert_signal_emit_count(data, 'filled', 3)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 0)], 2)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 1)], 1)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 2)], 0)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 0), 1], 2)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 1), 0], 1)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 2), 0], 0)
 
 	assert_eq_deep(data._data, [
 		[1, 2, 1, 0],
@@ -190,9 +207,9 @@ func test_swap_and_collapse_horizontal():
 	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(3, 0), Vector2i(3, 1)], 2)
 
 	assert_signal_emit_count(data, 'filled', 3)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(3, 0)], 2)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 0)], 1)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(1, 0)], 0)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(3, 0), 4], 2)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 0), 2], 1)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(1, 0), 4], 0)
 
 	assert_eq_deep(data._data, [
 		[3, 4, 2, 4],

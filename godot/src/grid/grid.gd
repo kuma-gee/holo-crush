@@ -43,6 +43,8 @@ var logger = Logger.new('Grid')
 func _ready():
 	get_tree().get_root().size_changed.connect(_update_slots)
 	
+	processing_finished.connect(func(): queue.append(func(): _refresh_slots()))
+	
 	_init_slots()
 	data.created.connect(func(): queue.append(_create_pieces))
 	data.swapped.connect(func(pos, dest):
@@ -78,10 +80,6 @@ func _ready():
 			logger.debug("Queue Fill %s" % [filling])
 			var x = filling.duplicate()
 			queue.append(func(): await _fill_pieces(x))
-
-			# make sure prod is always correct
-			if not data.debug:
-				queue.append(func(): _refresh_slots())
 
 			filling = []
 	)
@@ -143,9 +141,9 @@ func _refresh_slots():
 			var slot = _get_slot(Vector2i(x, y))
 
 			if slot.piece and slot.piece.type != type:
-				logger.warn("Slot is not showing the correct value")
-				var node = _spawn_piece(type)
-				slot.replace(node)
+				logger.warn("Slot is not showing the correct value: %s/%s" % [x, y])
+				#var node = _spawn_piece(type)
+				#slot.replace(node)
 
 func _create_pieces():
 	for x in data.width:

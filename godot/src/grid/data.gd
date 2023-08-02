@@ -137,8 +137,7 @@ func check_matches():
 
 func collapse_columns(check = true, fill = true):
 	for x in width:
-		var y = height-1
-		while y > 0:
+		for y in range(height-1, -1, -1):
 			if get_value(x, y) == null:
 				var yy = _first_non_null_above(x, y)
 				if yy == null:
@@ -146,9 +145,6 @@ func collapse_columns(check = true, fill = true):
 
 				_swap_value(Vector2i(x, yy), Vector2i(x, y))
 				moved.emit(Vector2i(x, yy), Vector2i(x, y))
-				y = yy
-			else:
-				y -= 1
 
 	if fill:
 		update.emit()
