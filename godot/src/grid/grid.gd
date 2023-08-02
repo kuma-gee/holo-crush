@@ -78,7 +78,11 @@ func _ready():
 			logger.debug("Queue Fill %s" % [filling])
 			var x = filling.duplicate()
 			queue.append(func(): await _fill_pieces(x))
-			# queue.append(func(): _refresh_slots())
+
+			# make sure prod is always correct
+			if not data.debug:
+				queue.append(func(): _refresh_slots())
+
 			filling = []
 	)
 	
@@ -103,18 +107,6 @@ func _init_slots():
 func _get_slot(pos: Vector2i):
 	var idx = pos.y * columns + pos.x
 	return get_child(idx)
-
-func _refresh_slots():
-	for y in range(data.height):
-		for x in range(data.width):
-			var type = data.get_value(x, y)
-			var slot = _get_slot(Vector2i(x, y))
-
-			if slot.piece and slot.piece.type != type:
-				logger.warn("Slot is not showing the correct value")
-				var node = _spawn_piece(type)
-				slot.replace(node)
-
 
 func _process(_delta):
 	if not is_processing_queue and queue.size() > 0:
@@ -143,6 +135,17 @@ func _spawn_piece(piece):
 #################
 # Queue Actions #
 #################
+
+func _refresh_slots():
+	for y in range(data.height):
+		for x in range(data.width):
+			var type = data.get_value(x, y)
+			var slot = _get_slot(Vector2i(x, y))
+
+			if slot.piece and slot.piece.type != type:
+				logger.warn("Slot is not showing the correct value")
+				var node = _spawn_piece(type)
+				slot.replace(node)
 
 func _create_pieces():
 	for x in data.width:
