@@ -63,6 +63,11 @@ func matched():
 		piece.match_done.connect(func(): match_done.emit())
 		piece = null
 
+func replace(p):
+	if piece:
+		piece.queue_free()
+	piece = p
+	capture()
 
 func _on_swipe_control_pressed():
 	if piece:

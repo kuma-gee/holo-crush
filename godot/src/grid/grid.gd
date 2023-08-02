@@ -35,21 +35,32 @@ var logger = Logger.new('Grid')
 # [x] Initial Create Pieces
 # [x] Swap
 # [x] Matched
-# [ ] Collapse
-# [ ] Fill
+# [x] Collapse
+# [x] Fill
 # [ ] Refill
+
 
 func _ready():
 	get_tree().get_root().size_changed.connect(_update_slots)
 	
 	_init_slots()
 	data.created.connect(func(): queue.append(_create_pieces))
-	data.swapped.connect(_swap)
-	data.invalid_swap.connect(_invalid_swap)
+	data.swapped.connect(func(pos, dest):
+		queue.append(func():
+			var slot = _get_slot(pos)
+			var other = _get_slot(dest)
+			slot.swap(other)
+			await slot.swap_done
+		)
+	)
+	data.invalid_swap.connect(func(pos, dir):
+		var slot = _get_slot(pos)
+		slot.invalid_swap(dir)
+	)
 
-	data.matched.connect(_matched)
-	data.moved.connect(_moved)
-	data.filled.connect(_filled)
+	data.matched.connect(func(m): matches.append(m))
+	data.moved.connect(func(pos, dest): moving.append([pos, dest]))
+	data.filled.connect(func(p): filling.append(p))
 	data.update.connect(func(): 
 		if matches.size() > 0:
 			logger.debug("Queue Match %s" % [matches])
@@ -67,6 +78,7 @@ func _ready():
 			logger.debug("Queue Fill %s" % [filling])
 			var x = filling.duplicate()
 			queue.append(func(): await _fill_pieces(x))
+			# queue.append(func(): _refresh_slots())
 			filling = []
 	)
 	
@@ -92,10 +104,54 @@ func _get_slot(pos: Vector2i):
 	var idx = pos.y * columns + pos.x
 	return get_child(idx)
 
+func _refresh_slots():
+	for y in range(data.height):
+		for x in range(data.width):
+			var type = data.get_value(x, y)
+			var slot = _get_slot(Vector2i(x, y))
+
+			if slot.piece and slot.piece.type != type:
+				logger.warn("Slot is not showing the correct value")
+				var node = _spawn_piece(type)
+				slot.replace(node)
+
+
+func _process(_delta):
+	if not is_processing_queue and queue.size() > 0:
+		is_processing_queue = true
+		processing.emit()
+		logger.debug("Start process")
+		_process_queue()
+
+func _process_queue():
+	if queue.size() == 0:
+		logger.debug("Process done")
+		is_processing_queue = false
+		processing_finished.emit()
+		return
+
+	var fn = queue.pop_front() as Callable
+	await fn.call()
+	_process_queue()
+
+func _spawn_piece(piece):
+	var scene = PIECE_MAP[piece]
+	var node = scene.instantiate()
+	get_tree().current_scene.add_child(node)
+	return node
+
+#################
+# Queue Actions #
+#################
+
 func _create_pieces():
 	for x in data.width:
 		for y in data.height:
-			_add_piece(Vector2i(x, y))
+			var pos = Vector2i(x, y)
+			var piece = data.get_value(pos.x, pos.y)
+			var slot = _get_slot(pos)
+			slot.piece = _spawn_piece(piece)
+			slot.capture()
 
 func _fill_pieces(fills):
 	logger.debug("Start fill %s" % [fills])
@@ -104,8 +160,8 @@ func _fill_pieces(fills):
 	var finished = []
 	for pos in fills:
 		var piece = data.get_value(pos.x, pos.y)
-		_create_piece(pos, piece)
 		var slot = _get_slot(pos)
+		slot.piece = _spawn_piece(piece)
 		slot.fill_drop()
 		called += 1
 
@@ -152,55 +208,3 @@ func _remove_matched(matched):
 			)
 		
 	await match_finished
-
-func _add_piece(pos: Vector2i):
-	var piece = data.get_value(pos.x, pos.y)
-	_create_piece(pos, piece)
-	var slot = _get_slot(pos)
-	slot.capture()
-	
-func _create_piece(pos: Vector2i, piece):
-	var scene = PIECE_MAP[piece]
-	var node = scene.instantiate()
-	var slot = _get_slot(pos)
-	slot.piece = node
-	get_tree().current_scene.add_child(node)
-
-func _invalid_swap(pos: Vector2i, dir: Vector2i):
-	var slot = _get_slot(pos)
-	slot.invalid_swap(dir)
-
-func _swap(pos: Vector2i, dest: Vector2i):
-	queue.append(func():
-		var slot = _get_slot(pos)
-		var other = _get_slot(dest)
-		slot.swap(other)
-		await slot.swap_done
-	)
-
-func _moved(pos: Vector2i, dest: Vector2i):
-	moving.append([pos, dest])
-
-func _matched(m: Array):
-	matches.append(m)
-
-func _filled(pos: Vector2):
-	filling.append(pos)
-
-func _process(_delta):
-	if not is_processing_queue and queue.size() > 0:
-		is_processing_queue = true
-		processing.emit()
-		logger.debug("Start process")
-		_process_queue()
-
-func _process_queue():
-	if queue.size() == 0:
-		logger.debug("Process done")
-		is_processing_queue = false
-		processing_finished.emit()
-		return
-
-	var fn = queue.pop_front() as Callable
-	await fn.call()
-	_process_queue()
