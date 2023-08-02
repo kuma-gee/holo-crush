@@ -5,6 +5,7 @@ signal processing_finished
 
 signal match_finished
 signal collapse_finished
+signal fill_finished
 
 const PIECE_MAP := {
 	Piece.Type.INA: preload("res://src/piece/ina.tscn"),
@@ -24,6 +25,8 @@ var is_processing_queue = false
 var moving = []
 var matches = []
 var filling = []
+
+var logger = Logger.new('Grid')
 
 # https://www.youtube.com/watch?v=YhykrMFHOV4&list=PL4vbr3u7UKWqwQlvwvgNcgDL1p_3hcNn2
 # https://medium.com/@thrivevolt/making-a-grid-inventory-system-with-godot-727efedb71f7
@@ -49,19 +52,19 @@ func _ready():
 	data.filled.connect(_filled)
 	data.update.connect(func(): 
 		if matches.size() > 0:
-			print("Queue Match", matches)
+			logger.debug("Queue Match %s" % [matches])
 			var x = matches.duplicate()
 			queue.append(func(): await _remove_matched(x))
 			matches = []
 		
 		if moving.size() > 0:
-			print("Queue Move", moving)
+			logger.debug("Queue Move %s" % [moving])
 			var x = moving.duplicate()
 			queue.append(func(): await _move_collapsed(x))
 			moving = []
 
 		if filling.size() > 0:
-			print("Queue Fill", filling)
+			logger.debug("Queue Fill %s" % [filling])
 			var x = filling.duplicate()
 			queue.append(func(): await _fill_pieces(x))
 			filling = []
@@ -95,15 +98,30 @@ func _create_pieces():
 			_add_piece(Vector2i(x, y))
 
 func _fill_pieces(fills):
-	print("Start fill", fills)
-	for p in fills:
-		_add_piece(p)
+	logger.debug("Start fill %s" % [fills])
+
+	var called = 0
+	var finished = []
+	for pos in fills:
+		var piece = data.get_value(pos.x, pos.y)
+		_create_piece(pos, piece)
+		var slot = _get_slot(pos)
+		slot.fill_drop()
+		called += 1
+
+		slot.fill_done.connect(func():
+			finished.append(pos)
+			if finished.size() >= called:
+				fill_finished.emit()
+		)
+
+	await fill_finished
 
 func _move_collapsed(moves):
 	var called = 0
 	var finished = []
 
-	print("Start moving", moves)
+	logger.debug("Start moving %s" % [moves])
 
 	for m in moves:
 		var slot = _get_slot(m[0])
@@ -121,7 +139,7 @@ func _remove_matched(matched):
 	var called = 0
 	var done = []
 	
-	print("Staring match", matched)
+	logger.debug("Staring match %s" % [matched])
 	for m in matched:
 		for p in m:
 			var slot = _get_slot(p) as Slot
@@ -137,13 +155,16 @@ func _remove_matched(matched):
 
 func _add_piece(pos: Vector2i):
 	var piece = data.get_value(pos.x, pos.y)
+	_create_piece(pos, piece)
+	var slot = _get_slot(pos)
+	slot.capture()
+	
+func _create_piece(pos: Vector2i, piece):
 	var scene = PIECE_MAP[piece]
-
 	var node = scene.instantiate()
 	var slot = _get_slot(pos)
 	slot.piece = node
 	get_tree().current_scene.add_child(node)
-	slot.capture()
 
 func _invalid_swap(pos: Vector2i, dir: Vector2i):
 	var slot = _get_slot(pos)
@@ -170,16 +191,16 @@ func _process(_delta):
 	if not is_processing_queue and queue.size() > 0:
 		is_processing_queue = true
 		processing.emit()
+		logger.debug("Start process")
 		_process_queue()
 
 func _process_queue():
 	if queue.size() == 0:
-		print("Process done")
+		logger.debug("Process done")
 		is_processing_queue = false
 		processing_finished.emit()
 		return
 
 	var fn = queue.pop_front() as Callable
-	print("Processing")
 	await fn.call()
 	_process_queue()

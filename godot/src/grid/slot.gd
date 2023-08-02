@@ -4,6 +4,7 @@ extends Control
 signal match_done
 signal move_done
 signal swap_done
+signal fill_done
 
 signal pressed
 signal swiped(pos, dir)
@@ -44,6 +45,14 @@ func move(slot: Slot):
 func capture():
 	if piece:
 		piece.global_position = get_pos()
+
+func fill_drop():
+	if piece == null:
+		return
+	
+	piece.global_position = get_pos() + Vector2.UP * (abs(pos.y) + 1) * custom_minimum_size
+	piece.move(get_pos())
+	piece.move_done.connect(func(): fill_done.emit())
 
 func get_pos():
 	return global_position + custom_minimum_size / 2
