@@ -1,9 +1,11 @@
 class_name Data
 extends Node
 
-signal invalid_move(pos, dir)
+signal invalid_swap(pos, dir)
+signal swapped(pos, dest)
 signal moved(pos, dest)
 
+signal filled(pos)
 signal created()
 signal matched(pos)
 
@@ -86,21 +88,22 @@ func _swap_value(p1: Vector2i, p2: Vector2i):
 	var temp = get_value(p2.x, p2.y)
 	_set_value(p2.x, p2.y, get_value(p1.x, p1.y))
 	_set_value(p1.x, p1.y, temp)
-	moved.emit(p1, p2)
 
-func move(pos: Vector2i, dest: Vector2i):
+func swap(pos: Vector2i, dest: Vector2i):
 	var piece = get_value(pos.x, pos.y)
 	if piece == null:
 		return # Invalid move, no animation needed either
 
 	var other = get_value(dest.x, dest.y)
 	if other == null:
-		invalid_move.emit(pos, dest - pos)
+		invalid_swap.emit(pos, dest - pos)
 		return
 
 	_swap_value(pos, dest)
+	swapped.emit(pos, dest)
 	if not check_matches():
 		_swap_value(dest, pos)
+		swapped.emit(dest, pos)
 
 func check_matches():
 	var has_matched = false
@@ -133,6 +136,8 @@ func _fill_empty():
 	for x in width:
 		while get_value(x, 0) == null:
 			_fill_random(x, 0)
+			filled.emit(Vector2(x, 0))
+
 			for y in range(1, height):
 				if get_value(x, y) != null:
 					break

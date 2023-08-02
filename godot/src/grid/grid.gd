@@ -1,7 +1,8 @@
 extends GridContainer
 
-signal moving
-signal moving_finished
+signal processing
+signal processing_finished
+
 signal match_finished
 
 const PIECE_MAP := {
@@ -16,10 +17,8 @@ const PIECE_MAP := {
 @export var data: Data
 
 var pieces = PIECE_MAP.keys()
-var matches = []
-var is_moving = false
-
 var queue = []
+var is_processing_queue = false
 
 # https://www.youtube.com/watch?v=YhykrMFHOV4&list=PL4vbr3u7UKWqwQlvwvgNcgDL1p_3hcNn2
 # https://medium.com/@thrivevolt/making-a-grid-inventory-system-with-godot-727efedb71f7
@@ -28,10 +27,12 @@ func _ready():
 	get_tree().get_root().size_changed.connect(_update_slots)
 	
 	_init_slots()
-	data.created.connect(_create_pieces)
-	data.moved.connect(_moved)
-	data.invalid_move.connect(_invalid_move)
+	data.created.connect(func(): queue.append(_create_pieces))
+	data.swapped.connect(_swap)
+	data.invalid_swap.connect(_invalid_swap)
 	data.matched.connect(_matched)
+	data.moved.connect(_moved)
+	data.filled.connect(_filled)
 	
 	data.create_data(pieces)
 
@@ -48,7 +49,7 @@ func _init_slots():
 			var slot = slot_scene.instantiate() as Slot
 			add_child(slot)
 			slot.pos = pos
-			slot.swiped.connect(func(pos, dir): data.move(pos, pos + dir))
+			slot.swiped.connect(func(pos, dir): data.swap(pos, pos + dir))
 
 # Should not be called with invalid position, ty
 func _get_slot(pos: Vector2i):
@@ -58,45 +59,38 @@ func _get_slot(pos: Vector2i):
 func _create_pieces():
 	for x in data.width:
 		for y in data.height:
-			var piece = data.get_value(x, y)
-			var scene = PIECE_MAP[piece]
-			var node = scene.instantiate()
+			_add_piece(Vector2i(x, y))
 
-			var pos = Vector2i(x, y)
-			var slot = _get_slot(pos)
-			add_piece.call_deferred(slot, node)
+func _add_piece(pos: Vector2i):
+	var piece = data.get_value(pos.x, pos.y)
+	var scene = PIECE_MAP[piece]
 
-func add_piece(slot: Slot, piece: Piece):
-	slot.piece = piece
-	get_tree().current_scene.add_child(piece)
+	var node = scene.instantiate()
+	var slot = _get_slot(pos)
+	slot.piece = node
+	get_tree().current_scene.add_child(node)
 	slot.capture()
 
-func _invalid_move(pos: Vector2i, dir: Vector2i):
+func _invalid_swap(pos: Vector2i, dir: Vector2i):
 	var slot = _get_slot(pos)
-	slot.invalid_move(dir)
+	slot.invalid_swap(dir)
+
+func _swap(pos: Vector2i, dest: Vector2i):
+	queue.append(func():
+		var slot = _get_slot(pos)
+		var other = _get_slot(dest)
+		await slot.move(other)
+	)
 
 func _moved(pos: Vector2i, dest: Vector2i):
-	moving.emit()
-	is_moving = true
-	
-	var slot = _get_slot(pos)
-	var other = _get_slot(dest)
-	await slot.move(other)
-	print("move finish")
-	
-	moving_finished.emit()
-	is_moving = false
-	_process_matched()
+	pass
 
-func _matched(pos: Array):
-	matches.append(pos)
-
-func _process_matched():
-	var called = 0
-	var done = []
-	
-	for matched in matches:
-		for p in matched:
+func _matched(matches: Array):
+	queue.append(func():
+		var called = 0
+		var done = []
+		
+		for p in matches:
 			var slot = _get_slot(p) as Slot
 			slot.matched()
 			called += 1
@@ -105,8 +99,27 @@ func _process_matched():
 				if done.size() >= called:
 					match_finished.emit()
 			)
-		
-	await match_finished
-	
+			
+		await match_finished
+	)
 
-	
+func _filled(pos: Vector2):
+	queue.append(func(): _add_piece(pos))
+
+func _process(_delta):
+	if not is_processing_queue and queue.size() > 0:
+		is_processing_queue = true
+		processing.emit()
+		_process_queue()
+
+func _process_queue():
+	if queue.size() == 0:
+		print("Process done")
+		is_processing_queue = false
+		processing_finished.emit()
+		return
+
+	var fn = queue.pop_front() as Callable
+	print("Processing")
+	await fn.call()
+	_process_queue()

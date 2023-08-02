@@ -8,16 +8,17 @@ signal swiped(pos, dir)
 var piece: Piece
 var pos: Vector2i
 
-func invalid_move(dir: Vector2i):
+func invalid_swap(dir: Vector2i):
 	if piece:
 		piece.slight_move(dir)
 
-func move(other_slot: Slot):
+func swap(other_slot: Slot):
 	if piece:
 		var other = other_slot.piece
 		var piece_pos = get_pos()
-		piece.move(other_slot.get_pos())
-		await other.move(piece_pos)
+		if other:
+			other.move(piece_pos)
+		await piece.move(other_slot.get_pos())
 
 		other_slot.piece = piece
 		piece = other

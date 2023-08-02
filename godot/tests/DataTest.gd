@@ -56,7 +56,7 @@ func test_refill():
 		])
 
 
-func test_move_not_match():
+func test_swap_not_match():
 	var data = _create([
 		[1, 2, 1, 0],
 		[0, 1, 2, 0],
@@ -64,8 +64,11 @@ func test_move_not_match():
 		[1, 0, 0, 2]
 	])
 
-	data.move(Vector2(0, 0), Vector2(1, 0))
+	watch_signals(data)
+	data.swap(Vector2(0, 0), Vector2(1, 0))
 
+	assert_signal_emit_count(data, 'swapped', 2)
+	assert_signal_emitted_with_parameters(data, 'swapped', [Vector2i(1, 0), Vector2i(0, 0)])
 	assert_eq_deep(data._data, [
 		[1, 2, 1, 0],
 		[0, 1, 2, 0],
@@ -74,7 +77,7 @@ func test_move_not_match():
 	])
 
 
-func test_move_and_collapse_vertical():
+func test_swap_and_collapse_vertical():
 	var data = _create([
 		[1, 2, 1, 0],
 		[0, 1, 2, 0],
@@ -82,8 +85,11 @@ func test_move_and_collapse_vertical():
 		[1, 0, 0, 2]
 	])
 
-	data.move(Vector2(1, 3), Vector2(0, 3))
+	watch_signals(data)
+	data.swap(Vector2(1, 3), Vector2(0, 3))
 
+	assert_signal_emit_count(data, 'swapped', 1)
+	assert_signal_emitted_with_parameters(data, 'swapped', [Vector2i(1, 3), Vector2i(0, 3)])
 	assert_eq_deep(data._data, [
 		[1, 2, 1, 0],
 		[0, 1, 2, 0],
@@ -95,7 +101,7 @@ func test_move_and_collapse_vertical():
 		print(x)
 
 
-func test_move_and_collapse_horizontal():
+func test_swap_and_collapse_horizontal():
 	var data = _create([
 		[1, 2, 1, 0],
 		[0, 1, 2, 0],
@@ -103,7 +109,7 @@ func test_move_and_collapse_horizontal():
 		[1, 0, 0, 2]
 	])
 
-	data.move(Vector2(1, 1), Vector2(1, 0))
+	data.swap(Vector2(1, 1), Vector2(1, 0))
 
 	assert_eq_deep(data._data, [
 		[0, 0, 1, 0],

@@ -6,9 +6,10 @@ func _ready():
 	input_blocker.hide()
 
 
-func _on_grid_moving():
+func _on_grid_processing():
 	input_blocker.show()
 
 
-func _on_grid_moving_finished():
+func _on_grid_processing_finished():
 	input_blocker.hide()
+
