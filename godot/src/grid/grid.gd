@@ -43,7 +43,8 @@ var logger = Logger.new('Grid')
 func _ready():
 	get_tree().get_root().size_changed.connect(_update_slots)
 	
-	processing_finished.connect(func(): queue.append(func(): _refresh_slots()))
+#	if data.debug:
+#		processing_finished.connect(func(): queue.append(func(): _refresh_slots()))
 	
 	_init_slots()
 	data.created.connect(func(): queue.append(_create_pieces))
@@ -110,7 +111,7 @@ func _process(_delta):
 	if not is_processing_queue and queue.size() > 0:
 		is_processing_queue = true
 		processing.emit()
-		logger.debug("Start process")
+		logger.debug("Start process: %s" % queue.size())
 		_process_queue()
 
 func _process_queue():
@@ -121,6 +122,7 @@ func _process_queue():
 		return
 
 	var fn = queue.pop_front() as Callable
+	logger.debug("Processing")
 	await fn.call()
 	_process_queue()
 

@@ -17,16 +17,22 @@ func invalid_swap(dir: Vector2i):
 		piece.slight_move(dir)
 
 func swap(other_slot: Slot):
-	if piece:
-		var other = other_slot.piece
-		var piece_pos = get_pos()
-		if other:
-			other.move(piece_pos)
-		piece.move(other_slot.get_pos())
-		piece.move_done.connect(func(): swap_done.emit())
+	if piece == null:
+		return
 
-		other_slot.piece = piece
-		piece = other
+	var other = other_slot.piece
+	var piece_pos = get_pos()
+	if other:
+		other.move(piece_pos)
+	piece.move(other_slot.get_pos())
+
+	var temp = piece
+	other_slot.piece = piece
+	piece = other
+
+	# Do not use connect. We want to wait for it only once
+	await temp.move_done
+	swap_done.emit()
 
 func move(slot: Slot):
 	if piece == null:
@@ -38,9 +44,13 @@ func move(slot: Slot):
 		return
 	
 	piece.move(slot.get_pos())
-	piece.move_done.connect(func(): move_done.emit())
+
+	var temp = piece
 	slot.piece = piece
 	piece = null
+
+	await temp.move_done
+	move_done.emit()
 
 func capture():
 	if piece:
@@ -52,16 +62,21 @@ func fill_drop():
 	
 	piece.global_position = get_pos() + Vector2.UP * (abs(pos.y) + 1) * custom_minimum_size
 	piece.move(get_pos())
-	piece.move_done.connect(func(): fill_done.emit())
+
+	await piece.move_done
+	fill_done.emit()
 
 func get_pos():
 	return global_position + custom_minimum_size / 2
 
 func matched():
 	if piece:
+		var temp = piece
 		piece.matched()
-		piece.match_done.connect(func(): match_done.emit())
 		piece = null
+
+		await temp.match_done
+		match_done.emit()
 
 func replace(p):
 	if piece:
