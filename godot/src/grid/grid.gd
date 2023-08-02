@@ -60,7 +60,7 @@ func _ready():
 
 	data.matched.connect(func(m): matches.append(m))
 	data.moved.connect(func(pos, dest): moving.append([pos, dest]))
-	data.filled.connect(func(p): filling.append(p))
+	data.filled.connect(func(p, v): filling.append([p, v]))
 	data.update.connect(func(): 
 		if matches.size() > 0:
 			logger.debug("Queue Match %s" % [matches])
@@ -161,8 +161,9 @@ func _fill_pieces(fills):
 
 	var called = 0
 	var finished = []
-	for pos in fills:
-		var piece = data.get_value(pos.x, pos.y)
+	for v in fills:
+		var pos = v[0]
+		var piece = v[1]
 		var slot = _get_slot(pos)
 		slot.piece = _spawn_piece(piece)
 		slot.fill_drop()

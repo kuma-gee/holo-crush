@@ -5,7 +5,7 @@ signal invalid_swap(pos, dir)
 signal swapped(pos, dest)
 signal moved(pos, dest)
 
-signal filled(pos)
+signal filled(pos, value)
 signal created()
 signal matched(pos)
 
@@ -168,8 +168,8 @@ func fill_empty():
 	for x in width:
 		for y in range(height-1, -1, -1):
 			if get_value(x, y) == null:
-				_fill_random(x, y)
-				filled.emit(Vector2i(x, y))
+				var value = _fill_random(x, y)
+				filled.emit(Vector2i(x, y), value)
 	
 	update.emit()
 	_print('Fill')
@@ -177,3 +177,4 @@ func fill_empty():
 func _fill_random(x: int, y: int):
 	var piece = _pieces.pick_random()
 	_set_value(x, y, piece)
+	return piece
