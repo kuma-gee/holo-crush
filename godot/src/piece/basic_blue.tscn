@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://cmwklckfgwegu"]
+
+[ext_resource type="PackedScene" uid="uid://c0o3d7dki4axs" path="res://src/piece/ina.tscn" id="1_hiotm"]
+[ext_resource type="Texture2D" uid="uid://d4gbf7f0x54h5" path="res://assets/Piece_Basic.png" id="2_xcjna"]
+
+[node name="BasicBlue" instance=ExtResource("1_hiotm")]
+
+[node name="Sprite2D" parent="." index="0"]
+modulate = Color(0, 0.662745, 0.811765, 1)
+texture = ExtResource("2_xcjna")

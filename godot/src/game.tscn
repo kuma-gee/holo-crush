@@ -6,7 +6,8 @@
 [ext_resource type="Script" path="res://src/grid/data.gd" id="3_3oo0b"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ymwg1"]
-bg_color = Color(0, 0, 0, 0.784314)
+bg_color = Color(0.266667, 0.32549, 0.368627, 0.784314)
+shadow_size = 10
 
 [node name="Game" type="Control" node_paths=PackedStringArray("input_blocker")]
 layout_mode = 3
@@ -39,11 +40,12 @@ theme_override_constants/margin_bottom = 20
 
 [node name="Grid" type="GridContainer" parent="CenterContainer/MarginContainer/MarginContainer" node_paths=PackedStringArray("data")]
 layout_mode = 2
-theme_override_constants/h_separation = 0
-theme_override_constants/v_separation = 0
+theme_override_constants/h_separation = 5
+theme_override_constants/v_separation = 5
 script = ExtResource("1_o8g41")
 slot_scene = ExtResource("2_4abeq")
 data = NodePath("../../../../Data")
+pieces = Array[int]([0, 1, 2, 3, 4])
 
 [node name="InputBlocker" type="Control" parent="CenterContainer/MarginContainer/MarginContainer"]
 layout_mode = 2

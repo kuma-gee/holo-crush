@@ -8,6 +8,12 @@ signal collapse_finished
 signal fill_finished
 
 const PIECE_MAP := {
+	Piece.Type.BLUE: preload("res://src/piece/basic_blue.tscn"),
+	Piece.Type.RED: preload("res://src/piece/basic_red.tscn"),
+	Piece.Type.YELLOW: preload("res://src/piece/basic_yellow.tscn"),
+	Piece.Type.GREEN: preload("res://src/piece/basic_green.tscn"),
+	Piece.Type.PURPLE: preload("res://src/piece/basic_purple.tscn"),
+	
 	Piece.Type.INA: preload("res://src/piece/ina.tscn"),
 	Piece.Type.AME: preload("res://src/piece/ame.tscn"),
 	Piece.Type.GURA: preload("res://src/piece/gura.tscn"),
@@ -17,8 +23,8 @@ const PIECE_MAP := {
 
 @export var slot_scene: PackedScene
 @export var data: Data
+@export var pieces: Array[Piece.Type]
 
-var pieces = PIECE_MAP.keys()
 var queue = []
 var is_processing_queue = false
 

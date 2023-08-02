@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cr0fpadl0kvxc"]
+
+[ext_resource type="PackedScene" uid="uid://cmwklckfgwegu" path="res://src/piece/basic_blue.tscn" id="1_f5la7"]
+
+[node name="BasicGreen" instance=ExtResource("1_f5la7")]
+
+[node name="Sprite2D" parent="." index="0"]
+modulate = Color(0, 0.811765, 0.160784, 1)
