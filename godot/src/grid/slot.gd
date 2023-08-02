@@ -9,16 +9,18 @@ var piece: Piece
 var pos: Vector2i
 
 func invalid_move(dir: Vector2i):
-	piece.slight_move(dir)
+	if piece:
+		piece.slight_move(dir)
 
 func move(other_slot: Slot):
-	var other = other_slot.piece
-	var piece_pos = get_pos()
-	piece.move(other_slot.get_pos())
-	await other.move(piece_pos)
+	if piece:
+		var other = other_slot.piece
+		var piece_pos = get_pos()
+		piece.move(other_slot.get_pos())
+		await other.move(piece_pos)
 
-	other_slot.piece = piece
-	piece = other
+		other_slot.piece = piece
+		piece = other
 
 func capture():
 	if piece:
@@ -28,13 +30,17 @@ func get_pos():
 	return global_position + custom_minimum_size / 2
 
 func matched():
-	await piece.matched()
-	match_done.emit()
+	if piece:
+		await piece.matched()
+		piece = null
+		match_done.emit()
 
 
 func _on_swipe_control_pressed():
-	pressed.emit()
+	if piece:
+		pressed.emit()
 
 
 func _on_swipe_control_swiped(dir):
-	swiped.emit(pos, dir)
+	if piece:
+		swiped.emit(pos, dir)

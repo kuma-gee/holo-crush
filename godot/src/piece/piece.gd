@@ -26,6 +26,7 @@ func matched():
 	var tw = create_tween()
 	tw.tween_property(self, "scale", Vector2(0, 0), 1.0).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
 	await tw.finished
+	queue_free()
 
 func slight_move(dir: Vector2):
 	var tw = create_tween()
