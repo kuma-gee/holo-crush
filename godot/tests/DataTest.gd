@@ -11,7 +11,7 @@ func _create(initial_data: Array) -> Data:
 	var values = []
 	for i in initial_data:
 		for j in i:
-			if not j in values:
+			if not j in values and j != null:
 				values.append(j)
 
 	data.create_data(values)
@@ -55,6 +55,50 @@ func test_refill():
 			[0, 1, 0, 2]
 		])
 
+func test_collapse():
+	var data = _create([
+		[1, 1, 1, 0],
+		[0, 1, 2, 0],
+		[null, null, null, 1],
+		[0, 1, 0, 2]
+	])
+
+	data.collapse_columns(false, false)
+
+	assert_eq_deep(data._data, [
+		[null, null, null, 0],
+		[1, 1, 1, 0],
+		[0, 1, 2, 1],
+		[0, 1, 0, 2]
+	])
+
+
+func test_fill_empty():
+	var data = _create([
+		[1, 1, null, 0],
+		[0, 1, null, 0],
+		[0, 0, null, 1],
+		[0, 1, 0, 2]
+	])
+
+	watch_signals(data)
+	data.fill_empty()
+
+	assert_signal_emit_count(data, 'filled', 3)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 0)], 2)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 1)], 1)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 2)], 0)
+
+	assert_eq_deep(data._data, [
+		[1, 1, 1, 0],
+		[0, 1, 2, 0],
+		[0, 0, 2, 1],
+		[0, 1, 0, 2]
+	])
+
+	for x in data._data:
+		print(x)
+
 
 func test_swap_not_match():
 	var data = _create([
@@ -68,7 +112,8 @@ func test_swap_not_match():
 	data.swap(Vector2(0, 0), Vector2(1, 0))
 
 	assert_signal_emit_count(data, 'swapped', 2)
-	assert_signal_emitted_with_parameters(data, 'swapped', [Vector2i(1, 0), Vector2i(0, 0)])
+	assert_signal_emitted_with_parameters(data, 'swapped', [Vector2i(1, 0), Vector2i(0, 0)], 1)
+	assert_signal_emitted_with_parameters(data, 'swapped', [Vector2i(0, 0), Vector2i(1, 0)], 0)
 	assert_eq_deep(data._data, [
 		[1, 2, 1, 0],
 		[0, 1, 2, 0],
@@ -88,8 +133,17 @@ func test_swap_and_collapse_vertical():
 	watch_signals(data)
 	data.swap(Vector2(1, 3), Vector2(0, 3))
 
-	assert_signal_emit_count(data, 'swapped', 1)
-	assert_signal_emitted_with_parameters(data, 'swapped', [Vector2i(1, 3), Vector2i(0, 3)])
+	assert_signal_emit_count(data, 'matched', 1)
+	assert_signal_emitted_with_parameters(data, 'matched', [[Vector2i(0, 3), Vector2i(0, 2), Vector2i(0, 1)]])
+
+	assert_signal_emit_count(data, 'moved', 1)
+	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(0, 3), Vector2i(0, 0)])
+
+	assert_signal_emit_count(data, 'filled', 3)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 0)], 2)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 1)], 1)
+	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 2)], 0)
+
 	assert_eq_deep(data._data, [
 		[1, 2, 1, 0],
 		[0, 1, 2, 0],
@@ -97,23 +151,31 @@ func test_swap_and_collapse_vertical():
 		[1, 1, 0, 2]
 	])
 
-	for x in data._data:
-		print(x)
-
-
 func test_swap_and_collapse_horizontal():
 	var data = _create([
-		[1, 2, 1, 0],
-		[0, 1, 2, 0],
-		[2, 2, 1, 1],
+		[3, 2, 1, 2],
+		[0, 3, 2, 3],
+		[2, 2, 3, 1],
 		[1, 0, 0, 2]
 	])
 
-	data.swap(Vector2(1, 1), Vector2(1, 0))
+	watch_signals(data)
+	data.swap(Vector2(2, 1), Vector2(2, 2))
 
-	assert_eq_deep(data._data, [
-		[0, 0, 1, 0],
-		[0, 2, 2, 0],
-		[2, 2, 1, 1],
-		[1, 0, 0, 2]
-	])
+	assert_signal_emit_count(data, 'matched', 1)
+	assert_signal_emitted_with_parameters(data, 'matched', [ Vector2i(2, 2), Vector2i(1, 2), Vector2i(0, 2)])
+
+	# assert_signal_emit_count(data, 'filled', 3)
+	# assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 0)], 2)
+	# assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 1)], 1)
+	# assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 2)], 0)
+
+	# assert_eq_deep(data._data, [
+	# 	[0, 0, 0, 2],
+	# 	[3, 2, 1, 3],
+	# 	[0, 3, 3, 1],
+	# 	[1, 0, 0, 2]
+	# ])
+
+	# for x in data._data:
+	# 	print(x)

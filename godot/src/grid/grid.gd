@@ -23,6 +23,14 @@ var is_processing_queue = false
 # https://www.youtube.com/watch?v=YhykrMFHOV4&list=PL4vbr3u7UKWqwQlvwvgNcgDL1p_3hcNn2
 # https://medium.com/@thrivevolt/making-a-grid-inventory-system-with-godot-727efedb71f7
 
+# Actions
+# [x] Initial Create Pieces
+# [x] Swap
+# [x] Matched
+# [ ] Collapse
+# [ ] Fill
+# [ ] Refill
+
 func _ready():
 	get_tree().get_root().size_changed.connect(_update_slots)
 	
@@ -31,6 +39,7 @@ func _ready():
 	data.swapped.connect(_swap)
 	data.invalid_swap.connect(_invalid_swap)
 	data.matched.connect(_matched)
+
 	data.moved.connect(_moved)
 	data.filled.connect(_filled)
 	
@@ -79,7 +88,7 @@ func _swap(pos: Vector2i, dest: Vector2i):
 	queue.append(func():
 		var slot = _get_slot(pos)
 		var other = _get_slot(dest)
-		await slot.move(other)
+		await slot.swap(other)
 	)
 
 func _moved(pos: Vector2i, dest: Vector2i):

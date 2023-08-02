@@ -21,7 +21,7 @@ func set_data(d):
 	_data = d
 
 func create_data(pieces: Array):
-	_pieces = pieces
+	_pieces = pieces.duplicate()
 	_create_new_empty()
 	refill_data()
 	created.emit()
@@ -117,32 +117,43 @@ func check_matches():
 				has_matched = true
 
 	if has_matched:
-		_collapse_columns()
+		collapse_columns()
 
 	return has_matched
 
-func _collapse_columns():
-	for y in height:
-		for x in width:
-			if get_value(x, y) == null:
-				for yy in range(y-1, -1, -1):
-					if get_value(x, yy) != null:
-						_swap_value(Vector2(x, yy), Vector2(x, y))
-						break
-	_fill_empty()
-	check_matches()
-
-func _fill_empty():
+func collapse_columns(check = true, fill = true):
 	for x in width:
-		while get_value(x, 0) == null:
-			_fill_random(x, 0)
-			filled.emit(Vector2(x, 0))
+		var y = height-1
+		while y > 0:
+			if get_value(x, y) == null:
+				var yy = _first_non_null_above(x, y)
+				if yy == null:
+					break;
 
-			for y in range(1, height):
-				if get_value(x, y) != null:
-					break
+				_swap_value(Vector2i(x, y), Vector2i(x, yy))
+				moved.emit(Vector2i(x, y), Vector2i(x, yy))
+				y = yy
+			else:
+				y -= 1
 
-				_swap_value(Vector2(x, y-1), Vector2(x, y))
+	if fill:
+		fill_empty()
+
+	if check:
+		check_matches()
+
+func _first_non_null_above(x: int, y: int):
+	for yy in range(y-1, -1, -1):
+		if get_value(x, yy) != null:
+			return yy
+	return null
+
+func fill_empty():
+	for x in width:
+		for y in range(height-1, -1, -1):
+			if get_value(x, y) == null:
+				_fill_random(x, y)
+				filled.emit(Vector2i(x, y))
 
 func _fill_random(x: int, y: int):
 	var piece = _pieces.pick_random()
