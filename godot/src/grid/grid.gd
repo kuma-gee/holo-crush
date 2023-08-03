@@ -99,6 +99,8 @@ func _ready():
 	
 	data.create_data(pieces)
 
+	Engine.time_scale = 0.4
+
 func _update_slots():
 	await get_tree().create_timer(0.1).timeout
 	for child in get_children():
@@ -208,13 +210,14 @@ func _move_collapsed(moves):
 	await collapse_finished
 
 func _remove_matched(matched: Array, special_matches: Array):
-	var called = 0
+	var called = []
 	var done = []
 
 	var counter_fn = func():
 		done.append(0)
-		if done.size() >= called:
+		if done.size() >= called.size():
 			match_finished.emit()
+			print("Done %s/%s" % [called.size(), done.size()])
 
 	logger.debug("Staring match %s - %s" % [matched, special_matches])
 	for x in special_matches:
@@ -226,20 +229,28 @@ func _remove_matched(matched: Array, special_matches: Array):
 		for pos in affected:
 			if pos == dest:
 				continue
+			called.append(pos)
 			var slot = _get_slot(pos) as Slot
 			slot.move_match(target)
-			called += 1
 			slot.match_done.connect(counter_fn)
 		
-		called += 1
+		called.append(dest)
 		target.change_special(type)
 		target.change_done.connect(counter_fn)
 	
 	for m in matched:
 		for p in m:
+			called.append(p)
 			var slot = _get_slot(p) as Slot
 			slot.matched()
-			called += 1
 			slot.match_done.connect(counter_fn)
 		
 	await match_finished
+
+	for p in called:
+		var slot = _get_slot(p) as Slot
+		for c in slot.match_done.get_connections():
+			slot.match_done.disconnect(c["callable"])
+		for c in slot.change_done.get_connections():
+			slot.change_done.disconnect(c["callable"])
+
