@@ -228,10 +228,11 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 		for m in all_matched:
 			if m in special_matches:
 				if m in remove_special:
-					_remove_value(m)
+					for l in _remove_value(m):
+						if not l in remove_matched and not l in remove_special:
+							remove_matched.append(l)
 			else:
-				_remove_value(m)
-				remove_matched.append(m)
+				_append_unique(remove_matched, [_remove_value(m)])
 		
 		matched.emit(remove_matched)
 		update.emit()
@@ -247,11 +248,10 @@ func _remove_value(p: Vector2i):
 
 	if p in _specials:
 		var special_pos = _activate_special(p, _specials[p])
-		print(special_pos)
 		_specials.erase(p)
 		for sp in special_pos:
 			if sp != p:
-				_append_unique(removed, _remove_value(sp))
+				_append_unique(removed, [_remove_value(sp)])
 	return removed
 
 func _activate_special(p: Vector2i, type: Special):

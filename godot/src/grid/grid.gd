@@ -69,6 +69,7 @@ func _ready():
 		slot.invalid_swap(dir)
 	)
 
+	data.special_activate.connect(func(p):)
 	data.special_matched.connect(func(p, v, t): specials.append([p, v, t]))
 	data.matched.connect(func(m): matches.append(m))
 	data.moved.connect(func(pos, dest): moving.append([pos, dest]))
