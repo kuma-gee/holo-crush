@@ -219,6 +219,8 @@ func _remove_matched(matched: Array, special_matches: Array):
 			match_finished.emit()
 			print("Done %s/%s" % [called.size(), done.size()])
 
+	# TODO: check if special matching special works
+
 	logger.debug("Staring match %s - %s" % [matched, special_matches])
 	for x in special_matches:
 		var dest = x[0]
@@ -235,7 +237,8 @@ func _remove_matched(matched: Array, special_matches: Array):
 			slot.match_done.connect(counter_fn)
 		
 		called.append(dest)
-		target.change_special(type)
+		var piece = _spawn_piece(target.piece.type)
+		target.change_special(type, piece)
 		target.change_done.connect(counter_fn)
 	
 	for m in matched:

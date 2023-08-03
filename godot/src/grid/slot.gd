@@ -61,10 +61,12 @@ func move_match(slot: Slot):
 	await piece.move_done
 	matched()
 
-func change_special(type: Data.Special):
+func change_special(type: Data.Special, special_piece):
 	if piece == null:
 		return
 	
+	piece.matched()
+	piece = special_piece
 	piece.change_to(type)
 	await piece.change_done
 	change_done.emit()

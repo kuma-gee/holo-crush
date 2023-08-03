@@ -348,3 +348,44 @@ func test_activate_special():
 		[1, 3, 4, 3],
 		[2, 2, 3, 1]
 	])
+
+
+func test_match_special_with_special():
+	seed(0)
+	var data = _create([
+		[2, 0, 1, 2, 5],
+		[3, 0, 4, 3, 1],
+		[4, 2, 0, 1, 4],
+		[1, 0, 5, 3, 1],
+		[0, 2, 0, 0, 2]
+	])
+
+	watch_signals(data)
+	data.swap(Vector2(2, 2), Vector2(1, 2))
+
+	assert_eq_deep(data._data, [
+		[2, 2, 1, 2, 5],
+		[3, 4, 4, 3, 1],
+		[4, 5, 2, 1, 4],
+		[1, 0, 5, 3, 1],
+		[0, 2, 0, 0, 2]
+	])
+	data.swap(Vector2(1, 3), Vector2(1, 4))
+
+	assert_signal_emitted(data, 'special_activate', [Vector2i(1, 4)])
+	assert_contains_exact(get_signal_parameters(data, 'matched')[0], [Vector2i(4, 4)])
+
+	var actual = get_signal_parameters(data, 'special_matched')
+	assert_eq(actual[0], Vector2i(1, 4))
+	assert_contains_exact(actual[1], [Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4) ])
+	assert_eq(actual[2], Data.Special.COL)
+
+	assert_eq_deep(data._data, [
+		[5, 2, 5, 5, 3],
+		[2, 4, 1, 2, 5],
+		[3, 5, 4, 3, 1],
+		[4, 2, 2, 1, 4],
+		[1, 0, 5, 3, 1],
+	])
+	for x in data._data:
+		print(x)

@@ -175,64 +175,26 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 		var all_matched = counts.keys()
 		all_matched.sort_custom(func(a, b): return counts[a] > counts[b])
 
-		var special_matches = []
-		var remove_special = []
-
-		for i in all_matched:
-			if i in special_matches:
-				continue
-			
-			var value = get_value(i.x, i.y)
-			var col_matched = []
-			var row_matched = []
-
-			for j in all_matched:
-				var other_value = get_value(j.x, j.y)
-				if value == other_value:
-					if j.x == i.x:
-						col_matched.append(j)
-					if j.y == i.y:
-						row_matched.append(j)
-			
-			var row = row_matched.size()
-			var col = col_matched.size()
-			var actual_match: Array
-			var type: Special
-
-			if row >= 5 or col >= 5:
-				if row >= min_match:
-					_append_unique(actual_match, [row_matched])
-				if col >= min_match:
-					_append_unique(actual_match, [col_matched])
-				
-				type = Special.ULT
-			elif row >= 3 and col >= 3:
-				_append_unique(actual_match, [col_matched, row_matched])
-				type = Special.BOMB
-			elif col == 4:
-				actual_match = col_matched
-				type = Special.ROW
-			elif row == 4:
-				actual_match = row_matched
-				type = Special.COL
-
-			if actual_match != null and type != null:
-				if actual_match.size() > 0:
-					special_matches.append_array(actual_match)
-					var remove = _create_special(actual_match, dest, type)
-					for p in remove:
-						if not p in remove_special:
-							remove_special.append(p)
+		var result = _get_special_match_data(all_matched, dest)
+		var special_matches = result[0]
+		var create_specials = result[1]
 
 		var remove_matched = []
 		for m in all_matched:
 			if m in special_matches:
-				if m in remove_special:
-					for l in _remove_value(m):
-						if not l in remove_matched and not l in remove_special:
-							remove_matched.append(l)
-			else:
+				for l in _remove_value(m):
+					if not l in remove_matched and not l in special_matches:
+						remove_matched.append(l)
+			else: # All others
 				_append_unique(remove_matched, [_remove_value(m)])
+		
+		for special in create_specials:
+			var pair = create_specials[special]
+			var type = pair[0]
+			var value = pair[1]
+
+			_set_value(special.x, special.y, value)
+			_specials[special] = type
 		
 		matched.emit(remove_matched)
 		update.emit()
@@ -241,6 +203,62 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 		collapse_columns()
 
 	return has_matched
+
+func _get_special_match_data(all_matched: Array, dest: Vector2i):
+	var special_matches = []
+	var created_specials = {}
+
+	for i in all_matched:
+		if i in special_matches:
+			continue
+		
+		var value = get_value(i.x, i.y)
+		var col_matched = []
+		var row_matched = []
+
+		for j in all_matched:
+			var other_value = get_value(j.x, j.y)
+			if value == other_value:
+				if j.x == i.x:
+					col_matched.append(j)
+				if j.y == i.y:
+					row_matched.append(j)
+		
+		var row = row_matched.size()
+		var col = col_matched.size()
+		var actual_match: Array
+		var type: Special
+
+		if row >= 5 or col >= 5:
+			if row >= min_match:
+				_append_unique(actual_match, [row_matched])
+			if col >= min_match:
+				_append_unique(actual_match, [col_matched])
+			
+			type = Special.ULT
+		elif row >= 3 and col >= 3:
+			_append_unique(actual_match, [col_matched, row_matched])
+			type = Special.BOMB
+		elif col == 4:
+			actual_match = col_matched
+			type = Special.ROW
+		elif row == 4:
+			actual_match = row_matched
+			type = Special.COL
+
+		if actual_match != null and type != null:
+			if actual_match.size() > 0:
+				_append_unique(special_matches, [actual_match])
+				var special_pos = _create_special(actual_match, dest, type)
+				created_specials[special_pos] = [type, get_value(special_pos.x, special_pos.y)]
+
+	return [special_matches, created_specials]
+
+func _create_special(matches: Array, dest: Vector2i, type: int):
+	var pos = dest if dest in matches else matches[0]
+	special_matched.emit(pos, matches, type)
+	return pos
+
 
 func _remove_value(p: Vector2i):
 	var removed = [p]
@@ -282,18 +300,6 @@ func _append_unique(arr, items: Array):
 		for i in item:
 			if not i in arr:
 				arr.append(i)
-
-func _create_special(matches: Array, dest: Vector2i, type: int):
-	var pos = dest if dest in matches else matches[0]
-	_specials[pos] = type 
-
-	var remove = []
-	for m in matches:
-		if m != pos:
-			remove.append(m)
-
-	special_matched.emit(pos, matches, type)
-	return remove
 
 func collapse_columns(check = true, fill = true):
 	for x in width:
