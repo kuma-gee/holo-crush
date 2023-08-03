@@ -31,6 +31,7 @@ var is_processing_queue = false
 var moving = []
 var matches = []
 var filling = []
+var specials = []
 
 var logger = Logger.new('Grid')
 
@@ -67,6 +68,7 @@ func _ready():
 		slot.invalid_swap(dir)
 	)
 
+	data.special_matched.connect(func(p, v, t): specials.append([p, v, t]))
 	data.matched.connect(func(m): matches.append(m))
 	data.moved.connect(func(pos, dest): moving.append([pos, dest]))
 	data.filled.connect(func(p, v): filling.append([p, v]))
@@ -74,8 +76,10 @@ func _ready():
 		if matches.size() > 0:
 			logger.debug("Queue Match %s" % [matches])
 			var x = matches.duplicate()
-			queue.append(func(): await _remove_matched(x))
+			var y = specials.duplicate()
+			queue.append(func(): await _remove_matched(x, y))
 			matches = []
+			specials = []
 		
 		if moving.size() > 0:
 			logger.debug("Queue Move %s" % [moving])
@@ -201,11 +205,33 @@ func _move_collapsed(moves):
 	
 	await collapse_finished
 
-func _remove_matched(matched):
+func _remove_matched(matched: Array, special_matches: Array):
 	var called = 0
 	var done = []
+
+	# var special_pos = []
+	# var special_map = {}
+	for x in special_matches:
+		var dest = x[0]
+		var affected = x[1]
+		var type = x[2]
+
+		for pos in affected:
+			if pos == dest:
+				continue
+			# special_pos.append(pos)
+			var slot = _get_slot(pos) as Slot
+			slot.matched()
+			called += 1
+			slot.match_done.connect(func():
+				done.append(slot.pos)
+				if done.size() >= called:
+					match_finished.emit()
+			)
+
+		# special_map[pos] = x
 	
-	logger.debug("Staring match %s" % [matched])
+	logger.debug("Staring match %s - %s" % [matched, special_matches])
 	for m in matched:
 		for p in m:
 			var slot = _get_slot(p) as Slot

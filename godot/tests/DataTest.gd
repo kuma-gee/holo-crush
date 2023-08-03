@@ -200,6 +200,23 @@ func test_swap_and_collapse_horizontal():
 		[1, 0, 0, 2]
 	])
 
+func test_create_special():
+	var data = _create([
+		[0, 4, 1, 2],
+		[0, 3, 4, 3],
+		[2, 0, 3, 1],
+		[0, 2, 1, 2]
+	])
+
+	data.swap(Vector2(1, 2), Vector2(0, 2))
+
+	assert_eq_deep(data._data, [
+		[4, 4, 1, 2],
+		[2, 3, 4, 3],
+		[4, 2, 3, 1],
+		[0, 2, 1, 2]
+	])
+
 func test_swap_and_collapse_special_matches(params=use_parameters([
 	[
 		[
@@ -209,8 +226,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[0, 2, 1, 2]
 		],
 		[Vector2(1, 2), Vector2(0, 2)],
-		[Vector2i(0, 3), Vector2i(0, 2), Vector2i(0, 1), Vector2i(0, 0)],
-		[Vector2i(0, 2), 0, Data.Special.COL]
+		[Vector2i(0, 2), [Vector2i(0, 3), Vector2i(0, 2), Vector2i(0, 1), Vector2i(0, 0)], Data.Special.COL]
 	],
 
 	[
@@ -221,8 +237,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[0, 2, 0, 0]
 		],
 		[Vector2(1, 2), Vector2(1, 3)],
-		[Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3)],
-		[Vector2i(1, 3), 0, Data.Special.ROW]
+		[Vector2i(1, 3), [Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3)], Data.Special.ROW]
 	],
 
 	[
@@ -233,8 +248,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[0, 2, 0, 0]
 		],
 		[Vector2(0, 3), Vector2(1, 3)],
-		[Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(2, 3), Vector2i(3, 3)],
-		[Vector2i(1, 3), 0, Data.Special.BOMB]
+		[Vector2i(1, 3), [Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(2, 3), Vector2i(3, 3)], Data.Special.BOMB]
 	],
 
 	[
@@ -245,8 +259,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[5, 0, 3, 5]
 		],
 		[Vector2(0, 2), Vector2(1, 2)],
-		[Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(2, 2), Vector2i(3, 2)],
-		[Vector2i(1, 2), 0, Data.Special.BOMB]
+		[Vector2i(1, 2), [Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(2, 2), Vector2i(3, 2)], Data.Special.BOMB]
 	],
 
 	[
@@ -258,8 +271,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[5, 0, 3]
 		],
 		[Vector2(0, 2), Vector2(1, 2)],
-		[Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 3), Vector2i(1, 4)],
-		[Vector2i(1, 2), 0, Data.Special.ULT]
+		[Vector2i(1, 2), [Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 3), Vector2i(1, 4)], Data.Special.ULT]
 	],
 ])):
 	var data = _create(params[0])
@@ -269,7 +281,12 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 	data.swap(move[0], move[1])
 
 	assert_signal_emit_count(data, 'matched', 1)
-	assert_contains_exact(get_signal_parameters(data, 'matched')[0], params[2])
+	assert_contains_exact(get_signal_parameters(data, 'matched')[0], []) 
 
 	assert_signal_emit_count(data, 'special_matched', 1)
-	assert_signal_emitted_with_parameters(data, 'special_matched', params[3])
+
+	var actual = get_signal_parameters(data, 'special_matched')
+	var expected = params[2]
+	assert_eq(actual[0], expected[0])
+	assert_contains_exact(actual[1], expected[1])
+	assert_eq(actual[2], expected[2])

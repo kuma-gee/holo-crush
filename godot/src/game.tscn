@@ -53,7 +53,8 @@ layout_mode = 2
 [node name="Data" type="Node" parent="."]
 script = ExtResource("3_3oo0b")
 width = 8
-height = 10
+height = 5
+debug = true
 
 [connection signal="processing" from="CenterContainer/MarginContainer/MarginContainer/Grid" to="." method="_on_grid_processing"]
 [connection signal="processing_finished" from="CenterContainer/MarginContainer/MarginContainer/Grid" to="." method="_on_grid_processing_finished"]

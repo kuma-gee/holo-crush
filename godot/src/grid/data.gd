@@ -15,7 +15,7 @@ signal moved(pos, dest)
 signal filled(pos, value)
 signal created()
 signal matched(pos)
-signal special_matched(pos, value, type)
+signal special_matched(pos, affected, type)
 
 signal update()
 
@@ -26,7 +26,6 @@ signal update()
 
 var _data: Array = []
 var _pieces: Array = []
-var _special_data: Array = []
 
 # Don't touch! Only for testing
 func set_data(d):
@@ -35,7 +34,6 @@ func set_data(d):
 func create_data(pieces: Array):
 	_pieces = pieces.duplicate()
 	_data = _create_new_empty()
-	_special_data = _create_new_empty()
 	refill_data()
 	created.emit()
 
@@ -73,7 +71,7 @@ func get_matches(x: int, y: int):
 		var row = _create_match_array(pos)
 		var filtered = _filter_match_array(row, piece)
 		if filtered.size() >= min_match:
-			return filtered.map(func(a): return a["pos"])
+			return filtered
 		return null
 
 	if piece != null:
@@ -97,7 +95,7 @@ func _create_match_array(pos: Array):
 func _filter_match_array(arr: Array, value: int):
 	var filtered = arr.filter(func(a): return a["value"] == value)
 	if filtered.size() > 0:
-		return filtered
+		return filtered.map(func(a): return a["pos"])
 	return []
 
 func get_value(x: int, y: int):
@@ -111,9 +109,6 @@ func get_value(x: int, y: int):
 
 func _set_value(x: int, y: int, value):
 	_data[y][x] = value
-
-func _set_special(x: int, y: int, type):
-	_special_data[y][x] = type
 
 func _swap_value(p1: Vector2i, p2: Vector2i):
 	var temp = get_value(p2.x, p2.y)
@@ -168,30 +163,38 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 			
 			var row = row_matched.size()
 			var col = col_matched.size()
+			var actual_match: Array
+			var type: Special
+
 			if row >= 5 or col >= 5:
-				var actual_match = []
 				if row >= 5:
 					_append_unique(actual_match, [row_matched])
 				if col >= 5:
 					_append_unique(actual_match, [col_matched])
 				
-				special_matches.append_array(actual_match)
-				_create_special(actual_match, dest, Special.ULT)
-			if row >= 3 and col >= 3:
-				var actual_match = []
+				type = Special.ULT
+			elif row >= 3 and col >= 3:
 				_append_unique(actual_match, [col_matched, row_matched])
-				special_matches.append_array(actual_match)
-				_create_special(actual_match, dest, Special.BOMB)
-			if col == 4:
-				special_matches.append_array(col_matched)
-				_create_special(col_matched, dest, Special.COL)
-			if row == 4:
-				special_matches.append_array(row_matched)
-				_create_special(row_matched, dest, Special.ROW)
+				type = Special.BOMB
+			elif col == 4:
+				actual_match = col_matched
+				type = Special.COL
+			elif row == 4:
+				actual_match = row_matched
+				type = Special.ROW
 
+			if actual_match != null and type != null:
+				if actual_match.size() > 0:
+					special_matches.append_array(actual_match)
+					_create_special(actual_match, dest, type)
+
+		var remove_matched = []
 		for m in all_matched:
+			if m in special_matches:
+				continue
 			_set_value(m.x, m.y, null)
-		matched.emit(all_matched)
+			remove_matched.append(m)
+		matched.emit(remove_matched)
 		update.emit()
 		
 		_print('Match')
@@ -207,9 +210,12 @@ func _append_unique(arr, items: Array):
 
 func _create_special(matches: Array, dest: Vector2i, type: int):
 	var pos = dest if dest in matches else matches[0]
-	var value = get_value(pos.x, pos.y)
-	_set_special(pos.x, pos.y, type)
-	special_matched.emit(pos, value, type)
+	# _set_special(pos.x, pos.y, type)
+	for m in matches:
+		if m != pos:
+			_set_value(m.x, m.y, null)
+
+	special_matched.emit(pos, matches, type)
 
 func collapse_columns(check = true, fill = true):
 	for x in width:
