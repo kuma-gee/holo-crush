@@ -38,7 +38,7 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="Grid" type="GridContainer" parent="CenterContainer/MarginContainer/MarginContainer" node_paths=PackedStringArray("data")]
+[node name="Grid" type="GridContainer" parent="CenterContainer/MarginContainer/MarginContainer" node_paths=PackedStringArray("data", "pieces_root")]
 layout_mode = 2
 theme_override_constants/h_separation = 5
 theme_override_constants/v_separation = 5
@@ -46,6 +46,7 @@ script = ExtResource("1_o8g41")
 slot_scene = ExtResource("2_4abeq")
 data = NodePath("../../../../Data")
 pieces = Array[int]([0, 1, 2, 3, 4])
+pieces_root = NodePath("../../../../Field")
 
 [node name="InputBlocker" type="Control" parent="CenterContainer/MarginContainer/MarginContainer"]
 layout_mode = 2
@@ -55,6 +56,9 @@ script = ExtResource("3_3oo0b")
 width = 8
 height = 5
 debug = true
+
+[node name="Field" type="Node2D" parent="."]
+y_sort_enabled = true
 
 [connection signal="processing" from="CenterContainer/MarginContainer/MarginContainer/Grid" to="." method="_on_grid_processing"]
 [connection signal="processing_finished" from="CenterContainer/MarginContainer/MarginContainer/Grid" to="." method="_on_grid_processing_finished"]

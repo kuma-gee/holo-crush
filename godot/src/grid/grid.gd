@@ -24,6 +24,7 @@ const PIECE_MAP := {
 @export var slot_scene: PackedScene
 @export var data: Data
 @export var pieces: Array[Piece.Type]
+@export var pieces_root: Node2D
 
 var queue = []
 var is_processing_queue = false
@@ -139,7 +140,7 @@ func _process_queue():
 func _spawn_piece(piece):
 	var scene = PIECE_MAP[piece]
 	var node = scene.instantiate()
-	get_tree().current_scene.add_child(node)
+	pieces_root.add_child(node)
 	return node
 
 #################

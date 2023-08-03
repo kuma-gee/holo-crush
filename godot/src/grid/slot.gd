@@ -57,7 +57,7 @@ func move_match(slot: Slot):
 	if piece == null:
 		return
 	
-	piece.move(slot.get_pos())
+	piece.move(slot.get_pos() + Vector2.UP)
 	await piece.move_done
 	matched()
 
