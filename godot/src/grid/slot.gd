@@ -5,6 +5,7 @@ signal match_done
 signal move_done
 signal swap_done
 signal fill_done
+signal change_done
 
 signal pressed
 signal swiped(pos, dir)
@@ -59,6 +60,14 @@ func move_match(slot: Slot):
 	piece.move(slot.get_pos())
 	await piece.move_done
 	matched()
+
+func change_special(type: Data.Special):
+	if piece == null:
+		return
+	
+	piece.change_to(type)
+	await piece.change_done
+	change_done.emit()
 
 func capture():
 	if piece:
