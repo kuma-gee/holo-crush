@@ -16,6 +16,7 @@ signal filled(pos, value)
 signal created()
 signal matched(pos)
 signal special_matched(pos, affected, type)
+signal special_activate(pos)
 
 signal update()
 
@@ -113,6 +114,15 @@ func _set_value(x: int, y: int, value):
 
 	_data[y][x] = value
 
+func _is_inside(x: int, y: int):
+	if x < 0 or x >= width:
+		return false
+	
+	if y < 0 or y >= height:
+		return false
+
+	return true
+
 func _swap_special(pos: Vector2i, target: Vector2i):
 	var v1 = _specials[pos] if pos in _specials else null
 	var v2 = _specials[target] if target in _specials else null
@@ -124,15 +134,6 @@ func _swap_special(pos: Vector2i, target: Vector2i):
 		_specials[target] = v1
 	if v2 != null:
 		_specials[pos] = v2
-
-func _is_inside(x: int, y: int):
-	if x < 0 or x >= width:
-		return false
-	
-	if y < 0 or y >= height:
-		return false
-
-	return true
 
 func _swap_value(p1: Vector2i, p2: Vector2i):
 	var temp = get_value(p2.x, p2.y)
@@ -175,6 +176,8 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 		all_matched.sort_custom(func(a, b): return counts[a] > counts[b])
 
 		var special_matches = []
+		var remove_special = []
+
 		for i in all_matched:
 			if i in special_matches:
 				continue
@@ -208,23 +211,27 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 				type = Special.BOMB
 			elif col == 4:
 				actual_match = col_matched
-				type = Special.COL
+				type = Special.ROW
 			elif row == 4:
 				actual_match = row_matched
-				type = Special.ROW
+				type = Special.COL
 
 			if actual_match != null and type != null:
 				if actual_match.size() > 0:
 					special_matches.append_array(actual_match)
-					_create_special(actual_match, dest, type)
+					var remove = _create_special(actual_match, dest, type)
+					for p in remove:
+						if not p in remove_special:
+							remove_special.append(p)
 
 		var remove_matched = []
 		for m in all_matched:
 			if m in special_matches:
-				continue
-			_set_value(m.x, m.y, null)
-			_specials.erase(m) # TODO: activate it, but also on a special match
-			remove_matched.append(m)
+				if m in remove_special:
+					_remove_value(m)
+			else:
+				_remove_value(m)
+				remove_matched.append(m)
 		
 		matched.emit(remove_matched)
 		update.emit()
@@ -233,6 +240,42 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 		collapse_columns()
 
 	return has_matched
+
+func _remove_value(p: Vector2i):
+	var removed = [p]
+	_set_value(p.x, p.y, null)
+
+	if p in _specials:
+		var special_pos = _activate_special(p, _specials[p])
+		print(special_pos)
+		_specials.erase(p)
+		for sp in special_pos:
+			if sp != p:
+				_append_unique(removed, _remove_value(sp))
+	return removed
+
+func _activate_special(p: Vector2i, type: Special):
+	special_activate.emit(p)
+	match type:
+		Special.ROW: return _get_row(p)
+		Special.COL: return _get_col(p)
+	
+	return []
+
+
+func _get_row(p: Vector2i):
+	var result = []
+	for x in width:
+		result.append(Vector2i(x, p.y))
+	return result
+
+
+func _get_col(p: Vector2i):
+	var result = []
+	for y in height:
+		result.append(Vector2i(p.x, y))
+	return result
+
 
 func _append_unique(arr, items: Array):
 	for item in items:
@@ -243,12 +286,14 @@ func _append_unique(arr, items: Array):
 func _create_special(matches: Array, dest: Vector2i, type: int):
 	var pos = dest if dest in matches else matches[0]
 	_specials[pos] = type 
+
+	var remove = []
 	for m in matches:
 		if m != pos:
-			_set_value(m.x, m.y, null)
-			# TODO: activate special?
+			remove.append(m)
 
 	special_matched.emit(pos, matches, type)
+	return remove
 
 func collapse_columns(check = true, fill = true):
 	for x in width:

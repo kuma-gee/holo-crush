@@ -237,7 +237,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[0, 2, 1, 2]
 		],
 		[Vector2(1, 2), Vector2(0, 2)],
-		[Vector2i(0, 2), [Vector2i(0, 3), Vector2i(0, 2), Vector2i(0, 1), Vector2i(0, 0)], Data.Special.COL],
+		[Vector2i(0, 2), [Vector2i(0, 3), Vector2i(0, 2), Vector2i(0, 1), Vector2i(0, 0)], Data.Special.ROW],
 		Vector2i(0, 3),
 	],
 	[
@@ -248,7 +248,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[0, 2, 0, 0]
 		],
 		[Vector2(1, 2), Vector2(1, 3)],
-		[Vector2i(1, 3), [Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3)], Data.Special.ROW],
+		[Vector2i(1, 3), [Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3)], Data.Special.COL],
 		Vector2i(1, 3)
 	],
 
@@ -319,15 +319,30 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 	assert_eq(actual[2], expected[2])
 
 	assert_eq(data._specials, {params[3]: expected[2]})
-	print(data._specials)
 
 func test_activate_special():
 	var data = _create([
 		[0, 4, 1, 2],
 		[0, 3, 4, 3],
 		[2, 0, 3, 1],
-		[0, 0, 1, 0]
+		[0, 0, 4, 0]
 	])
 
 	watch_signals(data)
 	data.swap(Vector2(1, 2), Vector2(0, 2))
+
+	assert_eq_deep(data._data, [
+		[4, 4, 1, 2],
+		[2, 3, 4, 3],
+		[4, 2, 3, 1],
+		[0, 0, 4, 0]
+	])
+	data.swap(Vector2(3, 3), Vector2(2, 3))
+
+	assert_signal_emitted(data, 'special_activate', [Vector2i(0, 3)])
+	assert_eq_deep(data._data, [
+		[1, 4, 0, 0],
+		[4, 4, 1, 2],
+		[2, 3, 4, 3],
+		[4, 2, 3, 1]
+	])

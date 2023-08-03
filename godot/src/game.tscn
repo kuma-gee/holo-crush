@@ -55,7 +55,6 @@ layout_mode = 2
 script = ExtResource("3_3oo0b")
 width = 8
 height = 5
-debug = true
 
 [node name="Field" type="Node2D" parent="."]
 y_sort_enabled = true
