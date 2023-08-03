@@ -75,14 +75,16 @@ func get_matches(x: int, y: int):
 		return null
 
 	if piece != null:
+		var matches = []
 		if x > 1:
 			var row_match = check.call([Vector2i(x, y), Vector2i(x-1, y), Vector2i(x-2, y)])
 			if row_match:
-				return row_match
+				_append_unique(matches, [row_match])
 		if y > 1:
 			var col_match = check.call([Vector2i(x, y), Vector2i(x, y-1), Vector2i(x, y-2)])
 			if col_match:
-				return col_match
+				_append_unique(matches, [col_match])
+		return matches
 
 	return []
 
@@ -133,17 +135,23 @@ func swap(pos: Vector2i, dest: Vector2i):
 		swapped.emit(dest, pos)
 
 func check_matches(dest: Vector2i = Vector2i(-1, -1)):
-	var all_matched = []
+	var counts = {}
 	for y in height:
 		for x in width:
 			var matches = get_matches(x, y)
 			if matches.size() > 0:
 				for m in matches:
-					if not m in all_matched:
-						all_matched.append(m)
+					if not m in counts:
+						counts[m] = 0
+					counts[m] += 1
 
-	var has_matched = all_matched.size() > 0
+
+	print(counts)
+	var has_matched = counts.size() > 0
 	if has_matched:
+		var all_matched = counts.keys()
+		all_matched.sort_custom(func(a, b): return counts[a] > counts[b])
+
 		var special_matches = []
 		for i in all_matched:
 			if i in special_matches:
@@ -167,9 +175,9 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 			var type: Special
 
 			if row >= 5 or col >= 5:
-				if row >= 5:
+				if row >= min_match:
 					_append_unique(actual_match, [row_matched])
-				if col >= 5:
+				if col >= min_match:
 					_append_unique(actual_match, [col_matched])
 				
 				type = Special.ULT
@@ -194,6 +202,7 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 				continue
 			_set_value(m.x, m.y, null)
 			remove_matched.append(m)
+		
 		matched.emit(remove_matched)
 		update.emit()
 		

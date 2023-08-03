@@ -37,6 +37,16 @@ func test_matches():
 	assert_eq_deep(data.get_matches(0, 2), [])
 	assert_contains_exact(data.get_matches(0, 3), [Vector2i(0, 1), Vector2i(0, 2), Vector2i(0, 3)])
 
+func test_matches_both_directions():
+	var data = _create([
+		[1, 1, 0, 1],
+		[2, 1, 0, 2],
+		[0, 0, 0, 1],
+		[3, 1, 2, 2]
+	])
+	
+	assert_contains_exact(data.get_matches(2, 2), [Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 2), Vector2i(2, 1), Vector2i(2, 0)])
+
 func test_refill():
 	var data = _create([
 		[1, 1, 1, 0],
@@ -272,6 +282,17 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 		],
 		[Vector2(0, 2), Vector2(1, 2)],
 		[Vector2i(1, 2), [Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 3), Vector2i(1, 4)], Data.Special.ULT]
+	],
+	[
+		[
+			[2, 5, 0, 1],
+			[3, 1, 0, 4],
+			[0, 0, 2, 0],
+			[1, 5, 0, 2],
+			[2, 5, 0, 3]
+		],
+		[Vector2(3, 2), Vector2(2, 2)],
+		[Vector2i(2, 2), [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3), Vector2i(2, 4), Vector2i(0, 2), Vector2i(1, 2)], Data.Special.ULT]
 	],
 ])):
 	var data = _create(params[0])

@@ -52,6 +52,14 @@ func move(slot: Slot):
 	await temp.move_done
 	move_done.emit()
 
+func move_match(slot: Slot):
+	if piece == null:
+		return
+	
+	piece.move(slot.get_pos())
+	await piece.move_done
+	matched()
+
 func capture():
 	if piece:
 		piece.global_position = get_pos()

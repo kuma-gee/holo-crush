@@ -209,29 +209,25 @@ func _remove_matched(matched: Array, special_matches: Array):
 	var called = 0
 	var done = []
 
-	# var special_pos = []
-	# var special_map = {}
+	logger.debug("Staring match %s - %s" % [matched, special_matches])
 	for x in special_matches:
 		var dest = x[0]
 		var affected = x[1]
 		var type = x[2]
 
+		var target = _get_slot(dest) as Slot
 		for pos in affected:
 			if pos == dest:
 				continue
-			# special_pos.append(pos)
 			var slot = _get_slot(pos) as Slot
-			slot.matched()
+			slot.move_match(target)
 			called += 1
 			slot.match_done.connect(func():
 				done.append(slot.pos)
 				if done.size() >= called:
 					match_finished.emit()
 			)
-
-		# special_map[pos] = x
 	
-	logger.debug("Staring match %s - %s" % [matched, special_matches])
 	for m in matched:
 		for p in m:
 			var slot = _get_slot(p) as Slot
