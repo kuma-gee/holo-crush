@@ -24,6 +24,7 @@ signal update()
 @export var min_match := 3
 
 var _data: Array = []
+var _specials = {}
 var _pieces: Array = []
 var _logger = Logger.new("Data")
 
@@ -34,6 +35,7 @@ func set_data(d):
 func create_data(pieces: Array):
 	_pieces = pieces.duplicate()
 	_data = _create_new_empty()
+	_specials = {}
 	refill_data()
 	created.emit()
 
@@ -60,7 +62,7 @@ func refill_data():
 func _print(msg = ''):
 	_logger.debug('------- %s --------' % msg)
 	for x in _data:
-		_logger.debug(x)
+		_logger.debug(str(x))
 	_logger.debug("---------------------------")
 
 func get_matches(x: int, y: int):
@@ -111,6 +113,14 @@ func _set_value(x: int, y: int, value):
 
 	_data[y][x] = value
 
+func _move_special(pos: Vector2i, target: Vector2i):
+	if not pos in _specials:
+		return
+	
+	var value = _specials[pos]
+	_specials.erase(pos)
+	_specials[target] = value
+
 func _is_inside(x: int, y: int):
 	if x < 0 or x >= width:
 		return false
@@ -124,6 +134,8 @@ func _swap_value(p1: Vector2i, p2: Vector2i):
 	var temp = get_value(p2.x, p2.y)
 	_set_value(p2.x, p2.y, get_value(p1.x, p1.y))
 	_set_value(p1.x, p1.y, temp)
+	_move_special(p1, p2)
+	_move_special(p2, p1)
 
 func swap(pos: Vector2i, dest: Vector2i):
 	var value = get_value(pos.x, pos.y)
@@ -208,6 +220,7 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 			if m in special_matches:
 				continue
 			_set_value(m.x, m.y, null)
+			_specials.erase(m) # TODO: activate it, but also on a special match
 			remove_matched.append(m)
 		
 		matched.emit(remove_matched)
@@ -226,10 +239,11 @@ func _append_unique(arr, items: Array):
 
 func _create_special(matches: Array, dest: Vector2i, type: int):
 	var pos = dest if dest in matches else matches[0]
-	# _set_special(pos.x, pos.y, type)
+	_specials[pos] = type 
 	for m in matches:
 		if m != pos:
 			_set_value(m.x, m.y, null)
+			# TODO: activate special?
 
 	special_matched.emit(pos, matches, type)
 

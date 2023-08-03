@@ -1,6 +1,7 @@
 extends UnitTest
 
 func before_each():
+	Debug.log_level = Debug.Level.INFO
 	seed(100)
 
 func _create(initial_data: Array) -> Data:
