@@ -54,7 +54,6 @@ layout_mode = 2
 script = ExtResource("3_3oo0b")
 width = 8
 height = 10
-debug = true
 
 [connection signal="processing" from="CenterContainer/MarginContainer/MarginContainer/Grid" to="." method="_on_grid_processing"]
 [connection signal="processing_finished" from="CenterContainer/MarginContainer/MarginContainer/Grid" to="." method="_on_grid_processing_finished"]

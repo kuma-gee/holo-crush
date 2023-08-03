@@ -55,86 +55,68 @@ func test_refill():
 			[0, 1, 0, 2]
 		])
 
-func test_collapse():
-	var data = _create([
-		[1, 1, 1, 0],
-		[0, 1, 2, 0],
-		[null, null, null, 1],
-		[0, 1, 0, 2]
-	])
-
+func test_collapse(params=use_parameters([
+	[
+		[
+			[1, 1, 1, 0],
+			[0, 1, 2, 0],
+			[null, null, null, 1],
+			[0, 1, 0, 2]
+		],
+		[
+			[null, null, null, 0],
+			[1, 1, 1, 0],
+			[0, 1, 2, 1],
+			[0, 1, 0, 2]
+		]
+	],
+	[
+		[
+			[1, 1, 1, 0],
+			[0, 1, 2, 0],
+			[0, 1, null, 2],
+			[0, 1, null, 2]
+		],
+		[
+			[1, 1, null, 0],
+			[0, 1, null, 0],
+			[0, 1, 1, 2],
+			[0, 1, 2, 2]
+		]
+	]
+])):
+	var data = _create(params[0])
 	data.collapse_columns(false, false)
+	assert_eq_deep(data._data, params[1])
 
-	assert_eq_deep(data._data, [
-		[null, null, null, 0],
-		[1, 1, 1, 0],
-		[0, 1, 2, 1],
-		[0, 1, 0, 2]
-	])
-
-func test_collapse_vertical():
-	var data = _create([
-		[1, 1, 1, 0],
-		[0, 1, 2, 0],
-		[0, 1, null, 2],
-		[0, 1, null, 2]
-	])
-
-	data.collapse_columns(false, false)
-
-	assert_eq_deep(data._data, [
-		[1, 1, null, 0],
-		[0, 1, null, 0],
-		[0, 1, 1, 2],
-		[0, 1, 2, 2]
-	])
-
-
-func test_fill_empty_vertical():
-	var data = _create([
-		[1, 1, null, 0],
-		[0, 1, null, 0],
-		[0, 0, null, 1],
-		[0, 1, 0, 2]
-	])
-
+func test_fill_empty(params=use_parameters([
+	[
+		[
+			[1, 1, null, 0],
+			[0, 1, null, 0],
+			[0, 0, null, 1],
+			[0, 1, 0, 2]
+		],
+		[[Vector2i(2, 2), 2], [Vector2i(2, 1), 2], [Vector2i(2, 0), 1]],
+	],
+	[
+		[
+			[1, null, null, null],
+			[0, 1, 2, 0],
+			[0, 0, 1, 1],
+			[0, 1, 0, 2]
+		],
+		[[Vector2i(1, 0), 2], [Vector2i(2, 0), 2], [Vector2i(3, 0), 1]],
+	]
+])):
+	var data = _create(params[0])
 	watch_signals(data)
 	data.fill_empty()
 
-	assert_signal_emit_count(data, 'filled', 3)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 0), 1], 2)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 1), 2], 1)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 2), 2], 0)
-
-	assert_eq_deep(data._data, [
-		[1, 1, 1, 0],
-		[0, 1, 2, 0],
-		[0, 0, 2, 1],
-		[0, 1, 0, 2]
-	])
-
-func test_fill_empty_horizontal():
-	var data = _create([
-		[1, null, null, null],
-		[0, 1, 2, 0],
-		[0, 0, 1, 1],
-		[0, 1, 0, 2]
-	])
-
-	watch_signals(data)
-	data.fill_empty()
-
-	assert_signal_emit_count(data, 'filled', 3)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(3, 0), 1], 2)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 0), 2], 1)
-	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(1, 0), 2], 0)
-
-	assert_eq_deep(data._data, [
-		[1, 2, 2, 1],
-		[0, 1, 2, 0],
-		[0, 0, 1, 1],
-		[0, 1, 0, 2]
-	])
+	var fill = params[1]
+	assert_signal_emit_count(data, 'filled', fill.size())
+	for i in fill.size():
+		assert_signal_emitted_with_parameters(data, 'filled', fill[i], i)
 
 func test_swap_not_match():
 	var data = _create([
@@ -217,3 +199,77 @@ func test_swap_and_collapse_horizontal():
 		[2, 2, 4, 1],
 		[1, 0, 0, 2]
 	])
+
+func test_swap_and_collapse_special_matches(params=use_parameters([
+	[
+		[
+			[0, 4, 1, 2],
+			[0, 3, 4, 3],
+			[2, 0, 3, 1],
+			[0, 2, 1, 2]
+		],
+		[Vector2(1, 2), Vector2(0, 2)],
+		[Vector2i(0, 3), Vector2i(0, 2), Vector2i(0, 1), Vector2i(0, 0)],
+		[Vector2i(0, 2), 0, Data.Special.COL]
+	],
+
+	[
+		[
+			[5, 4, 1, 2],
+			[1, 3, 4, 3],
+			[2, 0, 5, 1],
+			[0, 2, 0, 0]
+		],
+		[Vector2(1, 2), Vector2(1, 3)],
+		[Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3)],
+		[Vector2i(1, 3), 0, Data.Special.ROW]
+	],
+
+	[
+		[
+			[5, 4, 1, 2],
+			[1, 0, 4, 3],
+			[2, 0, 5, 1],
+			[0, 2, 0, 0]
+		],
+		[Vector2(0, 3), Vector2(1, 3)],
+		[Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(2, 3), Vector2i(3, 3)],
+		[Vector2i(1, 3), 0, Data.Special.BOMB]
+	],
+
+	[
+		[
+			[5, 4, 1, 2],
+			[1, 0, 4, 3],
+			[0, 2, 0, 0],
+			[5, 0, 3, 5]
+		],
+		[Vector2(0, 2), Vector2(1, 2)],
+		[Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(2, 2), Vector2i(3, 2)],
+		[Vector2i(1, 2), 0, Data.Special.BOMB]
+	],
+
+	[
+		[
+			[5, 0, 1],
+			[1, 0, 4],
+			[0, 2, 5],
+			[5, 0, 2],
+			[5, 0, 3]
+		],
+		[Vector2(0, 2), Vector2(1, 2)],
+		[Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 3), Vector2i(1, 4)],
+		[Vector2i(1, 2), 0, Data.Special.ULT]
+	],
+])):
+	var data = _create(params[0])
+	watch_signals(data)
+
+	var move = params[1]
+	data.swap(move[0], move[1])
+
+	assert_signal_emit_count(data, 'matched', 1)
+	assert_contains_exact(get_signal_parameters(data, 'matched')[0], params[2])
+
+	assert_signal_emit_count(data, 'special_matched', 1)
+	assert_signal_emitted_with_parameters(data, 'special_matched', params[3])

@@ -1,6 +1,13 @@
 class_name Data
 extends Node
 
+enum Special {
+	ROW,
+	COL,
+	BOMB,
+	ULT,
+}
+
 signal invalid_swap(pos, dir)
 signal swapped(pos, dest)
 signal moved(pos, dest)
@@ -8,6 +15,7 @@ signal moved(pos, dest)
 signal filled(pos, value)
 signal created()
 signal matched(pos)
+signal special_matched(pos, value, type)
 
 signal update()
 
@@ -57,21 +65,27 @@ func _print(msg = ''):
 
 func get_matches(x: int, y: int):
 	var piece = get_value(x, y)
+
+	var check = func(pos: Array):
+		var row = _create_match_array(pos)
+		var filtered = _filter_match_array(row, piece)
+		if filtered.size() >= min_match:
+			return filtered.map(func(a): return a["pos"])
+		return null
+
 	if piece != null:
 		if x > 1:
-			var row = _create_match_array([Vector2i(x, y), Vector2i(x-1, y), Vector2i(x-2, y)])
-			var filtered = _filter_match_array(row, piece)
-			if filtered.size() >= min_match:
-				return filtered
+			var row_match = check.call([Vector2i(x, y), Vector2i(x-1, y), Vector2i(x-2, y)])
+			if row_match:
+				return row_match
 		if y > 1:
-			var col = _create_match_array([Vector2i(x, y), Vector2i(x, y-1), Vector2i(x, y-2)])
-			var filtered = _filter_match_array(col, piece)
-			if filtered.size() >= min_match:
-				return filtered
+			var col_match = check.call([Vector2i(x, y), Vector2i(x, y-1), Vector2i(x, y-2)])
+			if col_match:
+				return col_match
 
 	return []
 
-func _create_match_array(pos: Array[Vector2i]):
+func _create_match_array(pos: Array):
 	var arr = []
 	for p in pos:
 		arr.append({"value": get_value(p.x, p.y), "pos": p})
@@ -80,7 +94,7 @@ func _create_match_array(pos: Array[Vector2i]):
 func _filter_match_array(arr: Array, value: int):
 	var filtered = arr.filter(func(a): return a["value"] == value)
 	if filtered.size() > 0:
-		return filtered.map(func(a): return a["pos"])
+		return filtered
 	return []
 
 func get_value(x: int, y: int):
@@ -113,27 +127,84 @@ func swap(pos: Vector2i, dest: Vector2i):
 	_swap_value(pos, dest)
 	swapped.emit(pos, dest)
 	_print('Swap')
-	if not check_matches():
+	if not check_matches(dest):
 		_swap_value(dest, pos)
 		swapped.emit(dest, pos)
 
-func check_matches():
-	var has_matched = false
+func check_matches(dest: Vector2i = Vector2i(-1, -1)):
+	var all_matched = []
 	for y in height:
 		for x in width:
 			var matches = get_matches(x, y)
 			if matches.size() > 0:
 				for m in matches:
-					_set_value(m.x, m.y, null)
-				matched.emit(matches)
-				has_matched = true
+					if not m in all_matched:
+						all_matched.append(m)
 
+	var has_matched = all_matched.size() > 0
 	if has_matched:
+		var special_matches = []
+		for i in all_matched:
+			if i in special_matches:
+				continue
+			
+			var value = get_value(i.x, i.y)
+			var col_matched = []
+			var row_matched = []
+
+			for j in all_matched:
+				var other_value = get_value(j.x, j.y)
+				if value == other_value:
+					if j.x == i.x:
+						col_matched.append(j)
+					if j.y == i.y:
+						row_matched.append(j)
+			
+			var row = row_matched.size()
+			var col = col_matched.size()
+			if row >= 5 or col >= 5:
+				var actual_match = []
+				if row >= 5:
+					_append_unique(actual_match, [row_matched])
+				if col >= 5:
+					_append_unique(actual_match, [col_matched])
+				
+				special_matches.append_array(actual_match)
+				_emit_special(actual_match, dest, Special.ULT)
+			if row >= 3 and col >= 3:
+				var actual_match = []
+				_append_unique(actual_match, [col_matched, row_matched])
+				special_matches.append_array(actual_match)
+				_emit_special(actual_match, dest, Special.BOMB)
+			if col == 4:
+				special_matches.append_array(col_matched)
+				_emit_special(col_matched, dest, Special.COL)
+			if row == 4:
+				special_matches.append_array(row_matched)
+				_emit_special(row_matched, dest, Special.ROW)
+
+		for m in all_matched:
+			_set_value(m.x, m.y, null)
+		matched.emit(all_matched)
 		update.emit()
+		
 		_print('Match')
 		collapse_columns()
 
 	return has_matched
+
+func _append_unique(arr, items: Array):
+	for item in items:
+		for i in item:
+			if not i in arr:
+				arr.append(i)
+
+func _emit_special(matches: Array, dest: Vector2i, type: int):
+	print(dest in matches)
+	print(matches)
+	var pos = dest if dest in matches else matches[0]
+	var value = get_value(pos.x, pos.y)
+	special_matched.emit(pos, value, type)
 
 func collapse_columns(check = true, fill = true):
 	for x in width:
