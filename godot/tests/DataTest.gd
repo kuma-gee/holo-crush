@@ -237,9 +237,9 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[0, 2, 1, 2]
 		],
 		[Vector2(1, 2), Vector2(0, 2)],
-		[Vector2i(0, 2), [Vector2i(0, 3), Vector2i(0, 2), Vector2i(0, 1), Vector2i(0, 0)], Data.Special.COL]
+		[Vector2i(0, 2), [Vector2i(0, 3), Vector2i(0, 2), Vector2i(0, 1), Vector2i(0, 0)], Data.Special.COL],
+		Vector2i(0, 3),
 	],
-
 	[
 		[
 			[5, 4, 1, 2],
@@ -248,7 +248,8 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[0, 2, 0, 0]
 		],
 		[Vector2(1, 2), Vector2(1, 3)],
-		[Vector2i(1, 3), [Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3)], Data.Special.ROW]
+		[Vector2i(1, 3), [Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3)], Data.Special.ROW],
+		Vector2i(1, 3)
 	],
 
 	[
@@ -259,7 +260,8 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[0, 2, 0, 0]
 		],
 		[Vector2(0, 3), Vector2(1, 3)],
-		[Vector2i(1, 3), [Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(2, 3), Vector2i(3, 3)], Data.Special.BOMB]
+		[Vector2i(1, 3), [Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(2, 3), Vector2i(3, 3)], Data.Special.BOMB],
+		Vector2i(1, 3)
 	],
 
 	[
@@ -270,7 +272,8 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[5, 0, 3, 5]
 		],
 		[Vector2(0, 2), Vector2(1, 2)],
-		[Vector2i(1, 2), [Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(2, 2), Vector2i(3, 2)], Data.Special.BOMB]
+		[Vector2i(1, 2), [Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(2, 2), Vector2i(3, 2)], Data.Special.BOMB],
+		Vector2i(1, 3)
 	],
 
 	[
@@ -282,7 +285,8 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[5, 0, 3]
 		],
 		[Vector2(0, 2), Vector2(1, 2)],
-		[Vector2i(1, 2), [Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 3), Vector2i(1, 4)], Data.Special.ULT]
+		[Vector2i(1, 2), [Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 3), Vector2i(1, 4)], Data.Special.ULT],
+		Vector2i(1, 4)
 	],
 	[
 		[
@@ -293,7 +297,8 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[2, 5, 0, 3]
 		],
 		[Vector2(3, 2), Vector2(2, 2)],
-		[Vector2i(2, 2), [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3), Vector2i(2, 4), Vector2i(0, 2), Vector2i(1, 2)], Data.Special.ULT]
+		[Vector2i(2, 2), [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3), Vector2i(2, 4), Vector2i(0, 2), Vector2i(1, 2)], Data.Special.ULT],
+		Vector2i(2, 4)
 	],
 ])):
 	var data = _create(params[0])
@@ -312,6 +317,9 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 	assert_eq(actual[0], expected[0])
 	assert_contains_exact(actual[1], expected[1])
 	assert_eq(actual[2], expected[2])
+
+	assert_eq(data._specials, {params[3]: expected[2]})
+	print(data._specials)
 
 func test_activate_special():
 	var data = _create([

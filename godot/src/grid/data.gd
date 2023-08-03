@@ -113,13 +113,17 @@ func _set_value(x: int, y: int, value):
 
 	_data[y][x] = value
 
-func _move_special(pos: Vector2i, target: Vector2i):
-	if not pos in _specials:
-		return
-	
-	var value = _specials[pos]
+func _swap_special(pos: Vector2i, target: Vector2i):
+	var v1 = _specials[pos] if pos in _specials else null
+	var v2 = _specials[target] if target in _specials else null
+
 	_specials.erase(pos)
-	_specials[target] = value
+	_specials.erase(target)
+
+	if v1 != null:
+		_specials[target] = v1
+	if v2 != null:
+		_specials[pos] = v2
 
 func _is_inside(x: int, y: int):
 	if x < 0 or x >= width:
@@ -134,8 +138,7 @@ func _swap_value(p1: Vector2i, p2: Vector2i):
 	var temp = get_value(p2.x, p2.y)
 	_set_value(p2.x, p2.y, get_value(p1.x, p1.y))
 	_set_value(p1.x, p1.y, temp)
-	_move_special(p1, p2)
-	_move_special(p2, p1)
+	_swap_special(p1, p2)
 
 func swap(pos: Vector2i, dest: Vector2i):
 	var value = get_value(pos.x, pos.y)
