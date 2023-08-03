@@ -22,10 +22,10 @@ signal update()
 @export var width := 9
 @export var height := 9
 @export var min_match := 3
-@export var debug := false
 
 var _data: Array = []
 var _pieces: Array = []
+var _logger = Logger.new("Data")
 
 # Don't touch! Only for testing
 func set_data(d):
@@ -58,11 +58,10 @@ func refill_data():
 	_print('Refill')
 
 func _print(msg = ''):
-	if debug:
-		print('------- %s --------' % msg)
-		for x in _data:
-			print(x)
-		print("---------------------------")
+	_logger.debug('------- %s --------' % msg)
+	for x in _data:
+		_logger.debug(x)
+	_logger.debug("---------------------------")
 
 func get_matches(x: int, y: int):
 	var piece = get_value(x, y)
@@ -101,16 +100,25 @@ func _filter_match_array(arr: Array, value: int):
 	return []
 
 func get_value(x: int, y: int):
-	if x < 0 or x >= width:
+	if not _is_inside(x, y):
 		return null
-	
-	if y < 0 or y >= height:
-		return null
-
 	return _data[y][x]
 
 func _set_value(x: int, y: int, value):
+	if not _is_inside(x, y):
+		_logger.warn("Trying to set invalid position %s/%s to %s" % [x, y, value])
+		return
+
 	_data[y][x] = value
+
+func _is_inside(x: int, y: int):
+	if x < 0 or x >= width:
+		return false
+	
+	if y < 0 or y >= height:
+		return false
+
+	return true
 
 func _swap_value(p1: Vector2i, p2: Vector2i):
 	var temp = get_value(p2.x, p2.y)
@@ -118,8 +126,8 @@ func _swap_value(p1: Vector2i, p2: Vector2i):
 	_set_value(p1.x, p1.y, temp)
 
 func swap(pos: Vector2i, dest: Vector2i):
-	var piece = get_value(pos.x, pos.y)
-	if piece == null:
+	var value = get_value(pos.x, pos.y)
+	if value == null:
 		return # Invalid move, no animation needed either
 
 	var other = get_value(dest.x, dest.y)
@@ -146,7 +154,6 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 					counts[m] += 1
 
 
-	print(counts)
 	var has_matched = counts.size() > 0
 	if has_matched:
 		var all_matched = counts.keys()
