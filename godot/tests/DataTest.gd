@@ -312,3 +312,14 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 	assert_eq(actual[0], expected[0])
 	assert_contains_exact(actual[1], expected[1])
 	assert_eq(actual[2], expected[2])
+
+func test_activate_special():
+	var data = _create([
+		[0, 4, 1, 2],
+		[0, 3, 4, 3],
+		[2, 0, 3, 1],
+		[0, 0, 1, 0]
+	])
+
+	watch_signals(data)
+	data.swap(Vector2(1, 2), Vector2(0, 2))
