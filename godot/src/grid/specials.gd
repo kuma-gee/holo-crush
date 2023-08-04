@@ -85,7 +85,7 @@ func activate_specials(p: Vector2i, data: GridData):
 			Type.ROW: return _get_row(p, data)
 			Type.COL: return _get_col(p, data)
 			Type.BOMB: return _get_surrounding(p, data)
-	
+			Type.COLOR_BOMB: return _get_same_colors(p, data)
 	
 	return []
 
@@ -106,3 +106,12 @@ func _get_surrounding(p: Vector2i, data: GridData):
 	var result = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT, Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]
 	return result.map(func(d): return p + d).filter(func(d): return data.is_inside(d.x, d.y))
 
+func _get_same_colors(p: Vector2i, data: GridData):
+	var value = data.get_value_v(p)
+	var result = []
+	for y in data.height:
+		for x in data.width:
+			var v = data.get_value(x, y)
+			if v == value:
+				result.append(Vector2i(x, y))
+	return result

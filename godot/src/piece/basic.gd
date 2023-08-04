@@ -7,11 +7,11 @@ extends Piece
 @export var col_texture: Texture2D
 @export var bomb_texture: Texture2D
 
-func _to_special(special: MatchGrid.Special):
+func _to_special(special: Specials.Type):
 	var texture = normal_texture
 	match special:
-		MatchGrid.Special.ROW: texture = row_texture
-		MatchGrid.Special.COL: texture = col_texture
-		MatchGrid.Special.BOMB: texture = bomb_texture
+		Specials.Type.ROW: texture = row_texture
+		Specials.Type.COL: texture = col_texture
+		Specials.Type.BOMB: texture = bomb_texture
 	
 	sprite.texture = texture

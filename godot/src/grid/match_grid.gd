@@ -169,8 +169,7 @@ func _create_special(matches: Array, dest: Vector2i, type: int):
 
 
 func _remove_value(p: Vector2i):
-	var removed = [p]
-	_data.set_value_v(p, null)
+	var removed = []
 
 	var fields = _specials.activate_specials(p, _data)
 	if fields.size() > 0:
@@ -178,6 +177,12 @@ func _remove_value(p: Vector2i):
 		for sp in fields:
 			if sp != p:
 				_append_unique(removed, [_remove_value(sp)])
+
+	# Specials might need the current value, so remove it after
+	_data.set_value_v(p, null)
+	if not p in removed:
+		removed.append(p)
+
 	return removed
 
 func _append_unique(arr, items: Array):

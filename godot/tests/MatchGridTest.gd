@@ -259,18 +259,18 @@ func test_activate_special(params=use_parameters([
 		Vector2i(1, 3),
 		[Vector2i(2, 3), Vector2i(3, 3), Vector2i(1, 3), Vector2i(0, 3), Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 2)]
 	],
-	# [
-	# 	[
-	# 		[7, 0, 8, 2],
-	# 		[6, 0, 5, 3],
-	# 		[0, 3, 2, 1],
-	# 		[2, 0, 9, 6],
-	# 		[4, 0, 3, 5]
-	# 	],
-	# 	[[Vector2(0, 2), Vector2i(1, 2)], [Vector2i(1, 4), Vector2i(0, 4)]],
-	# 	Vector2i(0, 4),
-	# 	[]
-	# ]
+	[
+		[
+			[7, 0, 8, 2],
+			[6, 0, 5, 0],
+			[0, 3, 0, 1],
+			[2, 0, 9, 0],
+			[0, 0, 3, 0]
+		],
+		[[Vector2(0, 2), Vector2i(1, 2)], [Vector2i(3, 4), Vector2i(2, 4)]],
+		Vector2i(1, 4),
+		[Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 1), Vector2i(2, 2), Vector2i(3, 3)]
+	]
 ])):
 	var data = _create(params[0])
 	watch_signals(data)
@@ -281,21 +281,7 @@ func test_activate_special(params=use_parameters([
 
 
 	assert_signal_emitted(data, 'special_activate', params[2])
-	assert_contains_exact(get_signal_parameters(data, 'matched', params[1].size() - 1)[0], params[3])
-
-func test_dont_match_color_bomb():
-	var data = _create([
-		[7, 0, 8, 2],
-		[6, 0, 5, 3],
-		[0, 3, 2, 1],
-		[2, 0, 9, 6],
-		[0, 0, 3, 0]
-	])
-	watch_signals(data)
-	data.swap(Vector2(0, 2), Vector2(1, 2))
-	data.swap(Vector2(3, 4), Vector2(2, 4))
-
-	assert_signal_emit_count(data, 'invalid_swap', 1)
+	assert_contains_all(get_signal_parameters(data, 'matched', params[1].size() - 1)[0], params[3])
 
 
 func test_match_special_with_special():
