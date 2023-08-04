@@ -25,13 +25,17 @@ func _init(w: int, h: int, init_data: Array = []):
 func get_data():
 	return _data.duplicate(true)
 
-func refill():
+func refill(exclude: Array = []):
 	for y in height:
 		for x in width:
+			var pos = Vector2i(x, y)
+			if pos in exclude:
+				continue
+
 			var loops = 0
 			fill_random(x, y)
 			
-			while get_matches(x, y).size() > 0 and loops < 100: 
+			while get_matches(x, y).size() > 0 and loops < 300: 
 				loops += 1
 				fill_random(x, y)
 	print_data('Refill')

@@ -150,9 +150,13 @@ func _refresh_slots():
 	var called = {}
 	for y in range(data.height):
 		for x in range(data.width):
-			var type = data.get_value(x, y)
 			var pos = Vector2i(x, y)
+			var type = data.get_value(x, y)
+			var special = data.get_special_type(pos)
+
 			var slot = _get_slot(pos)
+			if special != null:
+				continue
 
 			called[pos] = 0
 			var node = _spawn_piece(type)

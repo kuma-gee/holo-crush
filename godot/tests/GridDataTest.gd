@@ -103,3 +103,15 @@ func test_refill():
 			[0, 2, 1, 1],
 			[0, 1, 0, 2]
 		])
+
+func test_refill_exclude():
+	var data = _create([
+		[1, 1, 1, 0],
+		[0, 1, 2, 0],
+		[0, 2, 1, 1],
+		[0, 1, 0, 2]
+	])
+
+	for _i in range(10):
+		data.refill([Vector2i(0, 0)])
+		assert_eq(data.get_value(0, 0), 1)

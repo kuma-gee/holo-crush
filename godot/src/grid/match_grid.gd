@@ -64,6 +64,11 @@ func is_deadlocked():
 
 	return true
 
+func get_special_type(p: Vector2i):
+	if not p in _specials:
+		return null
+	return _specials[p]
+
 func get_value(x: int, y: int):
 	return _data.get_value(x, y)
 
@@ -101,7 +106,8 @@ func swap(pos: Vector2i, dest: Vector2i):
 			swapped.emit(dest, pos)
 	else:
 		if is_deadlocked():
-			_data.refill()
+			_data.refill(_specials.keys())
+			check_matches() # Usually does not contain matches, but just in case, let it be a win for the player
 			refilled.emit()
 		_data.print_data('Swap')
 

@@ -23,6 +23,8 @@ enum Type {
 @export var type: Type
 @export var slight_move_distance := 10
 
+var special: MatchGrid.Special
+
 func move(dest: Vector2):
 	var tw = create_tween()
 	tw.tween_property(self, "global_position", dest, 0.5).set_trans(Tween.TRANS_CIRC).set_ease(Tween.EASE_IN_OUT)
@@ -49,7 +51,8 @@ func slight_move(dir: Vector2):
 	tw.tween_property(self, "global_position", pos + dir * slight_move_distance, 0.25).set_trans(Tween.TRANS_BACK)
 	tw.tween_property(self, "global_position", pos, 0.25)
 
-func change_to(special: MatchGrid.Special):
+func change_to(s: MatchGrid.Special):
+	special = s
 	var tw = create_tween()
 	tw.tween_property(self, "rotation", TAU, 1.0).set_trans(Tween.TRANS_BACK)
 	tw.finished.connect(func(): change_done.emit())
