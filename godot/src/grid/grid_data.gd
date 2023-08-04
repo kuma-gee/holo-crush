@@ -3,6 +3,7 @@ class_name GridData
 var _data: Array = []
 var _logger = Logger.new("GridData")
 
+var min_match := 3
 var width := 0
 var height := 0
 
@@ -60,3 +61,56 @@ func _is_inside(x: int, y: int):
 		return false
 
 	return true
+
+func get_match_counts():
+	var counts = {}
+	for y in height:
+		for x in width:
+			var matches = get_matches(x, y)
+			if matches.size() > 0:
+				for m in matches:
+					if not m in counts:
+						counts[m] = 0
+					counts[m] += 1
+	return counts
+
+
+func get_matches(x: int, y: int):
+	var piece = get_value(x, y)
+
+	var check = func(pos: Array):
+		var row = _create_match_array(pos)
+		var filtered = _filter_match_array(row, piece)
+		if filtered.size() >= min_match:
+			return filtered
+		return null
+
+	if piece != null:
+		var matches = []
+		if x > 1:
+			var row_match = check.call([Vector2i(x, y), Vector2i(x-1, y), Vector2i(x-2, y)])
+			if row_match:
+				for p in row_match:
+					if not p in matches:
+						matches.append(p)
+		if y > 1:
+			var col_match = check.call([Vector2i(x, y), Vector2i(x, y-1), Vector2i(x, y-2)])
+			if col_match:
+				for p in col_match:
+					if not p in matches:
+						matches.append(p)
+		return matches
+
+	return []
+
+func _create_match_array(pos: Array):
+	var arr = []
+	for p in pos:
+		arr.append({"value": get_value(p.x, p.y), "pos": p})
+	return arr
+
+func _filter_match_array(arr: Array, value: int):
+	var filtered = arr.filter(func(a): return a["value"] == value)
+	if filtered.size() > 0:
+		return filtered.map(func(a): return a["pos"])
+	return []

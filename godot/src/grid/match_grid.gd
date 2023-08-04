@@ -38,6 +38,7 @@ func get_data():
 func create_data(pieces: Array):
 	_pieces = pieces.duplicate()
 	_data = GridData.new(width, height)
+	_data.min_match = min_match
 	_specials = {}
 	refill_data()
 	created.emit()
@@ -48,49 +49,13 @@ func refill_data():
 			var loops = 0
 			_fill_random(x, y)
 			
-			while get_matches(x, y).size() > 0 and loops < 100: 
+			while _data.get_matches(x, y).size() > 0 and loops < 100: 
 				loops += 1
 				_fill_random(x, y)
 	_data.print_data('Refill')
 
 func is_deadlocked():
 	return false
-
-func get_matches(x: int, y: int, data: = _data):
-	var piece = get_value(x, y)
-
-	var check = func(pos: Array):
-		var row = _create_match_array(pos)
-		var filtered = _filter_match_array(row, piece)
-		if filtered.size() >= min_match:
-			return filtered
-		return null
-
-	if piece != null:
-		var matches = []
-		if x > 1:
-			var row_match = check.call([Vector2i(x, y), Vector2i(x-1, y), Vector2i(x-2, y)])
-			if row_match:
-				_append_unique(matches, [row_match])
-		if y > 1:
-			var col_match = check.call([Vector2i(x, y), Vector2i(x, y-1), Vector2i(x, y-2)])
-			if col_match:
-				_append_unique(matches, [col_match])
-		return matches
-
-	return []
-
-func _create_match_array(pos: Array):
-	var arr = []
-	for p in pos:
-		arr.append({"value": get_value(p.x, p.y), "pos": p})
-	return arr
-
-func _filter_match_array(arr: Array, value: int):
-	var filtered = arr.filter(func(a): return a["value"] == value)
-	if filtered.size() > 0:
-		return filtered.map(func(a): return a["pos"])
-	return []
 
 func get_value(x: int, y: int):
 	return _data.get_value(x, y)
@@ -131,18 +96,9 @@ func swap(pos: Vector2i, dest: Vector2i):
 		_data.print_data('Swap')
 
 func check_matches(dest: Vector2i = Vector2i(-1, -1)):
-	var counts = {}
-	for y in height:
-		for x in width:
-			var matches = get_matches(x, y)
-			if matches.size() > 0:
-				for m in matches:
-					if not m in counts:
-						counts[m] = 0
-					counts[m] += 1
-
-
+	var counts = _data.get_match_counts()
 	var has_matched = counts.size() > 0
+
 	if has_matched:
 		var all_matched = counts.keys()
 		all_matched.sort_custom(func(a, b): return counts[a] > counts[b])
