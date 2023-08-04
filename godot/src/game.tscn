@@ -53,8 +53,8 @@ layout_mode = 2
 
 [node name="Data" type="Node" parent="."]
 script = ExtResource("4_egjxx")
-width = 4
-height = 4
+width = 6
+height = 8
 debug = true
 
 [node name="Field" type="Node2D" parent="."]

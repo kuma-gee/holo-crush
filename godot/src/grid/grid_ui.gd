@@ -227,7 +227,7 @@ func _remove_matched(matched: Array, special_matches: Array):
 		done[p] = 0
 		if done.size() >= called.size():
 			match_finished.emit()
-			print("Done %s/%s" % [called.size(), done.size()])
+			logger.debug("Done %s/%s" % [called.size(), done.size()])
 
 	logger.debug("Staring match %s - %s" % [matched, special_matches])
 
