@@ -5,7 +5,7 @@ enum Special {
 	ROW,
 	COL,
 	BOMB,
-	ULT,
+	COLOR_BOMB,
 }
 
 signal invalid_swap(pos, dir)
@@ -184,7 +184,7 @@ func _get_special_match_data(all_matched: Array, dest: Vector2i):
 			if col >= min_match:
 				_append_unique(actual_match, [col_matched])
 			
-			type = Special.ULT
+			type = Special.COLOR_BOMB
 		elif row >= 3 and col >= 3:
 			_append_unique(actual_match, [col_matched, row_matched])
 			type = Special.BOMB
@@ -226,6 +226,7 @@ func _activate_special(p: Vector2i, type: Special):
 	match type:
 		Special.ROW: return _get_row(p)
 		Special.COL: return _get_col(p)
+		Special.BOMB: return _get_surrounding(p)
 	
 	return []
 
@@ -242,6 +243,10 @@ func _get_col(p: Vector2i):
 	for y in height:
 		result.append(Vector2i(p.x, y))
 	return result
+
+func _get_surrounding(p: Vector2i):
+	var result = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT, Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]
+	return result.map(func(d): return p + d).filter(func(d): return _data.is_inside(d.x, d.y))
 
 
 func _append_unique(arr, items: Array):

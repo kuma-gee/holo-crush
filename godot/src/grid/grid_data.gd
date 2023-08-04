@@ -67,7 +67,7 @@ func get_value_v(p: Vector2i):
 	return get_value(p.x, p.y)
 
 func get_value(x: int, y: int):
-	if not _is_inside(x, y):
+	if not is_inside(x, y):
 		return null
 	return _data[y][x]
 
@@ -75,21 +75,21 @@ func set_value_v(p: Vector2i, value):
 	set_value(p.x, p.y, value)
 
 func set_value(x: int, y: int, value):
-	if not _is_inside(x, y):
+	if not is_inside(x, y):
 		_logger.warn("Trying to set invalid position %s/%s to %s" % [x, y, value])
 		return
 
 	_data[y][x] = value
 
 func swap_value(p1: Vector2i, p2: Vector2i):
-	if not _is_inside(p1.x, p1.y) or not _is_inside(p2.x, p2.y):
+	if not is_inside(p1.x, p1.y) or not is_inside(p2.x, p2.y):
 		return
 
 	var temp = get_value_v(p2)
 	set_value_v(p2, get_value_v(p1))
 	set_value_v(p1, temp)
 
-func _is_inside(x: int, y: int):
+func is_inside(x: int, y: int):
 	if x < 0 or x >= width:
 		return false
 	

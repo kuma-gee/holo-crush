@@ -198,7 +198,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[5, 0, 3]
 		],
 		[Vector2(0, 2), Vector2(1, 2)],
-		[Vector2i(1, 2), [Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 3), Vector2i(1, 4)], MatchGrid.Special.ULT],
+		[Vector2i(1, 2), [Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 3), Vector2i(1, 4)], MatchGrid.Special.COLOR_BOMB],
 		Vector2i(1, 4)
 	],
 	[
@@ -210,7 +210,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[2, 5, 0, 3]
 		],
 		[Vector2(3, 2), Vector2(2, 2)],
-		[Vector2i(2, 2), [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3), Vector2i(2, 4), Vector2i(0, 2), Vector2i(1, 2)], MatchGrid.Special.ULT],
+		[Vector2i(2, 2), [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3), Vector2i(2, 4), Vector2i(0, 2), Vector2i(1, 2)], MatchGrid.Special.COLOR_BOMB],
 		Vector2i(2, 4)
 	],
 ])):
@@ -233,20 +233,76 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 
 	assert_eq_deep(data._specials, {params[3]: expected[2]})
 
-func test_activate_special():
-	var data = _create([
-		[0, 2, 1, 2],
-		[0, 3, 4, 3],
-		[2, 0, 3, 1],
-		[0, 0, 4, 0]
-	])
-
+func test_activate_special(params=use_parameters([
+	[
+		[
+			[0, 2, 1, 2],
+			[0, 3, 4, 3],
+			[1, 0, 3, 1],
+			[0, 0, 2, 0]
+		],
+		[[Vector2(1, 2), Vector2(0, 2)], [Vector2(3, 3), Vector2(2, 3)]],
+		Vector2i(0, 3),
+		[Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3)]
+	],
+	[
+		[
+			[8, 7, 6, 5],
+			[0, 0, 4, 0],
+			[5, 0, 0, 1],
+			[7, 3, 0, 3],
+		],
+		[[Vector2(2, 2), Vector2i(2, 1)], [Vector2i(1, 2), Vector2i(2, 2)]],
+		Vector2i(2, 0),
+		[Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3)]
+	],
+	[
+		[
+			[7, 0, 8, 2],
+			[6, 0, 5, 3],
+			[0, 1, 0, 1],
+			[4, 0, 0, 0]
+		],
+		[[Vector2(1, 3), Vector2i(1, 2)], [Vector2i(1, 2), Vector2i(1, 3)]],
+		Vector2i(1, 3),
+		[Vector2i(2, 3), Vector2i(3, 3), Vector2i(1, 3), Vector2i(0, 3), Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 2)]
+	],
+	# [
+	# 	[
+	# 		[7, 0, 8, 2],
+	# 		[6, 0, 5, 3],
+	# 		[0, 3, 2, 1],
+	# 		[2, 0, 9, 6],
+	# 		[4, 0, 3, 5]
+	# 	],
+	# 	[[Vector2(0, 2), Vector2i(1, 2)], [Vector2i(1, 4), Vector2i(0, 4)]],
+	# 	Vector2i(0, 4),
+	# 	[]
+	# ]
+])):
+	var data = _create(params[0])
 	watch_signals(data)
-	data.swap(Vector2(1, 2), Vector2(0, 2))
-	data.swap(Vector2(3, 3), Vector2(2, 3))
+	for swap in params[1]:
+		data.swap(swap[0], swap[1])
+		for x in data.get_data():
+			print(x)
 
-	assert_signal_emitted(data, 'special_activate', [Vector2i(0, 3)])
-	assert_contains_exact(get_signal_parameters(data, 'matched')[0], [Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3)])
+	assert_signal_emitted(data, 'special_activate', params[2])
+	assert_contains_exact(get_signal_parameters(data, 'matched', params[1].size() - 1)[0], params[3])
+
+func test_dont_match_color_bomb():
+	var data = _create([
+		[7, 0, 8, 2],
+		[6, 0, 5, 3],
+		[0, 3, 2, 1],
+		[2, 0, 9, 6],
+		[0, 0, 3, 0]
+	])
+	watch_signals(data)
+	data.swap(Vector2(0, 2), Vector2(1, 2))
+	data.swap(Vector2(3, 4), Vector2(2, 4))
+
+	assert_signal_emit_count(data, 'invalid_swap', 1)
 
 
 func test_match_special_with_special():
