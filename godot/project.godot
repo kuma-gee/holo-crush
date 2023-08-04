@@ -18,8 +18,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Env="*res://addons/debug/Env.gd"
 SceneManager="*res://addons/scene-manager/SceneManager.tscn"
+Env="*res://addons/debug/Env.gd"
 Debug="*res://addons/debug/Debug.tscn"
 
 [debug]
