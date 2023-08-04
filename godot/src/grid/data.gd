@@ -23,6 +23,7 @@ signal update()
 @export var width := 9
 @export var height := 9
 @export var min_match := 3
+@export var debug := false
 
 var _data: Array = []
 var _specials = {}
@@ -65,6 +66,9 @@ func _print(msg = ''):
 	for x in _data:
 		_logger.debug(str(x))
 	_logger.debug("---------------------------")
+
+func is_deadlocked():
+	return false
 
 func get_matches(x: int, y: int):
 	var piece = get_value(x, y)
@@ -155,8 +159,9 @@ func swap(pos: Vector2i, dest: Vector2i):
 	swapped.emit(pos, dest)
 	_print('Swap')
 	if not check_matches(dest):
-		_swap_value(dest, pos)
-		swapped.emit(dest, pos)
+		if not debug:
+			_swap_value(dest, pos)
+			swapped.emit(dest, pos)
 
 func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 	var counts = {}
@@ -183,7 +188,8 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 		for m in all_matched:
 			if m in special_matches:
 				for l in _remove_value(m):
-					if not l in remove_matched and not l in special_matches:
+					var created_special_destroyed_by_other = l in create_specials and l != m
+					if not l in remove_matched and (not l in special_matches or created_special_destroyed_by_other):
 						remove_matched.append(l)
 			else: # All others
 				_append_unique(remove_matched, [_remove_value(m)])
@@ -195,6 +201,10 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 
 			_set_value(special.x, special.y, value)
 			_specials[special] = type
+			if special in remove_matched: # Can be immediately removed by another special activation
+				for l in _remove_value(special):
+					if not l in remove_matched:
+						remove_matched.append(l)
 		
 		matched.emit(remove_matched)
 		update.emit()

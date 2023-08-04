@@ -99,7 +99,7 @@ func _ready():
 	
 	data.create_data(pieces)
 
-	Engine.time_scale = 0.4
+	#Engine.time_scale = 0.4
 
 func _update_slots():
 	await get_tree().create_timer(0.1).timeout
@@ -210,18 +210,23 @@ func _move_collapsed(moves):
 	await collapse_finished
 
 func _remove_matched(matched: Array, special_matches: Array):
-	var called = []
-	var done = []
+	var called = {}
+	var done = {}
 
-	var counter_fn = func():
-		done.append(0)
+	var counter_fn = func(p):
+		logger.debug("Match finished %s" % p)
+		done[p] = 0
 		if done.size() >= called.size():
 			match_finished.emit()
 			print("Done %s/%s" % [called.size(), done.size()])
 
-	# TODO: check if special matching special works
-
 	logger.debug("Staring match %s - %s" % [matched, special_matches])
+
+	var all_matched = []
+	for m in matched:
+		for p in m:
+			all_matched.append(p)
+
 	for x in special_matches:
 		var dest = x[0]
 		var affected = x[1]
@@ -232,23 +237,26 @@ func _remove_matched(matched: Array, special_matches: Array):
 		for pos in affected:
 			if pos == dest:
 				continue
-			called.append(pos)
+			called[pos] = 0
 			var slot = _get_slot(pos) as Slot
 			slot.move_match(target)
-			slot.match_done.connect(counter_fn)
+			slot.match_done.connect(func(): counter_fn.call(pos))
 		
-		called.append(dest)
-		var piece = _spawn_piece(val)
-		target.change_special(type, piece)
-		target.change_done.connect(counter_fn)
+		if not dest in all_matched:
+			called[dest] = 0
+			var piece = _spawn_piece(val)
+			target.change_special(type, piece)
+			target.change_done.connect(func(): counter_fn.call(dest))
+		else:
+			pass # TODO: activate created special immediately
 	
-	for m in matched:
-		for p in m:
-			called.append(p)
-			var slot = _get_slot(p) as Slot
-			slot.matched()
-			slot.match_done.connect(counter_fn)
+	for p in all_matched:
+		called[p] = 0
+		var slot = _get_slot(p) as Slot
+		slot.matched()
+		slot.match_done.connect(func(): counter_fn.call(p))
 		
+	logger.debug("Waiting for %s" % [called])
 	await match_finished
 
 	for p in called:

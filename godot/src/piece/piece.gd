@@ -24,7 +24,7 @@ enum Type {
 
 func move(dest: Vector2):
 	var tw = create_tween()
-	tw.tween_property(self, "global_position", dest, 0.5).set_trans(Tween.TRANS_BACK)#.set_ease(Tween.EASE_IN_OUT)
+	tw.tween_property(self, "global_position", dest, 0.5).set_trans(Tween.TRANS_CIRC).set_ease(Tween.EASE_IN_OUT)
 	tw.finished.connect(func(): move_done.emit())
 
 func matched():

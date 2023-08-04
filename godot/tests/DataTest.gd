@@ -372,7 +372,7 @@ func test_match_special_with_special():
 	])
 	data.swap(Vector2(1, 3), Vector2(1, 4))
 
-	assert_signal_emitted(data, 'special_activate', [Vector2i(1, 4)])
+	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(1, 4)])
 	assert_contains_exact(get_signal_parameters(data, 'matched')[0], [Vector2i(4, 4)])
 
 	var actual = get_signal_parameters(data, 'special_matched')
@@ -388,3 +388,56 @@ func test_match_special_with_special():
 		[4, 2, 2, 1, 4],
 		[1, 0, 5, 3, 1],
 	])
+
+func test_special_activation_immediately_after_matched():
+	seed(999)
+	var data = _create([
+		[4, 0, 5, 2],
+		[3, 0, 4, 5],
+		[5, 2, 0, 1],
+		[0, 0, 5, 0],
+		[5, 1, 0, 3],
+	])
+
+	watch_signals(data)
+	data.swap(Vector2(2, 2), Vector2(1, 2))
+
+	assert_eq_deep(data._data, [
+		[4, 0, 5, 2],
+		[3, 5, 4, 5],
+		[5, 4, 2, 1],
+		[0, 0, 5, 0],
+		[5, 1, 0, 3],
+	])
+	data.swap(Vector2(2, 4), Vector2(2, 3))
+
+	assert_signal_emit_count(data, 'special_activate', 2)
+	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(1, 3)], 0)
+	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(2, 3)], 1)
+
+	assert_signal_emit_count(data, 'matched', 2)
+	assert_contains_exact(get_signal_parameters(data, 'matched')[0], [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3), Vector2i(2, 4)])
+
+# func test_deadlocked(params=use_parameters([
+# 	[
+# 		[
+# 			[2, 0, 2, 4],
+# 			[2, 2, 1, 2],
+# 			[1, 3, 4, 3],
+# 			[2, 2, 3, 1]
+# 		],
+# 		false
+# 	],
+
+# 	[
+# 		[
+# 			[2, 0, 5, 4],
+# 			[5, 2, 1, 2],
+# 			[1, 5, 4, 3],
+# 			[2, 2, 3, 1]
+# 		],
+# 		true,
+# 	]
+# ])):
+# 	var data = _create(params[0])
+# 	assert_eq(data.is_deadlocked(), params[1])
