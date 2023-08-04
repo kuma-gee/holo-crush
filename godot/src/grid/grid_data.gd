@@ -24,6 +24,9 @@ func _create_new_empty(w: int, h: int):
 		data[y].resize(w)
 	return data
 
+func duplicate() -> GridData:
+	return GridData.new(width, height, _data.duplicate(true))
+
 func print_data(msg = ''):
 	_logger.debug('------- %s --------' % msg)
 	for x in _data:
@@ -91,14 +94,12 @@ func get_matches(x: int, y: int):
 			var row_match = check.call([Vector2i(x, y), Vector2i(x-1, y), Vector2i(x-2, y)])
 			if row_match:
 				for p in row_match:
-					if not p in matches:
-						matches.append(p)
+					matches.append(p)
 		if y > 1:
 			var col_match = check.call([Vector2i(x, y), Vector2i(x, y-1), Vector2i(x, y-2)])
 			if col_match:
 				for p in col_match:
-					if not p in matches:
-						matches.append(p)
+					matches.append(p)
 		return matches
 
 	return []
