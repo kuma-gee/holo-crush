@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cmwklckfgwegu"]
+[gd_scene load_steps=9 format=3 uid="uid://cmwklckfgwegu"]
 
 [ext_resource type="PackedScene" uid="uid://c0o3d7dki4axs" path="res://src/piece/ina.tscn" id="1_hiotm"]
 [ext_resource type="Script" path="res://src/piece/basic.gd" id="2_1hvhb"]
@@ -6,6 +6,15 @@
 [ext_resource type="Texture2D" uid="uid://ctu0lyg156266" path="res://assets/Piece__Basic_Row.png" id="3_6fepw"]
 [ext_resource type="Texture2D" uid="uid://ced26cjexblnh" path="res://assets/Piece__Basic_Col.png" id="4_k8n1j"]
 [ext_resource type="Texture2D" uid="uid://c6vm2u4qhfw8b" path="res://assets/Piece__Basic_Bomb.png" id="6_2wluf"]
+[ext_resource type="Shader" path="res://src/piece/rainbow.gdshader" id="7_wjrow"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yj06x"]
+shader = ExtResource("7_wjrow")
+shader_parameter/speed = 2.5
+shader_parameter/count = 5.0
+shader_parameter/strength = 1.0
+shader_parameter/smoothing = 0.5
+shader_parameter/size = 0.52
 
 [node name="BasicBlue" instance=ExtResource("1_hiotm")]
 script = ExtResource("2_1hvhb")
@@ -14,6 +23,13 @@ row_texture = ExtResource("3_6fepw")
 col_texture = ExtResource("4_k8n1j")
 bomb_texture = ExtResource("6_2wluf")
 
-[node name="Sprite2D" parent="." index="0"]
+[node name="BackColor" type="ColorRect" parent="." index="0"]
+material = SubResource("ShaderMaterial_yj06x")
+offset_left = -80.0
+offset_top = -80.0
+offset_right = 80.0
+offset_bottom = 80.0
+
+[node name="Sprite2D" parent="." index="1"]
 modulate = Color(0, 0.662745, 0.811765, 1)
 texture = ExtResource("2_la2jm")
