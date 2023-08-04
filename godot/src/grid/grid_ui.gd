@@ -22,7 +22,7 @@ const PIECE_MAP := {
 }
 
 @export var slot_scene: PackedScene
-@export var data: Data
+@export var data: MatchGrid
 @export var pieces: Array[Piece.Type]
 @export var pieces_root: Node2D
 

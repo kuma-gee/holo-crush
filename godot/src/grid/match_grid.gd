@@ -27,35 +27,41 @@ signal update()
 
 var _data: GridData
 var _specials = {}
-var _pieces: Array = []
 
 # Don't touch! Only for testing
 func set_data(d):
 	_data = d
 func get_data():
-	return _data._data
+	return _data.get_data()
 
-func create_data(pieces: Array):
-	_pieces = pieces.duplicate()
-	_data = GridData.new(width, height)
-	_data.min_match = min_match
+func create_data(values: Array, init: Array = []):
 	_specials = {}
-	refill_data()
+	_data = GridData.new(width, height, init)
+	_data.min_match = min_match
+	if init.size() == 0:
+		_data.values = values.duplicate()
+		_data.refill()
+
 	created.emit()
 
-func refill_data():
+func is_deadlocked():
+	var copy = _data.duplicate()
 	for y in height:
 		for x in width:
-			var loops = 0
-			_fill_random(x, y)
-			
-			while _data.get_matches(x, y).size() > 0 and loops < 100: 
-				loops += 1
-				_fill_random(x, y)
-	_data.print_data('Refill')
+			var p = Vector2i(x, y)
+			var dir_to_check = [Vector2i.UP, Vector2i.RIGHT]
 
-func is_deadlocked():
-	return false
+			for dir in dir_to_check:
+				copy.swap_value(p, p + dir)
+
+				var has_match = copy.get_match_counts().size() > 0
+				if has_match:
+					return false
+				
+				copy.swap_value(p, p + dir)
+
+
+	return true
 
 func get_value(x: int, y: int):
 	return _data.get_value(x, y)
@@ -263,13 +269,8 @@ func fill_empty():
 	for x in width:
 		for y in range(height-1, -1, -1):
 			if get_value(x, y) == null:
-				var value = _fill_random(x, y)
+				var value = _data.fill_random(x, y)
 				filled.emit(Vector2i(x, y), value)
 	
 	update.emit()
 	_data.print_data('Fill')
-
-func _fill_random(x: int, y: int):
-	var piece = _pieces.pick_random()
-	_data.set_value(x, y, piece)
-	return piece

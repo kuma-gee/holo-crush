@@ -1,7 +1,11 @@
 extends UnitTest
 
+func before_each():
+	Debug.log_level = Debug.Level.INFO
+	seed(100)
+
 func _create(initial_data: Array) -> GridData:
-	return GridData.new(initial_data[0].size(), initial_data.size(), initial_data)
+	return GridData.new(-1, -1, initial_data)
 
 func test_matches():
 	var data = _create([
@@ -56,6 +60,17 @@ func test_swap():
 	assert_eq(data.get_value(0, 0), 2);
 	assert_eq(data.get_value(0, 1), 1);
 
+func test_not_swap_outside():
+	var data = _create([
+		[1, 1, 2],
+		[2, 1, 0],
+		[0, 0, 1],
+	])
+	data.swap_value(Vector2i(0, 0), Vector2i(0, -1))
+
+	assert_eq(data.get_value(0, 0), 1);
+	assert_eq(data.get_value(0, 1), 2);
+
 
 func test_duplicate():
 	var data = _create([
@@ -69,3 +84,22 @@ func test_duplicate():
 
 	assert_eq(data.get_value(0, 0), 1);
 	assert_eq(data.get_value(0, 1), 2);
+
+	
+func test_refill():
+	var data = _create([
+		[1, 1, 1, 0],
+		[0, 1, 2, 0],
+		[0, 2, 1, 1],
+		[0, 1, 0, 2]
+	])
+
+	for _i in range(10):
+		data.refill()
+		assert_eq(data.get_match_counts().size(), 0, "Contains no matches")
+		assert_ne_deep(data.get_data(), [
+			[1, 1, 1, 0],
+			[0, 1, 2, 0],
+			[0, 2, 1, 1],
+			[0, 1, 0, 2]
+		])

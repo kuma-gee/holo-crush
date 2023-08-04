@@ -6,14 +6,40 @@ var _logger = Logger.new("GridData")
 var min_match := 3
 var width := 0
 var height := 0
+var values: Array = []
 
 func _init(w: int, h: int, init_data: Array = []):
-	width = w
-	height = h
 	if init_data.size() == 0:
 		_data = _create_new_empty(w, h)
 	else:
 		_data = init_data
+		values = []
+		for row in init_data:
+			for v in row:
+				if not v in values and v != null:
+					values.append(v)
+
+	width = _data[0].size()
+	height = _data.size()
+
+func get_data():
+	return _data.duplicate(true)
+
+func refill():
+	for y in height:
+		for x in width:
+			var loops = 0
+			fill_random(x, y)
+			
+			while get_matches(x, y).size() > 0 and loops < 100: 
+				loops += 1
+				fill_random(x, y)
+	print_data('Refill')
+
+func fill_random(x: int, y: int):
+	var val = values.pick_random()
+	set_value(x, y, val)
+	return val
 
 func _create_new_empty(w: int, h: int):
 	var data = []
@@ -52,7 +78,10 @@ func set_value(x: int, y: int, value):
 	_data[y][x] = value
 
 func swap_value(p1: Vector2i, p2: Vector2i):
-	var temp = get_value(p2.x, p2.y)
+	if not _is_inside(p1.x, p1.y) or not _is_inside(p2.x, p2.y):
+		return
+
+	var temp = get_value_v(p2)
 	set_value_v(p2, get_value_v(p1))
 	set_value_v(p1, temp)
 
