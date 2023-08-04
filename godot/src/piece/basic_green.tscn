@@ -4,5 +4,5 @@
 
 [node name="BasicGreen" instance=ExtResource("1_f5la7")]
 
-[node name="Sprite2D" parent="." index="0"]
+[node name="Sprite2D" parent="." index="1"]
 modulate = Color(0, 0.811765, 0.160784, 1)

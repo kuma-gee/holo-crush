@@ -42,7 +42,6 @@ theme_override_constants/margin_bottom = 20
 script = ExtResource("4_egjxx")
 width = 8
 height = 10
-debug = true
 
 [node name="Grid" type="GridContainer" parent="CenterContainer/MarginContainer/MarginContainer2" node_paths=PackedStringArray("data", "pieces_root")]
 layout_mode = 2
