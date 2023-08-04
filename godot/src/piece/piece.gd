@@ -41,11 +41,11 @@ func slight_move(dir: Vector2):
 	tw.tween_property(self, "global_position", pos + dir * slight_move_distance, 0.25).set_trans(Tween.TRANS_BACK)
 	tw.tween_property(self, "global_position", pos, 0.25)
 
-func change_to(special: Data.Special):
+func change_to(special: MatchGrid.Special):
 	var tw = create_tween()
 	tw.tween_property(self, "rotation", TAU, 1.0).set_trans(Tween.TRANS_BACK)
 	tw.finished.connect(func(): change_done.emit())
 	_to_special(special)
 
-func _to_special(_special: Data.Special):
+func _to_special(_special: MatchGrid.Special):
 	pass

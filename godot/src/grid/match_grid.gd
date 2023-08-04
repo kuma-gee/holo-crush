@@ -1,4 +1,4 @@
-class_name Data
+class_name MatchGrid
 extends Node
 
 enum Special {
@@ -70,7 +70,7 @@ func _print(msg = ''):
 func is_deadlocked():
 	return false
 
-func get_matches(x: int, y: int):
+func get_matches(x: int, y: int, arr: Array = _data):
 	var piece = get_value(x, y)
 
 	var check = func(pos: Array):
@@ -106,10 +106,10 @@ func _filter_match_array(arr: Array, value: int):
 		return filtered.map(func(a): return a["pos"])
 	return []
 
-func get_value(x: int, y: int):
+func get_value(x: int, y: int, arr = _data):
 	if not _is_inside(x, y):
 		return null
-	return _data[y][x]
+	return arr[y][x]
 
 func _set_value(x: int, y: int, value):
 	if not _is_inside(x, y):

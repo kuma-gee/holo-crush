@@ -69,7 +69,7 @@ func _ready():
 		slot.invalid_swap(dir)
 	)
 
-	data.special_activate.connect(func(p):)
+	data.special_activate.connect(func(p):) # TODO: activate special
 	data.special_matched.connect(func(pos, aff, type, val): specials.append([pos, aff, type, val]))
 	data.matched.connect(func(m): matches.append(m))
 	data.moved.connect(func(pos, dest): moving.append([pos, dest]))

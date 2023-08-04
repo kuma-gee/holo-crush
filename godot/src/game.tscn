@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://di8g8e6s34cik"]
 
-[ext_resource type="Script" path="res://src/grid/grid.gd" id="1_o8g41"]
 [ext_resource type="Script" path="res://src/game.gd" id="1_vav6y"]
 [ext_resource type="PackedScene" uid="uid://diptf1fbeqwco" path="res://src/grid/slot.tscn" id="2_4abeq"]
-[ext_resource type="Script" path="res://src/grid/data.gd" id="3_3oo0b"]
+[ext_resource type="Script" path="res://src/grid/grid_ui.gd" id="2_gsofw"]
+[ext_resource type="Script" path="res://src/grid/match_grid.gd" id="4_egjxx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ymwg1"]
 bg_color = Color(0.266667, 0.32549, 0.368627, 0.784314)
@@ -42,7 +42,7 @@ theme_override_constants/margin_bottom = 20
 layout_mode = 2
 theme_override_constants/h_separation = 5
 theme_override_constants/v_separation = 5
-script = ExtResource("1_o8g41")
+script = ExtResource("2_gsofw")
 slot_scene = ExtResource("2_4abeq")
 data = NodePath("../../../../Data")
 pieces = Array[int]([0, 1, 2, 3, 4])
@@ -52,7 +52,7 @@ pieces_root = NodePath("../../../../Field")
 layout_mode = 2
 
 [node name="Data" type="Node" parent="."]
-script = ExtResource("3_3oo0b")
+script = ExtResource("4_egjxx")
 width = 8
 height = 5
 debug = true

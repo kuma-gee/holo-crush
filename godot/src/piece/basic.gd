@@ -6,10 +6,10 @@ extends Piece
 @export var row_texture: Texture2D
 @export var col_texture: Texture2D
 
-func _to_special(special: Data.Special):
+func _to_special(special: MatchGrid.Special):
 	var texture = normal_texture
 	match special:
-		Data.Special.ROW: texture = row_texture
-		Data.Special.COL: texture = col_texture
+		MatchGrid.Special.ROW: texture = row_texture
+		MatchGrid.Special.COL: texture = col_texture
 	
 	sprite.texture = texture

@@ -61,7 +61,7 @@ func move_match(slot: Slot):
 	await piece.move_done
 	matched()
 
-func change_special(type: Data.Special, special_piece):
+func change_special(type: MatchGrid.Special, special_piece):
 	if piece == null:
 		return
 	
