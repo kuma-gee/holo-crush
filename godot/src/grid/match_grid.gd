@@ -25,30 +25,22 @@ signal update()
 @export var min_match := 3
 @export var debug := false
 
-var _data: Array = []
+var _data: GridData
 var _specials = {}
 var _pieces: Array = []
-var _logger = Logger.new("Data")
 
 # Don't touch! Only for testing
 func set_data(d):
 	_data = d
+func get_data():
+	return _data._data
 
 func create_data(pieces: Array):
 	_pieces = pieces.duplicate()
-	_data = _create_new_empty()
+	_data = GridData.new(width, height)
 	_specials = {}
 	refill_data()
 	created.emit()
-
-func _create_new_empty():
-	var data = []
-	data.resize(height)
-
-	for y in height:
-		data[y] = []
-		data[y].resize(width)
-	return data
 
 func refill_data():
 	for y in height:
@@ -59,18 +51,12 @@ func refill_data():
 			while get_matches(x, y).size() > 0 and loops < 100: 
 				loops += 1
 				_fill_random(x, y)
-	_print('Refill')
-
-func _print(msg = ''):
-	_logger.debug('------- %s --------' % msg)
-	for x in _data:
-		_logger.debug(str(x))
-	_logger.debug("---------------------------")
+	_data.print_data('Refill')
 
 func is_deadlocked():
 	return false
 
-func get_matches(x: int, y: int, arr: Array = _data):
+func get_matches(x: int, y: int, data: = _data):
 	var piece = get_value(x, y)
 
 	var check = func(pos: Array):
@@ -106,26 +92,8 @@ func _filter_match_array(arr: Array, value: int):
 		return filtered.map(func(a): return a["pos"])
 	return []
 
-func get_value(x: int, y: int, arr = _data):
-	if not _is_inside(x, y):
-		return null
-	return arr[y][x]
-
-func _set_value(x: int, y: int, value):
-	if not _is_inside(x, y):
-		_logger.warn("Trying to set invalid position %s/%s to %s" % [x, y, value])
-		return
-
-	_data[y][x] = value
-
-func _is_inside(x: int, y: int):
-	if x < 0 or x >= width:
-		return false
-	
-	if y < 0 or y >= height:
-		return false
-
-	return true
+func get_value(x: int, y: int):
+	return _data.get_value(x, y)
 
 func _swap_special(pos: Vector2i, target: Vector2i):
 	var v1 = _specials[pos] if pos in _specials else null
@@ -139,10 +107,8 @@ func _swap_special(pos: Vector2i, target: Vector2i):
 	if v2 != null:
 		_specials[pos] = v2
 
-func _swap_value(p1: Vector2i, p2: Vector2i):
-	var temp = get_value(p2.x, p2.y)
-	_set_value(p2.x, p2.y, get_value(p1.x, p1.y))
-	_set_value(p1.x, p1.y, temp)
+func _swap_value_with_special(p1: Vector2i, p2: Vector2i):
+	_data.swap_value(p1, p2)
 	_swap_special(p1, p2)
 
 func swap(pos: Vector2i, dest: Vector2i):
@@ -155,13 +121,14 @@ func swap(pos: Vector2i, dest: Vector2i):
 		invalid_swap.emit(pos, dest - pos)
 		return
 
-	_swap_value(pos, dest)
+	_swap_value_with_special(pos, dest)
 	swapped.emit(pos, dest)
-	_print('Swap')
 	if not check_matches(dest):
 		if not debug:
-			_swap_value(dest, pos)
+			_swap_value_with_special(dest, pos)
 			swapped.emit(dest, pos)
+	else:
+		_data.print_data('Swap')
 
 func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 	var counts = {}
@@ -199,7 +166,7 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 			var type = pair[0]
 			var value = pair[1]
 
-			_set_value(special.x, special.y, value)
+			_data.set_value_v(special, value)
 			_specials[special] = type
 			if special in remove_matched: # Can be immediately removed by another special activation
 				for l in _remove_value(special):
@@ -209,7 +176,7 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 		matched.emit(remove_matched)
 		update.emit()
 		
-		_print('Match')
+		_data.print_data('Match')
 		collapse_columns()
 
 	return has_matched
@@ -272,7 +239,7 @@ func _create_special(matches: Array, dest: Vector2i, type: int):
 
 func _remove_value(p: Vector2i):
 	var removed = [p]
-	_set_value(p.x, p.y, null)
+	_data.set_value_v(p, null)
 
 	if p in _specials:
 		var special_pos = _activate_special(p, _specials[p])
@@ -319,12 +286,12 @@ func collapse_columns(check = true, fill = true):
 				if yy == null:
 					break;
 
-				_swap_value(Vector2i(x, yy), Vector2i(x, y))
+				_swap_value_with_special(Vector2i(x, yy), Vector2i(x, y))
 				moved.emit(Vector2i(x, yy), Vector2i(x, y))
 
 	if fill:
 		update.emit()
-		_print('Collapse')
+		_data.print_data('Collapse')
 		fill_empty()
 
 	if check:
@@ -344,9 +311,9 @@ func fill_empty():
 				filled.emit(Vector2i(x, y), value)
 	
 	update.emit()
-	_print('Fill')
+	_data.print_data('Fill')
 
 func _fill_random(x: int, y: int):
 	var piece = _pieces.pick_random()
-	_set_value(x, y, piece)
+	_data.set_value(x, y, piece)
 	return piece

@@ -16,7 +16,7 @@ func _create(initial_data: Array) -> MatchGrid:
 				values.append(j)
 
 	data.create_data(values)
-	data.set_data(initial_data as Array[Array])
+	data.set_data(GridData.new(width, height, initial_data))
 	data.width = width
 	data.height = height
 	return data
@@ -59,7 +59,7 @@ func test_refill():
 	for _i in range(10):
 		data.refill_data()
 		assert_false(data.check_matches(), "Contains no matches")
-		assert_ne_deep(data._data, [
+		assert_ne_deep(data.get_data(), [
 			[1, 1, 1, 0],
 			[0, 1, 2, 0],
 			[0, 2, 1, 1],
@@ -98,7 +98,7 @@ func test_collapse(params=use_parameters([
 ])):
 	var data = _create(params[0])
 	data.collapse_columns(false, false)
-	assert_eq_deep(data._data, params[1])
+	assert_eq_deep(data.get_data(), params[1])
 
 func test_fill_empty(params=use_parameters([
 	[
@@ -143,7 +143,7 @@ func test_swap_not_match():
 	assert_signal_emit_count(data, 'swapped', 2)
 	assert_signal_emitted_with_parameters(data, 'swapped', [Vector2i(1, 0), Vector2i(0, 0)], 1)
 	assert_signal_emitted_with_parameters(data, 'swapped', [Vector2i(0, 0), Vector2i(1, 0)], 0)
-	assert_eq_deep(data._data, [
+	assert_eq_deep(data.get_data(), [
 		[1, 2, 1, 0],
 		[0, 1, 2, 0],
 		[0, 2, 1, 1],
@@ -173,7 +173,7 @@ func test_swap_and_collapse_vertical():
 	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 1), 0], 1)
 	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(0, 2), 0], 0)
 
-	assert_eq_deep(data._data, [
+	assert_eq_deep(data.get_data(), [
 		[1, 2, 1, 0],
 		[0, 1, 2, 0],
 		[0, 2, 1, 1],
@@ -204,7 +204,7 @@ func test_swap_and_collapse_horizontal():
 	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(2, 0), 2], 1)
 	assert_signal_emitted_with_parameters(data, 'filled', [Vector2i(1, 0), 4], 0)
 
-	assert_eq_deep(data._data, [
+	assert_eq_deep(data.get_data(), [
 		[3, 4, 2, 4],
 		[0, 4, 1, 2],
 		[2, 2, 4, 1],
@@ -221,7 +221,7 @@ func test_create_special():
 
 	data.swap(Vector2(1, 2), Vector2(0, 2))
 
-	assert_eq_deep(data._data, [
+	assert_eq_deep(data.get_data(), [
 		[4, 4, 1, 2],
 		[2, 3, 4, 3],
 		[4, 2, 3, 1],
@@ -332,7 +332,7 @@ func test_activate_special():
 	watch_signals(data)
 	data.swap(Vector2(1, 2), Vector2(0, 2))
 
-	assert_eq_deep(data._data, [
+	assert_eq_deep(data.get_data(), [
 		[2, 2, 1, 2],
 		[1, 3, 4, 3],
 		[2, 2, 3, 1],
@@ -342,7 +342,7 @@ func test_activate_special():
 
 	assert_signal_emitted(data, 'special_activate', [Vector2i(0, 3)])
 	assert_contains_exact(get_signal_parameters(data, 'matched')[0], [Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3)])
-	assert_eq_deep(data._data, [
+	assert_eq_deep(data.get_data(), [
 		[2, 0, 2, 4],
 		[2, 2, 1, 2],
 		[1, 3, 4, 3],
@@ -363,7 +363,7 @@ func test_match_special_with_special():
 	watch_signals(data)
 	data.swap(Vector2(2, 2), Vector2(1, 2))
 
-	assert_eq_deep(data._data, [
+	assert_eq_deep(data.get_data(), [
 		[2, 2, 1, 2, 5],
 		[3, 4, 4, 3, 1],
 		[4, 5, 2, 1, 4],
@@ -381,7 +381,7 @@ func test_match_special_with_special():
 	assert_eq(actual[2], MatchGrid.Special.COL)
 	assert_eq(actual[3], 0)
 
-	assert_eq_deep(data._data, [
+	assert_eq_deep(data.get_data(), [
 		[5, 2, 5, 5, 3],
 		[2, 4, 1, 2, 5],
 		[3, 5, 4, 3, 1],
@@ -402,7 +402,7 @@ func test_special_activation_immediately_after_matched():
 	watch_signals(data)
 	data.swap(Vector2(2, 2), Vector2(1, 2))
 
-	assert_eq_deep(data._data, [
+	assert_eq_deep(data.get_data(), [
 		[4, 0, 5, 2],
 		[3, 5, 4, 5],
 		[5, 4, 2, 1],
