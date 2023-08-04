@@ -71,6 +71,7 @@ func _ready():
 	data.update.connect(func(): 
 		if matches.size() > 0:
 			logger.debug("Queue Match %s" % [matches])
+			logger.debug("Match with specials %s" % [specials])
 			var x = matches.duplicate()
 			var y = specials.duplicate()
 			queue.append(func(): await _remove_matched(x, y))
@@ -168,9 +169,12 @@ func _refresh_slots():
 					refresh_finished.emit()
 			)
 
+	logger.debug("Waiting for refresh")
 	await refresh_finished
 
 func _create_pieces():
+	logger.debug("Creating initial pieces")
+	
 	for x in data.width:
 		for y in data.height:
 			var pos = Vector2i(x, y)
@@ -182,7 +186,7 @@ func _create_pieces():
 func _fill_pieces(fills):
 	logger.debug("Start fill %s" % [fills])
 
-	var called = 0
+	var called = {}
 	var finished = []
 	for v in fills:
 		var pos = v[0]
@@ -190,18 +194,19 @@ func _fill_pieces(fills):
 		var slot = _get_slot(pos)
 		slot.piece = _spawn_piece(piece)
 		slot.fill_drop()
-		called += 1
+		called[pos] = 0
 
 		slot.fill_done.connect(func():
 			finished.append(pos)
-			if finished.size() >= called:
+			if finished.size() >= called.size():
 				fill_finished.emit()
 		)
 
+	logger.debug("Waiting for %s" % [called.keys()])
 	await fill_finished
 
 func _move_collapsed(moves):
-	var called = 0
+	var called = {}
 	var finished = []
 
 	logger.debug("Start moving %s" % [moves])
@@ -209,13 +214,14 @@ func _move_collapsed(moves):
 	for m in moves:
 		var slot = _get_slot(m[0])
 		slot.move(_get_slot(m[1]))
-		called += 1
+		called[m] = 0
 		slot.move_done.connect(func():
 			finished.append(m)
-			if finished.size() >= called:
+			if finished.size() >= called.size():
 				collapse_finished.emit()
 		)
 	
+	logger.debug("Waiting for %s" % [called.keys()])
 	await collapse_finished
 
 func _remove_matched(matched: Array, special_matches: Array):
@@ -223,12 +229,10 @@ func _remove_matched(matched: Array, special_matches: Array):
 	var done = {}
 
 	var counter_fn = func(p):
-		logger.debug("Match finished %s" % p)
 		done[p] = 0
 		if done.size() >= called.size():
 			match_finished.emit()
-			logger.debug("Done %s/%s" % [called.size(), done.size()])
-
+			
 	logger.debug("Staring match %s - %s" % [matched, special_matches])
 
 	var all_matched = []
@@ -265,7 +269,7 @@ func _remove_matched(matched: Array, special_matches: Array):
 		slot.matched()
 		slot.match_done.connect(func(): counter_fn.call(p))
 		
-	logger.debug("Waiting for %s" % [called])
+	logger.debug("Waiting for %s" % [called.keys()])
 	await match_finished
 
 	for p in called:
