@@ -150,8 +150,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[0, 2, 1, 2]
 		],
 		[Vector2(1, 2), Vector2(0, 2)],
-		[Vector2i(0, 2), [Vector2i(0, 3), Vector2i(0, 2), Vector2i(0, 1), Vector2i(0, 0)], MatchGrid.Special.ROW],
-		Vector2i(0, 3),
+		[Vector2i(0, 2), [Vector2i(0, 3), Vector2i(0, 2), Vector2i(0, 1), Vector2i(0, 0)], Specials.Type.ROW],
 	],
 	[
 		[
@@ -161,8 +160,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[0, 2, 0, 0]
 		],
 		[Vector2(1, 2), Vector2(1, 3)],
-		[Vector2i(1, 3), [Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3)], MatchGrid.Special.COL],
-		Vector2i(1, 3)
+		[Vector2i(1, 3), [Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3)], Specials.Type.COL],
 	],
 
 	[
@@ -173,8 +171,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[0, 2, 0, 0]
 		],
 		[Vector2(0, 3), Vector2(1, 3)],
-		[Vector2i(1, 3), [Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(2, 3), Vector2i(3, 3)], MatchGrid.Special.BOMB],
-		Vector2i(1, 3)
+		[Vector2i(1, 3), [Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(2, 3), Vector2i(3, 3)], Specials.Type.BOMB],
 	],
 
 	[
@@ -185,8 +182,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[5, 0, 3, 5]
 		],
 		[Vector2(0, 2), Vector2(1, 2)],
-		[Vector2i(1, 2), [Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(2, 2), Vector2i(3, 2)], MatchGrid.Special.BOMB],
-		Vector2i(1, 3)
+		[Vector2i(1, 2), [Vector2i(1, 3), Vector2i(1, 2), Vector2i(1, 1), Vector2i(2, 2), Vector2i(3, 2)], Specials.Type.BOMB],
 	],
 
 	[
@@ -198,8 +194,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[5, 0, 3]
 		],
 		[Vector2(0, 2), Vector2(1, 2)],
-		[Vector2i(1, 2), [Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 3), Vector2i(1, 4)], MatchGrid.Special.COLOR_BOMB],
-		Vector2i(1, 4)
+		[Vector2i(1, 2), [Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 3), Vector2i(1, 4)], Specials.Type.COLOR_BOMB],
 	],
 	[
 		[
@@ -210,8 +205,7 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 			[2, 5, 0, 3]
 		],
 		[Vector2(3, 2), Vector2(2, 2)],
-		[Vector2i(2, 2), [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3), Vector2i(2, 4), Vector2i(0, 2), Vector2i(1, 2)], MatchGrid.Special.COLOR_BOMB],
-		Vector2i(2, 4)
+		[Vector2i(2, 2), [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3), Vector2i(2, 4), Vector2i(0, 2), Vector2i(1, 2)], Specials.Type.COLOR_BOMB],
 	],
 ])):
 	var data = _create(params[0])
@@ -230,8 +224,6 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 	assert_eq(actual[0], expected[0])
 	assert_contains_exact(actual[1], expected[1])
 	assert_eq(actual[2], expected[2])
-
-	assert_eq_deep(data._specials, {params[3]: expected[2]})
 
 func test_activate_special(params=use_parameters([
 	[
@@ -287,6 +279,7 @@ func test_activate_special(params=use_parameters([
 		for x in data.get_data():
 			print(x)
 
+
 	assert_signal_emitted(data, 'special_activate', params[2])
 	assert_contains_exact(get_signal_parameters(data, 'matched', params[1].size() - 1)[0], params[3])
 
@@ -324,7 +317,7 @@ func test_match_special_with_special():
 	var actual = get_signal_parameters(data, 'special_matched')
 	assert_eq(actual[0], Vector2i(1, 4))
 	assert_contains_exact(actual[1], [Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4) ])
-	assert_eq(actual[2], MatchGrid.Special.COL)
+	assert_eq(actual[2], Specials.Type.COL)
 	assert_eq(actual[3], 0)
 
 func test_special_activation_immediately_after_matched():

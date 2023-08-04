@@ -3,7 +3,9 @@ class_name GridData
 var _data: Array = []
 var _logger = Logger.new("GridData")
 
+# TODO: global variable?
 var min_match := 3
+
 var width := 0
 var height := 0
 var values: Array = []

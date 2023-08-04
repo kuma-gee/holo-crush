@@ -1,13 +1,6 @@
 class_name MatchGrid
 extends Node
 
-enum Special {
-	ROW,
-	COL,
-	BOMB,
-	COLOR_BOMB,
-}
-
 signal invalid_swap(pos, dir)
 signal swapped(pos, dest)
 signal moved(pos, dest)
@@ -23,11 +16,10 @@ signal update()
 
 @export var width := 9
 @export var height := 9
-@export var min_match := 3
 @export var debug := false
 
 var _data: GridData
-var _specials = {}
+var _specials: Specials
 
 # Don't touch! Only for testing
 func set_data(d):
@@ -36,9 +28,8 @@ func get_data():
 	return _data.get_data()
 
 func create_data(values: Array, init: Array = []):
-	_specials = {}
+	_specials = Specials.new()
 	_data = GridData.new(width, height, init)
-	_data.min_match = min_match
 	if init.size() == 0:
 		_data.values = values.duplicate()
 		_data.refill()
@@ -65,28 +56,14 @@ func is_deadlocked():
 	return true
 
 func get_special_type(p: Vector2i):
-	if not p in _specials:
-		return null
-	return _specials[p]
+	return _specials.get_special_type(p)
 
 func get_value(x: int, y: int):
 	return _data.get_value(x, y)
 
-func _swap_special(pos: Vector2i, target: Vector2i):
-	var v1 = _specials[pos] if pos in _specials else null
-	var v2 = _specials[target] if target in _specials else null
-
-	_specials.erase(pos)
-	_specials.erase(target)
-
-	if v1 != null:
-		_specials[target] = v1
-	if v2 != null:
-		_specials[pos] = v2
-
 func _swap_value_with_special(p1: Vector2i, p2: Vector2i):
 	_data.swap_value(p1, p2)
-	_swap_special(p1, p2)
+	_specials.swap_special(p1, p2)
 
 func swap(pos: Vector2i, dest: Vector2i):
 	var value = get_value(pos.x, pos.y)
@@ -106,7 +83,7 @@ func swap(pos: Vector2i, dest: Vector2i):
 			swapped.emit(dest, pos)
 	else:
 		if is_deadlocked():
-			_data.refill(_specials.keys())
+			_data.refill(_specials.get_all_specials())
 			check_matches() # Usually does not contain matches, but just in case, let it be a win for the player
 			refilled.emit()
 		_data.print_data('Swap')
@@ -139,7 +116,7 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 			var value = pair[1]
 
 			_data.set_value_v(special, value)
-			_specials[special] = type
+			_specials.set_special(special, type)
 			if special in remove_matched: # Can be immediately removed by another special activation
 				for l in _remove_value(special):
 					if not l in remove_matched:
@@ -173,33 +150,15 @@ func _get_special_match_data(all_matched: Array, dest: Vector2i):
 				if j.y == i.y:
 					row_matched.append(j)
 		
-		var row = row_matched.size()
-		var col = col_matched.size()
-		var actual_match: Array
-		var type: Special
-
-		if row >= 5 or col >= 5:
-			if row >= min_match:
-				_append_unique(actual_match, [row_matched])
-			if col >= min_match:
-				_append_unique(actual_match, [col_matched])
-			
-			type = Special.COLOR_BOMB
-		elif row >= 3 and col >= 3:
-			_append_unique(actual_match, [col_matched, row_matched])
-			type = Special.BOMB
-		elif col == 4:
-			actual_match = col_matched
-			type = Special.ROW
-		elif row == 4:
-			actual_match = row_matched
-			type = Special.COL
+		var result = _specials.match_special_type(row_matched, col_matched)
+		var actual_match = result[0]
+		var type = result[1]
 
 		if actual_match != null and type != null:
 			if actual_match.size() > 0:
 				_append_unique(special_matches, [actual_match])
 				var special_pos = _create_special(actual_match, dest, type)
-				created_specials[special_pos] = [type, get_value(special_pos.x, special_pos.y)]
+				created_specials[special_pos] = [type, _data.get_value_v(special_pos)]
 
 	return [special_matches, created_specials]
 
@@ -213,41 +172,13 @@ func _remove_value(p: Vector2i):
 	var removed = [p]
 	_data.set_value_v(p, null)
 
-	if p in _specials:
-		var special_pos = _activate_special(p, _specials[p])
-		_specials.erase(p)
-		for sp in special_pos:
+	var fields = _specials.activate_specials(p, _data)
+	if fields.size() > 0:
+		special_activate.emit(p)
+		for sp in fields:
 			if sp != p:
 				_append_unique(removed, [_remove_value(sp)])
 	return removed
-
-func _activate_special(p: Vector2i, type: Special):
-	special_activate.emit(p)
-	match type:
-		Special.ROW: return _get_row(p)
-		Special.COL: return _get_col(p)
-		Special.BOMB: return _get_surrounding(p)
-	
-	return []
-
-
-func _get_row(p: Vector2i):
-	var result = []
-	for x in width:
-		result.append(Vector2i(x, p.y))
-	return result
-
-
-func _get_col(p: Vector2i):
-	var result = []
-	for y in height:
-		result.append(Vector2i(p.x, y))
-	return result
-
-func _get_surrounding(p: Vector2i):
-	var result = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT, Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]
-	return result.map(func(d): return p + d).filter(func(d): return _data.is_inside(d.x, d.y))
-
 
 func _append_unique(arr, items: Array):
 	for item in items:
