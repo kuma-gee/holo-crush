@@ -4,6 +4,7 @@ extends Node2D
 signal match_done
 signal move_done
 signal change_done
+signal spawn_done
 
 enum Type {
 	BLUE,
@@ -26,6 +27,13 @@ func move(dest: Vector2):
 	var tw = create_tween()
 	tw.tween_property(self, "global_position", dest, 0.5).set_trans(Tween.TRANS_CIRC).set_ease(Tween.EASE_IN_OUT)
 	tw.finished.connect(func(): move_done.emit())
+
+func spawn():
+	scale = Vector2.ZERO
+
+	var tw = create_tween()
+	tw.tween_property(self, "scale", Vector2(1, 1), 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	tw.finished.connect(func(): spawn_done.emit())
 
 func matched():
 	var tw = create_tween()

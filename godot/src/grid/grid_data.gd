@@ -45,7 +45,7 @@ func _create_new_empty(w: int, h: int):
 	var data = []
 	data.resize(h)
 
-	for y in height:
+	for y in h:
 		data[y] = []
 		data[y].resize(w)
 	return data

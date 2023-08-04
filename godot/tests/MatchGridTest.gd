@@ -314,3 +314,18 @@ func test_deadlocked(params=use_parameters([
 ])):
 	var data = _create(params[0])
 	assert_eq(data.is_deadlocked(), params[1])
+
+
+func test_refill_on_deadlocked():
+	var data = _create([
+		[2, 2, 0, 2],
+		[5, 0, 1, 2],
+		[1, 3, 4, 3],
+		[0, 2, 5, 1]
+	])
+
+	watch_signals(data)
+	data.swap(Vector2i(3, 0), Vector2i(2, 0))
+
+	assert_signal_emitted(data, 'refilled')
+

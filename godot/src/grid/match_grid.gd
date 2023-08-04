@@ -18,6 +18,7 @@ signal matched(pos)
 signal special_matched(pos, affected, type, value)
 signal special_activate(pos)
 
+signal refilled()
 signal update()
 
 @export var width := 9
@@ -99,6 +100,9 @@ func swap(pos: Vector2i, dest: Vector2i):
 			_swap_value_with_special(dest, pos)
 			swapped.emit(dest, pos)
 	else:
+		if is_deadlocked():
+			_data.refill()
+			refilled.emit()
 		_data.print_data('Swap')
 
 func check_matches(dest: Vector2i = Vector2i(-1, -1)):

@@ -6,6 +6,7 @@ signal move_done
 signal swap_done
 signal fill_done
 signal change_done
+signal replace_done
 
 signal pressed
 signal swiped(pos, dir)
@@ -101,9 +102,15 @@ func matched():
 
 func replace(p):
 	if piece:
-		piece.queue_free()
+		piece.matched()
+		await piece.match_done
 	piece = p
 	capture()
+	piece.show()
+	piece.spawn()
+	await piece.spawn_done
+
+	replace_done.emit()
 
 func _on_swipe_control_pressed():
 	if piece:

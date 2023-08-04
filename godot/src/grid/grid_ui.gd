@@ -6,6 +6,7 @@ signal processing_finished
 signal match_finished
 signal collapse_finished
 signal fill_finished
+signal refresh_finished
 
 const PIECE_MAP := {
 	Piece.Type.BLUE: preload("res://src/piece/basic_blue.tscn"),
@@ -39,14 +40,6 @@ var logger = Logger.new('Grid')
 # https://www.youtube.com/watch?v=YhykrMFHOV4&list=PL4vbr3u7UKWqwQlvwvgNcgDL1p_3hcNn2
 # https://medium.com/@thrivevolt/making-a-grid-inventory-system-with-godot-727efedb71f7
 
-# Actions
-# [x] Initial Create Pieces
-# [x] Swap
-# [x] Matched
-# [x] Collapse
-# [x] Fill
-# [ ] Refill
-
 
 func _ready():
 	get_tree().get_root().size_changed.connect(_update_slots)
@@ -68,6 +61,7 @@ func _ready():
 		var slot = _get_slot(pos)
 		slot.invalid_swap(dir)
 	)
+	data.refilled.connect(func(): queue.append(_refresh_slots))
 
 	data.special_activate.connect(func(p):) # TODO: activate special
 	data.special_matched.connect(func(pos, aff, type, val): specials.append([pos, aff, type, val]))
@@ -151,15 +145,26 @@ func _spawn_piece(piece):
 #################
 
 func _refresh_slots():
+	logger.debug("Starting Refresh after refill")
+
+	var called = {}
 	for y in range(data.height):
 		for x in range(data.width):
 			var type = data.get_value(x, y)
-			var slot = _get_slot(Vector2i(x, y))
+			var pos = Vector2i(x, y)
+			var slot = _get_slot(pos)
 
-			if slot.piece and slot.piece.type != type:
-				logger.warn("Slot is not showing the correct value: %s/%s" % [x, y])
-				#var node = _spawn_piece(type)
-				#slot.replace(node)
+			called[pos] = 0
+			var node = _spawn_piece(type)
+			node.hide()
+			slot.replace(node)
+			slot.replace_done.connect(func():
+				called[pos] = 1
+				if called.values().all(func(v): return v == 1):
+					refresh_finished.emit()
+			)
+
+	await refresh_finished
 
 func _create_pieces():
 	for x in data.width:
