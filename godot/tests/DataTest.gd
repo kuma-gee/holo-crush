@@ -379,6 +379,7 @@ func test_match_special_with_special():
 	assert_eq(actual[0], Vector2i(1, 4))
 	assert_contains_exact(actual[1], [Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4) ])
 	assert_eq(actual[2], Data.Special.COL)
+	assert_eq(actual[3], 0)
 
 	assert_eq_deep(data._data, [
 		[5, 2, 5, 5, 3],
@@ -387,5 +388,3 @@ func test_match_special_with_special():
 		[4, 2, 2, 1, 4],
 		[1, 0, 5, 3, 1],
 	])
-	for x in data._data:
-		print(x)

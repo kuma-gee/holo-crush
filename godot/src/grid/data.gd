@@ -15,7 +15,7 @@ signal moved(pos, dest)
 signal filled(pos, value)
 signal created()
 signal matched(pos)
-signal special_matched(pos, affected, type)
+signal special_matched(pos, affected, type, value)
 signal special_activate(pos)
 
 signal update()
@@ -256,7 +256,7 @@ func _get_special_match_data(all_matched: Array, dest: Vector2i):
 
 func _create_special(matches: Array, dest: Vector2i, type: int):
 	var pos = dest if dest in matches else matches[0]
-	special_matched.emit(pos, matches, type)
+	special_matched.emit(pos, matches, type, get_value(pos.x, pos.y))
 	return pos
 
 

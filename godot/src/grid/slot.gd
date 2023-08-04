@@ -66,8 +66,10 @@ func change_special(type: Data.Special, special_piece):
 		return
 	
 	piece.matched()
+	piece.move(get_pos() + Vector2.UP)
 	piece = special_piece
 	piece.change_to(type)
+	capture()
 	await piece.change_done
 	change_done.emit()
 

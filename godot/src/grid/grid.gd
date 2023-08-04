@@ -70,7 +70,7 @@ func _ready():
 	)
 
 	data.special_activate.connect(func(p):)
-	data.special_matched.connect(func(p, v, t): specials.append([p, v, t]))
+	data.special_matched.connect(func(pos, aff, type, val): specials.append([pos, aff, type, val]))
 	data.matched.connect(func(m): matches.append(m))
 	data.moved.connect(func(pos, dest): moving.append([pos, dest]))
 	data.filled.connect(func(p, v): filling.append([p, v]))
@@ -226,6 +226,7 @@ func _remove_matched(matched: Array, special_matches: Array):
 		var dest = x[0]
 		var affected = x[1]
 		var type = x[2]
+		var val = x[3]
 
 		var target = _get_slot(dest) as Slot
 		for pos in affected:
@@ -237,7 +238,7 @@ func _remove_matched(matched: Array, special_matches: Array):
 			slot.match_done.connect(counter_fn)
 		
 		called.append(dest)
-		var piece = _spawn_piece(target.piece.type)
+		var piece = _spawn_piece(val)
 		target.change_special(type, piece)
 		target.change_done.connect(counter_fn)
 	
