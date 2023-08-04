@@ -4,15 +4,16 @@
 [ext_resource type="Script" path="res://src/grid/SwipeControl.gd" id="2_arkt7"]
 
 [node name="Slot" type="Control"]
-custom_minimum_size = Vector2(128, 128)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_ysysd")
 
 [node name="ColorRect" type="ColorRect" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

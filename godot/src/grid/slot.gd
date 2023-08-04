@@ -14,6 +14,8 @@ signal swiped(pos, dir)
 var piece: Piece
 var pos: Vector2i
 
+const piece_size = Vector2(128, 128)
+
 func invalid_swap(dir: Vector2i):
 	if piece:
 		piece.slight_move(dir)
@@ -77,19 +79,23 @@ func change_special(type: Specials.Type, special_piece):
 func capture():
 	if piece:
 		piece.global_position = get_pos()
+		var actual_size = min(size.x, size.y)
+		piece.scale = Vector2(actual_size, actual_size) / piece_size
+		
 
 func fill_drop():
 	if piece == null:
 		return
 	
-	piece.global_position = get_pos() + Vector2.UP * (abs(pos.y) + 1) * custom_minimum_size
+	capture()
+	piece.global_position = get_pos() + Vector2.UP * (abs(pos.y) + 1) * size
 	piece.move(get_pos())
 
 	await piece.move_done
 	fill_done.emit()
 
 func get_pos():
-	return global_position + custom_minimum_size / 2
+	return global_position + size / 2
 
 func matched():
 	if piece:
