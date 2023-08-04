@@ -276,9 +276,6 @@ func test_activate_special(params=use_parameters([
 	watch_signals(data)
 	for swap in params[1]:
 		data.swap(swap[0], swap[1])
-		for x in data.get_data():
-			print(x)
-
 
 	assert_signal_emitted(data, 'special_activate', params[2])
 	assert_contains_all(get_signal_parameters(data, 'matched', params[1].size() - 1)[0], params[3])
