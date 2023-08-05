@@ -4,7 +4,7 @@ extends Control
 @export var grid: GridUI
 
 @export var turns_label: Label
-@export var turns := 5
+@export var turns := 30
 
 @export var gameover: Control
 @export var end_score: Label
