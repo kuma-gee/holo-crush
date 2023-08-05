@@ -8,8 +8,7 @@ signal fill_done
 signal change_done
 signal replace_done
 
-signal pressed
-signal swiped(pos, dir)
+signal swiped(dir)
 
 var piece: Piece
 var pos: Vector2i
@@ -114,12 +113,6 @@ func replace(p):
 
 	replace_done.emit()
 
-
-func _on_swipe_control_pressed():
-	if piece:
-		pressed.emit()
-
-
 func _on_swipe_control_swiped(dir):
 	if piece:
-		swiped.emit(pos, dir)
+		swiped.emit(dir)

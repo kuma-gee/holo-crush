@@ -121,7 +121,7 @@ func _init_slots():
 			var slot = slot_scene.instantiate() as Slot
 			add_child(slot)
 			slot.pos = pos
-			slot.swiped.connect(func(pos, dir): 
+			slot.swiped.connect(func(dir): 
 				if data.swap(pos, pos + dir):
 					turn_used.emit()
 			)

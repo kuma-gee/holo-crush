@@ -13,6 +13,7 @@ size_flags_vertical = 3
 script = ExtResource("1_ysysd")
 
 [node name="ColorRect" type="ColorRect" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,5 +31,4 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_arkt7")
 
-[connection signal="pressed" from="SwipeControl" to="." method="_on_swipe_control_pressed"]
 [connection signal="swiped" from="SwipeControl" to="." method="_on_swipe_control_swiped"]
