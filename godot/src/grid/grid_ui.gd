@@ -1,8 +1,9 @@
+class_name GridUI
 extends GridContainer
 
 signal processing
 signal processing_finished
-signal swapped
+signal turn_used
 signal scored(value)
 
 signal match_finished
@@ -53,7 +54,6 @@ func _ready():
 	_init_slots()
 	data.created.connect(func(): queue.append(_create_pieces))
 	data.swapped.connect(func(pos, dest):
-		swapped.emit()
 		queue.append(func():
 			var slot = _get_slot(pos)
 			var other = _get_slot(dest)
@@ -98,7 +98,11 @@ func _ready():
 	
 	data.create_data(pieces)
 
-	#Engine.time_scale = 0.4
+func activate_specials():
+	if data.has_specials():
+		queue.append(func(): data.activate_all_specials())
+		return true
+	return false
 
 func _update_slots():
 	await get_tree().create_timer(0.1).timeout
@@ -113,7 +117,10 @@ func _init_slots():
 			var slot = slot_scene.instantiate() as Slot
 			add_child(slot)
 			slot.pos = pos
-			slot.swiped.connect(func(pos, dir): data.swap(pos, pos + dir))
+			slot.swiped.connect(func(pos, dir): 
+				if data.swap(pos, pos + dir):
+					turn_used.emit()
+			)
 
 # Should not be called with invalid position, ty
 func _get_slot(pos: Vector2i):

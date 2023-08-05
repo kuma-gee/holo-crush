@@ -81,12 +81,14 @@ func swap(pos: Vector2i, dest: Vector2i):
 		if not debug:
 			_swap_value_with_special(dest, pos)
 			swapped.emit(dest, pos)
+		return false
 	else:
 		if is_deadlocked():
 			_data.refill(_specials.get_all_specials())
 			check_matches() # Usually does not contain matches, but just in case, let it be a win for the player
 			refilled.emit()
 		_data.print_data('Swap')
+	return true
 
 func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 	var counts = _data.get_match_counts()
@@ -167,6 +169,21 @@ func _create_special(matches: Array, dest: Vector2i, type: int):
 	special_matched.emit(pos, matches, type, get_value(pos.x, pos.y))
 	return pos
 
+func has_specials():
+	return _specials.get_all_specials().size() > 0
+
+func activate_all_specials():
+	if not has_specials():
+		return
+	
+	var sp = _specials.get_all_specials()[0]
+	var removed = [sp]
+	_append_unique(removed, [_remove_value(sp)])
+		
+	matched.emit(removed)
+	update.emit()
+	_data.print_data('Activate specials')
+	collapse_columns()
 
 func _remove_value(p: Vector2i):
 	var removed = []

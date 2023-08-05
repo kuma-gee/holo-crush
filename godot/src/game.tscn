@@ -16,7 +16,7 @@ corner_radius_bottom_left = 20
 bg_color = Color(0.266667, 0.32549, 0.368627, 0.784314)
 shadow_size = 10
 
-[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker", "turns_label", "gameover", "end_score", "score_label")]
+[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker", "grid", "turns_label", "gameover", "end_score", "score_label")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,6 +26,7 @@ grow_vertical = 2
 theme = ExtResource("1_f8tal")
 script = ExtResource("1_vav6y")
 input_blocker = NodePath("CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/InputBlocker")
+grid = NodePath("CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid")
 turns_label = NodePath("PanelContainer/MarginContainer/HBoxContainer/Label2")
 gameover = NodePath("GameOver")
 end_score = NodePath("GameOver/PanelContainer/MarginContainer/VBoxContainer/EndScore")
@@ -179,5 +180,5 @@ text = "Restart"
 [connection signal="processing" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing"]
 [connection signal="processing_finished" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing_finished"]
 [connection signal="scored" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_scored"]
-[connection signal="swapped" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_swapped"]
+[connection signal="turn_used" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_turn_used"]
 [connection signal="pressed" from="GameOver/PanelContainer/MarginContainer/VBoxContainer/Restart" to="." method="_on_restart_pressed"]

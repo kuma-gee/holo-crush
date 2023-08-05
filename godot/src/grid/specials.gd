@@ -17,8 +17,7 @@ func get_all_specials():
 	return _specials.keys()
 
 func set_special(pos: Vector2i, type: Type):
-	var ult = type == Type.COLOR_BOMB
-	_specials[pos] = [type, ult]
+	_specials[pos] = type
 
 func get_special(p: Vector2i):
 	if not p in _specials:
@@ -27,11 +26,7 @@ func get_special(p: Vector2i):
 
 func get_special_type(p: Vector2i):
 	var sp = get_special(p)
-	return sp[0] if sp != null else null
-
-func is_matchable_special(p: Vector2i):
-	var sp = get_special(p)
-	return sp != null and sp[1]
+	return sp
 
 func swap_special(pos: Vector2i, target: Vector2i):
 	var v1 = _specials[pos] if pos in _specials else null

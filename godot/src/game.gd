@@ -1,6 +1,7 @@
 extends Control
 
 @export var input_blocker: Control
+@export var grid: GridUI
 
 @export var turns_label: Label
 @export var turns := 5
@@ -25,15 +26,12 @@ func _on_grid_processing_finished():
 	if turns > 0:
 		input_blocker.hide()
 	else:
-		_on_gameover()
+		if not grid.activate_specials():
+			_on_gameover()
 
 func _on_gameover():
 	end_score.text = tr("Score") + ": " + str(score)
 	gameover.show()
-
-func _on_grid_swapped():
-	turns -= 1
-	turns_label.text = str(turns)
 
 func _on_grid_scored(value):
 	score += value
@@ -42,3 +40,8 @@ func _on_grid_scored(value):
 
 func _on_restart_pressed():
 	get_tree().reload_current_scene()
+
+
+func _on_grid_turn_used():
+	turns -= 1
+	turns_label.text = str(turns)

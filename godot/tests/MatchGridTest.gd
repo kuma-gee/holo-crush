@@ -361,3 +361,19 @@ func test_refill_on_deadlocked():
 
 	assert_signal_emitted(data, 'refilled')
 
+
+func test_activate_all_specials():
+	var data = _create([
+		[2, 2, 0, 2],
+		[5, 0, 2, 2],
+		[1, 3, 4, 3],
+		[0, 2, 5, 1]
+	])
+
+	watch_signals(data)
+	data.swap(Vector2i(2, 0), Vector2i(2, 1))
+
+	data.activate_all_specials()
+
+	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(2, 0)])
+	assert_contains_exact(get_signal_parameters(data, 'matched', 1)[0], [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3)])
