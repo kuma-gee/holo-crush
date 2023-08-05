@@ -63,11 +63,10 @@ itch_release() {
     done
 }
 
-# sh ./addons/debug/prepare-build.sh $VERSION
-build_channels
-
 VERSION_REGEX='^v[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$'
 if [[ $VERSION =~ $VERSION_REGEX ]]; then
+    sh ./scripts/prepare-build.sh $VERSION
+    build_channels
     generate_changelog
 
     if [[ $VERSION != *"-rc"* ]]; then
@@ -77,5 +76,6 @@ if [[ $VERSION =~ $VERSION_REGEX ]]; then
     github_release
 
 else
+    build_channels
     echo "Missing or invalid version. Publish skipped."
 fi
