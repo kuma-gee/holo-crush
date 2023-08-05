@@ -14,8 +14,6 @@ func _ready():
 	mat.set_shader_parameter("color_gradient", _create_gradient())
 	back_color.material = mat
 	back_color.hide()
-	
-	shard_emitter.deleted.connect(func(): match_done.emit())
 
 func _create_gradient():
 	var gradient = Gradient.new()
@@ -31,6 +29,10 @@ func matched():
 	
 	var tw = create_tween()
 	tw.tween_property(self, "modulate", Color.TRANSPARENT, 0.5)
+	tw.finished.connect(func():
+		match_done.emit()
+		queue_free()
+	)
 
 func _to_special(special: Specials.Type):
 	var texture = normal_texture

@@ -37,6 +37,7 @@ score_label = NodePath("Score/PanelContainer/MarginContainer/Label")
 script = ExtResource("4_egjxx")
 width = 5
 height = 5
+debug = true
 
 [node name="Top" type="PanelContainer" parent="."]
 layout_mode = 1

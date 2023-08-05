@@ -57,10 +57,8 @@ func slight_move(dir: Vector2):
 
 func change_to(s: Specials.Type):
 	special = s
-	var tw = create_tween()
-	tw.tween_property(self, "rotation", TAU, 0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN_OUT)
-	tw.finished.connect(func(): change_done.emit())
 	_to_special(special)
+	change_done.emit()
 
 func _to_special(_special: Specials.Type):
 	pass

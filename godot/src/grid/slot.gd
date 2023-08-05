@@ -60,8 +60,6 @@ func move_match(slot: Slot):
 	if piece == null:
 		return
 	
-	piece.move(slot.get_pos() + Vector2.UP)
-	await piece.move_done
 	matched()
 
 func change_special(type: Specials.Type, special_piece):
@@ -69,7 +67,6 @@ func change_special(type: Specials.Type, special_piece):
 		return
 	
 	piece.matched()
-	piece.move(get_pos() + Vector2.UP)
 	piece = special_piece
 	piece.change_to(type)
 	capture()
@@ -102,8 +99,6 @@ func matched():
 		var temp = piece
 		piece.matched()
 		piece = null
-
-		await temp.match_done
 		match_done.emit()
 
 func replace(p):

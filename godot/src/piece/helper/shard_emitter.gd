@@ -9,7 +9,6 @@ signal deleted()
 @export var threshhold = 10.0 #prevents slim triangles being created at the sprite edges
 @export var min_impulse = 50.0 #impuls of the shards upon breaking
 @export var max_impulse = 200.0
-@export var lifetime = 5.0 #lifetime of the shards
 @export var display_triangles = false #debugging: display sprite triangulation
 
 var triangles = []
@@ -90,7 +89,6 @@ func shatter() -> void:
 		s.apply_central_impulse(direction * impulse)
 		s.get_node("CollisionPolygon2D").disabled = false
 		s.show()
-	$DeleteTimer.start(lifetime)
 
 func _draw() -> void:
 	if display_triangles:
@@ -98,8 +96,3 @@ func _draw() -> void:
 			draw_line(i[0], i[1], Color.WHITE, 1)
 			draw_line(i[1], i[2], Color.WHITE, 1)
 			draw_line(i[2], i[0], Color.WHITE, 1)
-
-
-func _on_delete_timer_timeout():
-	deleted.emit()
-	get_parent().queue_free()

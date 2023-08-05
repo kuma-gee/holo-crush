@@ -306,7 +306,7 @@ func _remove_matched(matched: Array, special_matches: Array):
 		var slot = _get_slot(p) as Slot
 		slot.matched()
 		scored.emit(default_score_value * combo)
-		
-	logger.debug("Waiting for %s" % [match_called.keys()])
-	await match_finished
+	
+	#logger.debug("Waiting for %s" % [match_called.keys()])
+	#await match_finished
 
