@@ -9,6 +9,7 @@ signal match_finished
 signal collapse_finished
 signal fill_finished
 signal refresh_finished
+signal create_finished
 
 const PIECE_MAP := {
 	Piece.Type.BLUE: preload("res://src/piece/basic_blue.tscn"),
@@ -167,7 +168,7 @@ func _refresh_slots(only_changed = false):
 			var slot = _get_slot(pos)
 			
 			if only_changed:
-				if slot.piece.type != type:
+				if slot.piece == null or slot.piece.type != type:
 					logger.debug("Pos %s has a different value: %s, %s" % [pos, slot.piece.type, type])
 					var node = _spawn_piece(type)
 					node.hide()
@@ -196,14 +197,24 @@ func _refresh_slots(only_changed = false):
 func _create_pieces():
 	logger.debug("Creating initial pieces")
 	
+	var called = {}
+	var finished = []
+	
 	for x in data.width:
 		for y in data.height:
 			var pos = Vector2i(x, y)
 			var piece = data.get_value(pos.x, pos.y)
 			var slot = _get_slot(pos)
-			slot.piece = _spawn_piece(piece)
-			slot.piece.spawn()
-			slot.capture()
+			slot.replace(_spawn_piece(piece))
+			
+			called[pos] = 0
+			slot.replace_done.connect(func():
+				slot.capture()
+				finished.append(pos)
+				if finished.size() >= called.size():
+					create_finished.emit()
+			)
+	await create_finished
 
 func _fill_pieces(fills):
 	logger.debug("Start fill %s" % [fills])

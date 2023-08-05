@@ -115,8 +115,10 @@ func replace(p):
 	piece.show()
 	piece.spawn()
 	await piece.spawn_done
+	capture()
 
 	replace_done.emit()
+
 
 func _on_swipe_control_pressed():
 	if piece:
