@@ -9,7 +9,7 @@ GAME="holo-crush"
 VERSION="$1"
 
 # win, linux, web, macOS, android
-CHANNELS=("web", "linux", "win", "macOS")
+CHANNELS=("web" "linux" "win" "macOS")
 LAST_TAG=$(git describe --tags --abbrev=0)
 CHANGELOG=""
 
@@ -17,9 +17,8 @@ generate_changelog() {
     echo "Generating changelog"
     touch package.json
     echo "{}" > package.json
-    changelog -p -t $LAST_TAG -f CHANGELOG.md
+    changelog -t $LAST_TAG -f CHANGELOG.md
     CHANGELOG=$(cat CHANGELOG.md)
-    rm package.json
     rm CHANGELOG.md
 }
 
