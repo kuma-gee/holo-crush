@@ -8,15 +8,8 @@
 GAME="holo-crush"
 VERSION="$1"
 
-ARGS=("$@")
-if [[ ${#ARGS[@]} -lt 2 ]]; then
-    echo "No channels"
-    exit 0
-fi
-shift
-
-# win, linux, Web, macOS, android
-CHANNELS=( "$@" )
+# win, linux, web, macOS, android
+CHANNELS=("web", "linux", "win", "macOS")
 LAST_TAG=$(git describe --tags --abbrev=0)
 CHANGELOG=""
 
