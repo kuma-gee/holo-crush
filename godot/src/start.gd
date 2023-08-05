@@ -1,6 +1,11 @@
 extends Control
 
-@export var game: PackedScene
+@export var energy: Label
+@export var points: Label
+
+func _ready():
+	energy.text = str(GameManager.energy)
+	points.text = str(GameManager.points)
 
 func _on_play_pressed():
-	get_tree().change_scene_to_packed(game)
+	GameManager.start_game()

@@ -32,6 +32,7 @@ func _on_grid_processing_finished():
 func _on_gameover():
 	end_score.text = tr("Score") + ": " + str(score)
 	gameover.show()
+	GameManager.scored(score)
 
 func _on_grid_scored(value):
 	score += value
@@ -45,3 +46,7 @@ func _on_restart_pressed():
 func _on_grid_turn_used():
 	turns -= 1
 	turns_label.text = str(turns)
+
+
+func _on_menu_pressed():
+	get_tree().change_scene_to_file("res://src/start.tscn")

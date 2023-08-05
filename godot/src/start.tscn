@@ -1,11 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://qdwfqb2qwrxb"]
+[gd_scene load_steps=4 format=3 uid="uid://qdwfqb2qwrxb"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
-[ext_resource type="PackedScene" uid="uid://di8g8e6s34cik" path="res://src/game.tscn" id="3_ljf05"]
 [ext_resource type="AudioStream" uid="uid://cfwc8qonkflxm" path="res://assets/sound/astro_Inst_hololive_202308052333.mp3" id="4_lb12p"]
 
-[node name="Start" type="Control"]
+[node name="Start" type="Control" node_paths=PackedStringArray("energy", "points")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,7 +13,8 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_rg8bf")
 script = ExtResource("2_af8bd")
-game = ExtResource("3_ljf05")
+energy = NodePath("PanelContainer/Top/Energy")
+points = NodePath("PanelContainer/Top/Points")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -30,7 +30,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 10
 
-[node name="HP" type="Label" parent="PanelContainer/Top"]
+[node name="Energy" type="Label" parent="PanelContainer/Top"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0

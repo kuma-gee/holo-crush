@@ -176,6 +176,10 @@ text = "Score: "
 layout_mode = 2
 text = "Restart"
 
+[node name="Menu" type="Button" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Back"
+
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_g8nju")
 volume_db = -30.0
@@ -186,3 +190,4 @@ autoplay = true
 [connection signal="scored" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_scored"]
 [connection signal="turn_used" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_turn_used"]
 [connection signal="pressed" from="GameOver/PanelContainer/MarginContainer/VBoxContainer/Restart" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="GameOver/PanelContainer/MarginContainer/VBoxContainer/Menu" to="." method="_on_menu_pressed"]
