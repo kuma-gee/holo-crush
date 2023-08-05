@@ -7,10 +7,9 @@ signal turn_used
 signal scored(value)
 
 signal match_finished
-signal collapse_finished
+signal move_finished
 signal fill_finished
-signal refresh_finished
-signal create_finished
+signal replace_finished
 
 const PIECE_MAP := {
 	Piece.Type.BLUE: preload("res://src/piece/basic_blue.tscn"),
@@ -41,6 +40,11 @@ var moving = []
 var matches = []
 var filling = []
 var specials = []
+
+var match_called = {}
+var move_called = {}
+var fill_called = {}
+var replace_called = {}
 
 var logger = Logger.new('Grid')
 
@@ -121,6 +125,33 @@ func _init_slots():
 				if data.swap(pos, pos + dir):
 					turn_used.emit()
 			)
+			slot.replace_done.connect(func():
+				replace_called[pos] = 1
+				if replace_called.values().all(func(v): return v == 1):
+					replace_finished.emit()
+			)
+			slot.fill_done.connect(func():
+				fill_called[pos] = 1
+				if fill_called.values().all(func(v): return v == 1):
+					fill_finished.emit()
+			)
+			slot.move_done.connect(func():
+				move_called[pos] = 1
+				if move_called.values().all(func(v): return v == 1):
+					move_finished.emit()
+			)
+			
+			# Both are used for matching
+			slot.match_done.connect(func():
+				match_called[pos] = 1
+				if match_called.values().all(func(v): return v == 1):
+					match_finished.emit()
+			)
+			slot.change_done.connect(func():
+				match_called[pos] = 1
+				if match_called.values().all(func(v): return v == 1):
+					match_finished.emit()
+			)
 
 # Should not be called with invalid position, ty
 func _get_slot(pos: Vector2i):
@@ -165,7 +196,7 @@ func _refresh_slots(only_changed = false):
 	else:
 		logger.debug("Starting Refresh after refill")
 
-	var called = {}
+	replace_called = {}
 	
 	for y in range(data.height):
 		for x in range(data.width):
@@ -176,7 +207,7 @@ func _refresh_slots(only_changed = false):
 			
 			if only_changed:
 				if slot.piece == null or slot.piece.type != type:
-					logger.debug("Pos %s has a different value: %s, %s" % [pos, slot.piece.type, type])
+					logger.debug("Pos %s has a different value: %s, %s" % [pos, slot.piece.type if slot.piece != null else null, type])
 					var node = _spawn_piece(type)
 					node.hide()
 					if special != null:
@@ -187,26 +218,19 @@ func _refresh_slots(only_changed = false):
 			if special != null:
 				continue
 
-			called[pos] = 0
+			replace_called[pos] = 0
 			var node = _spawn_piece(type)
 			node.hide()
 			slot.replace(node)
-			slot.replace_done.connect(func():
-				called[pos] = 1
-				if called.values().all(func(v): return v == 1):
-					refresh_finished.emit()
-			)
 
 	if not only_changed:
 		logger.debug("Waiting for refresh")
-		await refresh_finished
+		await replace_finished
 
 func _create_pieces():
 	logger.debug("Creating initial pieces")
 	
-	var called = {}
-	var finished = []
-	
+	replace_called = {}
 	for x in data.width:
 		for y in data.height:
 			var pos = Vector2i(x, y)
@@ -214,68 +238,40 @@ func _create_pieces():
 			var slot = _get_slot(pos)
 			slot.replace(_spawn_piece(piece))
 			
-			called[pos] = 0
-			slot.replace_done.connect(func():
-				slot.capture()
-				finished.append(pos)
-				if finished.size() >= called.size():
-					create_finished.emit()
-			)
-	await create_finished
+			replace_called[pos] = 0
+	await replace_finished
 
 func _fill_pieces(fills):
 	logger.debug("Start fill %s" % [fills])
 
-	var called = {}
-	var finished = []
+	fill_called = {}
 	for v in fills:
 		var pos = v[0]
 		var piece = v[1]
 		var slot = _get_slot(pos)
 		slot.piece = _spawn_piece(piece)
 		slot.fill_drop()
-		called[pos] = 0
+		fill_called[pos] = 0
 
-		slot.fill_done.connect(func():
-			finished.append(pos)
-			if finished.size() >= called.size():
-				fill_finished.emit()
-		)
-
-	logger.debug("Waiting for %s" % [called.keys()])
+	logger.debug("Waiting for %s" % [fill_called.keys()])
 	await fill_finished
 
 func _move_collapsed(moves):
-	var called = {}
-	var finished = []
-
 	logger.debug("Start moving %s" % [moves])
 
+	move_called = {}
 	for m in moves:
 		var slot = _get_slot(m[0])
 		slot.move(_get_slot(m[1]))
-		called[m] = 0
-		slot.move_done.connect(func():
-			finished.append(m)
-			if finished.size() >= called.size():
-				collapse_finished.emit()
-		)
+		move_called[m[0]] = 0
 	
-	logger.debug("Waiting for %s" % [called.keys()])
-	await collapse_finished
+	logger.debug("Waiting for %s" % [move_called.keys()])
+	await move_finished
 
 func _remove_matched(matched: Array, special_matches: Array):
-	combo += 1
-	
-	var called = {}
-	var done = {}
-
-	var counter_fn = func(p):
-		done[p] = 0
-		if done.size() >= called.size():
-			match_finished.emit()
-			
 	logger.debug("Staring match %s - %s" % [matched, special_matches])
+	combo += 1
+	match_called = {}
 
 	var all_matched = []
 	for m in matched:
@@ -292,35 +288,25 @@ func _remove_matched(matched: Array, special_matches: Array):
 		for pos in affected:
 			if pos == dest:
 				continue
-			called[pos] = 0
+			match_called[pos] = 0
 			var slot = _get_slot(pos) as Slot
 			slot.move_match(target)
-			slot.match_done.connect(func(): counter_fn.call(pos))
 			scored.emit(default_score_value * combo)
 		
 		if not dest in all_matched:
-			called[dest] = 0
+			match_called[dest] = 0
 			var piece = _spawn_piece(val)
 			target.change_special(type, piece)
-			target.change_done.connect(func(): counter_fn.call(dest))
 			scored.emit(default_score_value * combo * special_multiplier)
 		else:
 			pass # TODO: activate created special immediately
 	
 	for p in all_matched:
-		called[p] = 0
+		match_called[p] = 0
 		var slot = _get_slot(p) as Slot
 		slot.matched()
-		slot.match_done.connect(func(): counter_fn.call(p))
 		scored.emit(default_score_value * combo)
 		
-	logger.debug("Waiting for %s" % [called.keys()])
+	logger.debug("Waiting for %s" % [match_called.keys()])
 	await match_finished
-
-	for p in called:
-		var slot = _get_slot(p) as Slot
-		for c in slot.match_done.get_connections():
-			slot.match_done.disconnect(c["callable"])
-		for c in slot.change_done.get_connections():
-			slot.change_done.disconnect(c["callable"])
 
