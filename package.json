@@ -1,14 +1,1 @@
-{
-  "name": "holo-crush",
-  "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "changelog": "changelog"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "generate-changelog": "^1.8.0"
-  }
-}
+{}

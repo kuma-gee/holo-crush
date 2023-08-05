@@ -29,6 +29,7 @@ offset_left = -80.0
 offset_top = -80.0
 offset_right = 80.0
 offset_bottom = 80.0
+mouse_filter = 2
 
 [node name="Sprite2D" parent="." index="1"]
 modulate = Color(0, 0.662745, 0.811765, 1)

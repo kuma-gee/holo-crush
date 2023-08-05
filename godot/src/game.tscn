@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://di8g8e6s34cik"]
+[gd_scene load_steps=10 format=3 uid="uid://di8g8e6s34cik"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_f8tal"]
 [ext_resource type="Script" path="res://src/game.gd" id="1_vav6y"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://src/grid/grid_ui.gd" id="2_gsofw"]
 [ext_resource type="LabelSettings" uid="uid://vvr077uf4r3l" path="res://src/menu/title_label.tres" id="3_iqyq2"]
 [ext_resource type="Script" path="res://src/grid/match_grid.gd" id="4_egjxx"]
+[ext_resource type="AudioStream" uid="uid://8tfecoe8jxnl" path="res://assets/sound/Non-Fiction_Inst_hololive_202308052356.mp3" id="7_g8nju"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3lwum"]
 bg_color = Color(0, 0, 0, 1)
@@ -25,45 +26,48 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_f8tal")
 script = ExtResource("1_vav6y")
-input_blocker = NodePath("CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/InputBlocker")
-grid = NodePath("CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid")
-turns_label = NodePath("PanelContainer/MarginContainer/HBoxContainer/Label2")
+input_blocker = NodePath("Main/AspectRatioContainer/MarginContainer/MarginContainer2/InputBlocker")
+grid = NodePath("Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid")
+turns_label = NodePath("Top/MarginContainer/HBoxContainer/Label2")
 gameover = NodePath("GameOver")
 end_score = NodePath("GameOver/PanelContainer/MarginContainer/VBoxContainer/EndScore")
-score_label = NodePath("MarginContainer/PanelContainer/MarginContainer/Label")
+score_label = NodePath("Score/PanelContainer/MarginContainer/Label")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="Data" type="Node" parent="."]
+script = ExtResource("4_egjxx")
+
+[node name="Top" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 90.0
 grow_horizontal = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Top"]
 layout_mode = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Top/MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer"]
+[node name="Label2" type="Label" parent="Top/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 text = "Turns"
 
-[node name="Control" type="Control" parent="PanelContainer/MarginContainer/HBoxContainer"]
+[node name="Control" type="Control" parent="Top/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label3" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer"]
+[node name="Label3" type="Label" parent="Top/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="Score" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -74,27 +78,27 @@ offset_bottom = 111.0
 grow_horizontal = 2
 size_flags_horizontal = 3
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="Score"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_3lwum")
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Score/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 20
 
-[node name="Label" type="Label" parent="MarginContainer/PanelContainer/MarginContainer"]
+[node name="Label" type="Label" parent="Score/PanelContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Score"
 label_settings = ExtResource("3_iqyq2")
 horizontal_alignment = 1
 
-[node name="CenterContainer" type="MarginContainer" parent="."]
+[node name="Main" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -106,38 +110,33 @@ theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 0
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="CenterContainer"]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Main"]
 layout_mode = 2
 size_flags_vertical = 3
 ratio = 0.8
 
-[node name="MarginContainer" type="PanelContainer" parent="CenterContainer/AspectRatioContainer"]
+[node name="MarginContainer" type="PanelContainer" parent="Main/AspectRatioContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ymwg1")
 
-[node name="MarginContainer2" type="MarginContainer" parent="CenterContainer/AspectRatioContainer/MarginContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="Main/AspectRatioContainer/MarginContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="Data" type="Node" parent="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2"]
-script = ExtResource("4_egjxx")
-width = 8
-height = 10
-
-[node name="Grid" type="GridContainer" parent="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2" node_paths=PackedStringArray("data", "pieces_root")]
+[node name="Grid" type="GridContainer" parent="Main/AspectRatioContainer/MarginContainer/MarginContainer2" node_paths=PackedStringArray("data", "pieces_root")]
 layout_mode = 2
 theme_override_constants/h_separation = 5
 theme_override_constants/v_separation = 5
 script = ExtResource("2_gsofw")
 slot_scene = ExtResource("2_4abeq")
-data = NodePath("../Data")
+data = NodePath("../../../../../Data")
 pieces = Array[int]([0, 1, 2, 3, 4])
 pieces_root = NodePath("../../../../../Field")
 
-[node name="InputBlocker" type="Control" parent="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2"]
+[node name="InputBlocker" type="Control" parent="Main/AspectRatioContainer/MarginContainer/MarginContainer2"]
 layout_mode = 2
 
 [node name="Field" type="Node2D" parent="."]
@@ -177,8 +176,13 @@ text = "Score: "
 layout_mode = 2
 text = "Restart"
 
-[connection signal="processing" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing"]
-[connection signal="processing_finished" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing_finished"]
-[connection signal="scored" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_scored"]
-[connection signal="turn_used" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_turn_used"]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_g8nju")
+volume_db = -30.0
+autoplay = true
+
+[connection signal="processing" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing"]
+[connection signal="processing_finished" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing_finished"]
+[connection signal="scored" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_scored"]
+[connection signal="turn_used" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_turn_used"]
 [connection signal="pressed" from="GameOver/PanelContainer/MarginContainer/VBoxContainer/Restart" to="." method="_on_restart_pressed"]

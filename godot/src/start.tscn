@@ -1,0 +1,70 @@
+[gd_scene load_steps=5 format=3 uid="uid://qdwfqb2qwrxb"]
+
+[ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
+[ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
+[ext_resource type="PackedScene" uid="uid://di8g8e6s34cik" path="res://src/game.tscn" id="3_ljf05"]
+[ext_resource type="AudioStream" uid="uid://cfwc8qonkflxm" path="res://assets/sound/astro_Inst_hololive_202308052333.mp3" id="4_lb12p"]
+
+[node name="Start" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_rg8bf")
+script = ExtResource("2_af8bd")
+game = ExtResource("3_ljf05")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 70.0
+grow_horizontal = 2
+
+[node name="Top" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 10
+
+[node name="HP" type="Label" parent="PanelContainer/Top"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "5/5"
+
+[node name="Points" type="Label" parent="PanelContainer/Top"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "10000$"
+horizontal_alignment = 1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_lb12p")
+volume_db = -15.0
+autoplay = true
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="Play" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Play"
+
+[node name="Store" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+disabled = true
+text = "Store"
+
+[connection signal="pressed" from="CenterContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]
