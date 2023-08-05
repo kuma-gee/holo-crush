@@ -2,6 +2,7 @@ extends Piece
 
 @onready var sprite := $Sprite2D
 @onready var back_color := $BackColor
+@onready var shard_emitter := $Sprite2D/ShardEmitter
 
 @export var normal_texture: Texture2D
 @export var row_texture: Texture2D
@@ -13,6 +14,8 @@ func _ready():
 	mat.set_shader_parameter("color_gradient", _create_gradient())
 	back_color.material = mat
 	back_color.hide()
+	
+	shard_emitter.deleted.connect(func(): match_done.emit())
 
 func _create_gradient():
 	var gradient = Gradient.new()
@@ -21,6 +24,13 @@ func _create_gradient():
 	var gradient_tex = GradientTexture1D.new()
 	gradient_tex.gradient = gradient
 	return gradient_tex
+
+func matched():
+	SoundManager.play_match_break()
+	shard_emitter.shatter()
+	
+	var tw = create_tween()
+	tw.tween_property(self, "modulate", Color.TRANSPARENT, 0.5)
 
 func _to_special(special: Specials.Type):
 	var texture = normal_texture

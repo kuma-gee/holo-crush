@@ -108,8 +108,8 @@ func matched():
 
 func replace(p):
 	if piece:
-		piece.matched()
-		await piece.match_done
+		piece.despawn()
+		await piece.despawn_done
 	piece = p
 	capture()
 	piece.show()

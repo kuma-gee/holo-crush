@@ -5,6 +5,7 @@ signal match_done
 signal move_done
 signal change_done
 signal spawn_done
+signal despawn_done
 
 enum Type {
 	BLUE,
@@ -37,13 +38,16 @@ func spawn():
 	tw.tween_property(self, "scale", Vector2(1, 1), 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	tw.finished.connect(func(): spawn_done.emit())
 
-func matched():
+func despawn():
 	var tw = create_tween()
 	tw.tween_property(self, "scale", Vector2(0, 0), 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	tw.finished.connect(func(): 
-		match_done.emit()
+		despawn_done.emit()
 		queue_free()
 	)
+
+func matched():
+	despawn()
 
 func slight_move(dir: Vector2):
 	var tw = create_tween()
