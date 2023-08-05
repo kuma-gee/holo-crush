@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://src/game.gd" id="1_vav6y"]
 [ext_resource type="PackedScene" uid="uid://diptf1fbeqwco" path="res://src/grid/slot.tscn" id="2_4abeq"]
 [ext_resource type="Script" path="res://src/grid/grid_ui.gd" id="2_gsofw"]
+[ext_resource type="LabelSettings" uid="uid://vvr077uf4r3l" path="res://src/menu/title_label.tres" id="3_iqyq2"]
 [ext_resource type="Script" path="res://src/grid/match_grid.gd" id="4_egjxx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3lwum"]
@@ -11,14 +12,11 @@ bg_color = Color(0, 0, 0, 1)
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
 
-[sub_resource type="LabelSettings" id="LabelSettings_yxqsm"]
-font_size = 64
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ymwg1"]
 bg_color = Color(0.266667, 0.32549, 0.368627, 0.784314)
 shadow_size = 10
 
-[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker", "turns_label", "score_label")]
+[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker", "turns_label", "gameover", "end_score", "score_label")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,6 +27,8 @@ theme = ExtResource("1_f8tal")
 script = ExtResource("1_vav6y")
 input_blocker = NodePath("CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/InputBlocker")
 turns_label = NodePath("PanelContainer/MarginContainer/HBoxContainer/Label2")
+gameover = NodePath("GameOver")
+end_score = NodePath("GameOver/PanelContainer/MarginContainer/VBoxContainer/EndScore")
 score_label = NodePath("MarginContainer/PanelContainer/MarginContainer/Label")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
@@ -61,7 +61,6 @@ size_flags_horizontal = 3
 [node name="Label3" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
-text = "Sth"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -91,7 +90,7 @@ theme_override_constants/margin_bottom = 20
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Score"
-label_settings = SubResource("LabelSettings_yxqsm")
+label_settings = ExtResource("3_iqyq2")
 horizontal_alignment = 1
 
 [node name="CenterContainer" type="MarginContainer" parent="."]
@@ -143,7 +142,42 @@ layout_mode = 2
 [node name="Field" type="Node2D" parent="."]
 y_sort_enabled = true
 
+[node name="GameOver" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="GameOver"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="GameOver/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameOver/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Gameover"
+label_settings = ExtResource("3_iqyq2")
+
+[node name="EndScore" type="Label" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Score: "
+
+[node name="Restart" type="Button" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Restart"
+
 [connection signal="processing" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing"]
 [connection signal="processing_finished" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing_finished"]
 [connection signal="scored" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_scored"]
 [connection signal="swapped" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_swapped"]
+[connection signal="pressed" from="GameOver/PanelContainer/MarginContainer/VBoxContainer/Restart" to="." method="_on_restart_pressed"]
