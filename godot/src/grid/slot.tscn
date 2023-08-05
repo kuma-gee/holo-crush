@@ -4,7 +4,6 @@
 [ext_resource type="Script" path="res://src/grid/SwipeControl.gd" id="2_arkt7"]
 
 [node name="Slot" type="Control"]
-custom_minimum_size = Vector2(64, 64)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0

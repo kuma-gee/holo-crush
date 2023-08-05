@@ -1,49 +1,133 @@
-[gd_scene load_steps=6 format=3 uid="uid://di8g8e6s34cik"]
+[gd_scene load_steps=9 format=3 uid="uid://di8g8e6s34cik"]
 
+[ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_f8tal"]
 [ext_resource type="Script" path="res://src/game.gd" id="1_vav6y"]
 [ext_resource type="PackedScene" uid="uid://diptf1fbeqwco" path="res://src/grid/slot.tscn" id="2_4abeq"]
 [ext_resource type="Script" path="res://src/grid/grid_ui.gd" id="2_gsofw"]
 [ext_resource type="Script" path="res://src/grid/match_grid.gd" id="4_egjxx"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3lwum"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_yxqsm"]
+font_size = 64
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ymwg1"]
 bg_color = Color(0.266667, 0.32549, 0.368627, 0.784314)
 shadow_size = 10
 
-[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker")]
+[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker", "turns_label", "score_label")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_f8tal")
 script = ExtResource("1_vav6y")
-input_blocker = NodePath("CenterContainer/MarginContainer/MarginContainer2/InputBlocker")
+input_blocker = NodePath("CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/InputBlocker")
+turns_label = NodePath("PanelContainer/MarginContainer/HBoxContainer/Label2")
+score_label = NodePath("MarginContainer/PanelContainer/MarginContainer/Label")
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 90.0
+grow_horizontal = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Turns"
+
+[node name="Control" type="Control" parent="PanelContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label3" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Sth"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -373.0
+offset_right = 373.0
+offset_bottom = 111.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_3lwum")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 20
+
+[node name="Label" type="Label" parent="MarginContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Score"
+label_settings = SubResource("LabelSettings_yxqsm")
+horizontal_alignment = 1
+
+[node name="CenterContainer" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 0
 
-[node name="MarginContainer" type="PanelContainer" parent="CenterContainer"]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="CenterContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+ratio = 0.8
+
+[node name="MarginContainer" type="PanelContainer" parent="CenterContainer/AspectRatioContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ymwg1")
 
-[node name="MarginContainer2" type="MarginContainer" parent="CenterContainer/MarginContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="CenterContainer/AspectRatioContainer/MarginContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="Data" type="Node" parent="CenterContainer/MarginContainer/MarginContainer2"]
+[node name="Data" type="Node" parent="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2"]
 script = ExtResource("4_egjxx")
 width = 8
 height = 10
 
-[node name="Grid" type="GridContainer" parent="CenterContainer/MarginContainer/MarginContainer2" node_paths=PackedStringArray("data", "pieces_root")]
+[node name="Grid" type="GridContainer" parent="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2" node_paths=PackedStringArray("data", "pieces_root")]
 layout_mode = 2
 theme_override_constants/h_separation = 5
 theme_override_constants/v_separation = 5
@@ -51,13 +135,15 @@ script = ExtResource("2_gsofw")
 slot_scene = ExtResource("2_4abeq")
 data = NodePath("../Data")
 pieces = Array[int]([0, 1, 2, 3, 4])
-pieces_root = NodePath("../../../../Field")
+pieces_root = NodePath("../../../../../Field")
 
-[node name="InputBlocker" type="Control" parent="CenterContainer/MarginContainer/MarginContainer2"]
+[node name="InputBlocker" type="Control" parent="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2"]
 layout_mode = 2
 
 [node name="Field" type="Node2D" parent="."]
 y_sort_enabled = true
 
-[connection signal="processing" from="CenterContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing"]
-[connection signal="processing_finished" from="CenterContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing_finished"]
+[connection signal="processing" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing"]
+[connection signal="processing_finished" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing_finished"]
+[connection signal="scored" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_scored"]
+[connection signal="swapped" from="CenterContainer/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_swapped"]

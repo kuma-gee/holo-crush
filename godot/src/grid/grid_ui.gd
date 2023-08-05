@@ -2,6 +2,8 @@ extends GridContainer
 
 signal processing
 signal processing_finished
+signal swapped
+signal scored(value)
 
 signal match_finished
 signal collapse_finished
@@ -29,6 +31,9 @@ const PIECE_MAP := {
 
 var queue = []
 var is_processing_queue = false
+var combo = 0
+var default_score_value = 50
+var special_multiplier = 2
 
 var moving = []
 var matches = []
@@ -44,12 +49,10 @@ var logger = Logger.new('Grid')
 func _ready():
 	get_tree().get_root().size_changed.connect(_update_slots)
 	
-#	if data.debug:
-#		processing_finished.connect(func(): queue.append(func(): _refresh_slots()))
-	
 	_init_slots()
 	data.created.connect(func(): queue.append(_create_pieces))
 	data.swapped.connect(func(pos, dest):
+		swapped.emit()
 		queue.append(func():
 			var slot = _get_slot(pos)
 			var other = _get_slot(dest)
@@ -125,9 +128,11 @@ func _process(_delta):
 
 func _process_queue():
 	if queue.size() == 0:
+		combo = 0
 		logger.debug("Process done")
 		is_processing_queue = false
 		processing_finished.emit()
+		_refresh_slots(true)
 		return
 
 	var fn = queue.pop_front() as Callable
@@ -139,23 +144,38 @@ func _spawn_piece(piece):
 	var scene = PIECE_MAP[piece]
 	var node = scene.instantiate()
 	pieces_root.add_child(node)
+	node.type = piece
 	return node
 
 #################
 # Queue Actions #
 #################
 
-func _refresh_slots():
-	logger.debug("Starting Refresh after refill")
+func _refresh_slots(only_changed = false):
+	if only_changed:
+		logger.debug("Trying to refresh invalid pieces")
+	else:
+		logger.debug("Starting Refresh after refill")
 
 	var called = {}
+	
 	for y in range(data.height):
 		for x in range(data.width):
 			var pos = Vector2i(x, y)
 			var type = data.get_value(x, y)
 			var special = data.get_special_type(pos)
-
 			var slot = _get_slot(pos)
+			
+			if only_changed:
+				if slot.piece.type != type:
+					logger.debug("Pos %s has a different value: %s, %s" % [pos, slot.piece.type, type])
+					var node = _spawn_piece(type)
+					node.hide()
+					if special != null:
+						node.change_to(special)
+					slot.replace(node)
+				continue
+			
 			if special != null:
 				continue
 
@@ -169,8 +189,9 @@ func _refresh_slots():
 					refresh_finished.emit()
 			)
 
-	logger.debug("Waiting for refresh")
-	await refresh_finished
+	if not only_changed:
+		logger.debug("Waiting for refresh")
+		await refresh_finished
 
 func _create_pieces():
 	logger.debug("Creating initial pieces")
@@ -181,6 +202,7 @@ func _create_pieces():
 			var piece = data.get_value(pos.x, pos.y)
 			var slot = _get_slot(pos)
 			slot.piece = _spawn_piece(piece)
+			slot.piece.spawn()
 			slot.capture()
 
 func _fill_pieces(fills):
@@ -225,6 +247,8 @@ func _move_collapsed(moves):
 	await collapse_finished
 
 func _remove_matched(matched: Array, special_matches: Array):
+	combo += 1
+	
 	var called = {}
 	var done = {}
 
@@ -254,12 +278,14 @@ func _remove_matched(matched: Array, special_matches: Array):
 			var slot = _get_slot(pos) as Slot
 			slot.move_match(target)
 			slot.match_done.connect(func(): counter_fn.call(pos))
+			scored.emit(default_score_value * combo)
 		
 		if not dest in all_matched:
 			called[dest] = 0
 			var piece = _spawn_piece(val)
 			target.change_special(type, piece)
 			target.change_done.connect(func(): counter_fn.call(dest))
+			scored.emit(default_score_value * combo * special_multiplier)
 		else:
 			pass # TODO: activate created special immediately
 	
@@ -268,6 +294,7 @@ func _remove_matched(matched: Array, special_matches: Array):
 		var slot = _get_slot(p) as Slot
 		slot.matched()
 		slot.match_done.connect(func(): counter_fn.call(p))
+		scored.emit(default_score_value * combo)
 		
 	logger.debug("Waiting for %s" % [called.keys()])
 	await match_finished
