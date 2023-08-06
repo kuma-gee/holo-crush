@@ -1,0 +1,63 @@
+[gd_scene load_steps=5 format=3 uid="uid://dqw32jg4upbcp"]
+
+[ext_resource type="Script" path="res://src/menu/score.gd" id="1_4m0ar"]
+[ext_resource type="LabelSettings" uid="uid://vvr077uf4r3l" path="res://src/menu/title_label.tres" id="1_iwi3c"]
+[ext_resource type="PackedScene" uid="uid://dcqw5gw14ad3x" path="res://src/menu/score_added.tscn" id="2_wqht0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3lwum"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="Score" type="MarginContainer" node_paths=PackedStringArray("score_label")]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 123.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+script = ExtResource("1_4m0ar")
+score_add = ExtResource("2_wqht0")
+score_label = NodePath("PanelContainer/MarginContainer/CenterContainer/Control/Label")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_3lwum")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 20
+
+[node name="CenterContainer" type="CenterContainer" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="PanelContainer/MarginContainer/CenterContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/CenterContainer/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -85.5
+offset_top = -45.5
+offset_right = 85.5
+offset_bottom = 45.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 1
+text = "Score"
+label_settings = ExtResource("1_iwi3c")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ShowAddTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="ShowAddTimer" to="." method="_on_show_add_timer_timeout"]

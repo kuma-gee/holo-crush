@@ -8,14 +8,13 @@ extends Control
 
 @export var gameover: Control
 @export var end_score: Label
-@export var score_label: Label
-var score = 0
+@export var score_ui: ScoreUI
+
 
 func _ready():
 	gameover.hide()
 	input_blocker.hide()
 	turns_label.text = str(turns)
-	score_label.text = str(score)
 
 
 func _on_grid_processing():
@@ -30,13 +29,10 @@ func _on_grid_processing_finished():
 			_on_gameover()
 
 func _on_gameover():
+	var score = score_ui.score
 	end_score.text = tr("Score") + ": " + str(score)
 	gameover.show()
 	GameManager.scored(score)
-
-func _on_grid_scored(value):
-	score += value
-	score_label.text = str(score)
 
 
 func _on_restart_pressed():

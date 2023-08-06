@@ -4,7 +4,7 @@ extends GridContainer
 signal processing
 signal processing_finished
 signal turn_used
-signal scored(value)
+signal scored(value, combo)
 
 signal match_finished
 signal move_finished
@@ -291,13 +291,13 @@ func _remove_matched(matched: Array, special_matches: Array):
 			match_called[pos] = 0
 			var slot = _get_slot(pos) as Slot
 			slot.move_match(target)
-			scored.emit(default_score_value * combo)
+			scored.emit(default_score_value * combo, combo)
 		
 		if not dest in all_matched:
 			match_called[dest] = 0
 			var piece = _spawn_piece(val)
 			target.change_special(type, piece)
-			scored.emit(default_score_value * combo * special_multiplier)
+			scored.emit(default_score_value * combo * special_multiplier, combo)
 		else:
 			pass # TODO: activate created special immediately
 	
@@ -305,7 +305,7 @@ func _remove_matched(matched: Array, special_matches: Array):
 		match_called[p] = 0
 		var slot = _get_slot(p) as Slot
 		slot.matched()
-		scored.emit(default_score_value * combo)
+		scored.emit(default_score_value * combo, combo)
 	
 	#logger.debug("Waiting for %s" % [match_called.keys()])
 	#await match_finished
