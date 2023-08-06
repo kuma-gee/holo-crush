@@ -10,6 +10,7 @@ signal replace_done
 
 signal swiped(dir)
 
+var height = 0
 var piece: Piece
 var pos: Vector2i
 
@@ -84,8 +85,8 @@ func fill_drop():
 		return
 	
 	capture()
-	piece.global_position = get_pos() + Vector2.UP * (abs(pos.y) + 1) * size
-	piece.move(get_pos())
+	piece.global_position = get_pos() + Vector2.UP * (height - (abs(pos.y) + 1)) * size.y
+	piece.move(get_pos(), true)
 
 	await piece.move_done
 	fill_done.emit()

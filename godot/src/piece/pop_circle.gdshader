@@ -22,7 +22,7 @@ void fragment() {
 			COLOR = vec4(0.0);
 		} else {
 			float w = range_lerp(alpha, 0.0, 1.0, 1.0, 0.0);
-			COLOR = vec4(mix(color.rgb, COLOR.rgb, w), 1.0);
+			COLOR = vec4(mix(color.rgb, COLOR.rgb, w), COLOR.a);
 		}
 	} else {
 		COLOR = COLOR;
