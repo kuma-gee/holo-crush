@@ -5,4 +5,4 @@
 [node name="BasicPurple" instance=ExtResource("1_4ufh7")]
 
 [node name="Sprite2D" parent="." index="1"]
-modulate = Color(0.607843, 0, 0.811765, 1)
+modulate = Color(0.662745, 0.345098, 0.768627, 1)

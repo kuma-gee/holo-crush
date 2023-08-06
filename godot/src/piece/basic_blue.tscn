@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cmwklckfgwegu"]
+[gd_scene load_steps=11 format=3 uid="uid://cmwklckfgwegu"]
 
 [ext_resource type="PackedScene" uid="uid://c0o3d7dki4axs" path="res://src/piece/ina.tscn" id="1_hiotm"]
 [ext_resource type="Script" path="res://src/piece/basic.gd" id="2_1hvhb"]
@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://ced26cjexblnh" path="res://assets/Piece__Basic_Col.png" id="4_k8n1j"]
 [ext_resource type="Texture2D" uid="uid://c6vm2u4qhfw8b" path="res://assets/Piece__Basic_Bomb.png" id="6_2wluf"]
 [ext_resource type="Shader" path="res://src/piece/rainbow.gdshader" id="7_wjrow"]
-[ext_resource type="PackedScene" uid="uid://c0uyk0eishca3" path="res://src/piece/helper/shard_emitter.tscn" id="8_gev70"]
+[ext_resource type="Shader" path="res://src/piece/pop_circle.gdshader" id="8_kn5mu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yj06x"]
 shader = ExtResource("7_wjrow")
@@ -17,6 +17,13 @@ shader_parameter/strength = 1.0
 shader_parameter/smoothing = 0.5
 shader_parameter/size = 0.52
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tnkub"]
+shader = ExtResource("8_kn5mu")
+shader_parameter/ring_radius = 0.4
+shader_parameter/thickness_scalar = 0.7
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/progress = 1.0
+
 [node name="BasicBlue" instance=ExtResource("1_hiotm")]
 script = ExtResource("2_1hvhb")
 normal_texture = ExtResource("2_la2jm")
@@ -25,6 +32,7 @@ col_texture = ExtResource("4_k8n1j")
 bomb_texture = ExtResource("6_2wluf")
 
 [node name="BackColor" type="ColorRect" parent="." index="0"]
+visible = false
 material = SubResource("ShaderMaterial_yj06x")
 offset_left = -80.0
 offset_top = -80.0
@@ -33,11 +41,6 @@ offset_bottom = 80.0
 mouse_filter = 2
 
 [node name="Sprite2D" parent="." index="1"]
-modulate = Color(0, 0.662745, 0.811765, 1)
+modulate = Color(0.176471, 0.603922, 0.701961, 1)
+material = SubResource("ShaderMaterial_tnkub")
 texture = ExtResource("2_la2jm")
-
-[node name="ShardEmitter" parent="Sprite2D" index="0" instance=ExtResource("8_gev70")]
-nbr_of_shards = 10
-min_impulse = 20.0
-max_impulse = 80.0
-display_triangles = false
