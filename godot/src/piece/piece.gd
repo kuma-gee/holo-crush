@@ -50,6 +50,12 @@ func despawn(finish_signal = despawn_done):
 		queue_free()
 	)
 
+func pressed():
+	modulate = Color.GRAY
+
+func released():
+	modulate = Color.WHITE
+
 func matched():
 	despawn(match_done)
 
@@ -58,6 +64,7 @@ func slight_move(dir: Vector2):
 	var pos = global_position
 	tw.tween_property(self, "global_position", pos + dir * slight_move_distance, 0.25).set_trans(Tween.TRANS_BACK)
 	tw.tween_property(self, "global_position", pos, 0.25)
+	await tw.finished
 
 func change_to(s: Specials.Type):
 	special = s

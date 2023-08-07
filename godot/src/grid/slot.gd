@@ -14,11 +14,19 @@ var height = 0
 var piece: Piece
 var pos: Vector2i
 
+var slight_moving = false
+
+@onready var click_sound := $ClickSound
+@onready var swipe_sound := $SwipeSound
+@onready var swipe_control := $SwipeControl
+
 const piece_size = Vector2(128, 128)
 
 func invalid_swap(dir: Vector2i):
 	if piece:
-		piece.slight_move(dir)
+		slight_moving = true
+		await piece.slight_move(dir)
+		slight_moving = false
 
 func swap(other_slot: Slot):
 	if piece == null:
@@ -114,6 +122,22 @@ func replace(p):
 
 	replace_done.emit()
 
+func _can_move():
+	return piece != null and not slight_moving
+
 func _on_swipe_control_swiped(dir):
-	if piece:
+	if _can_move():
 		swiped.emit(dir)
+		swipe_sound.play()
+		piece.released()
+
+
+func _on_swipe_control_press_released():
+	if _can_move():
+		piece.released()
+
+
+func _on_swipe_control_press_click():
+	if _can_move():
+		piece.pressed()
+		click_sound.play()
