@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://b3wrtja7akth5"]
+[gd_scene load_steps=5 format=3 uid="uid://b3wrtja7akth5"]
 
 [ext_resource type="Script" path="res://src/sound_manager.gd" id="1_odwfr"]
 [ext_resource type="AudioStream" uid="uid://dsudgro5syiqh" path="res://assets/sound/パッ.mp3" id="2_mukpa"]
 [ext_resource type="Script" path="res://src/sound/DebounceAudio.gd" id="3_0bakx"]
+[ext_resource type="AudioStream" uid="uid://b1w3j723xv810" path="res://assets/sound/ペタッ.mp3" id="4_lypla"]
 
 [node name="SoundManager" type="Node"]
 script = ExtResource("1_odwfr")
@@ -12,5 +13,7 @@ stream = ExtResource("2_mukpa")
 volume_db = -10.0
 script = ExtResource("3_0bakx")
 
-[node name="Timer" type="Timer" parent="MatchSound"]
-one_shot = true
+[node name="SpecialMatch" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_lypla")
+volume_db = -10.0
+script = ExtResource("3_0bakx")

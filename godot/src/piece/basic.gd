@@ -2,6 +2,8 @@ extends Piece
 
 @onready var sprite := $Sprite2D
 @onready var back_color := $BackColor
+@onready var anim := $AnimationPlayer
+@onready var match_particles := $MatchParticles
 
 @export var normal_texture: Texture2D
 @export var row_texture: Texture2D
@@ -13,6 +15,7 @@ func _ready():
 	mat.set_shader_parameter("color_gradient", _create_gradient())
 	back_color.material = mat
 	back_color.hide()
+	match_particles.emitting = false
 	
 	var mat2 = (sprite.material as ShaderMaterial).duplicate()
 	sprite.material = mat2
@@ -30,6 +33,7 @@ func matched():
 	
 	var tw = create_tween()
 	tw.tween_method(_set_shader_value, 1.0, -1.0, 0.5).set_trans(Tween.TRANS_CUBIC) .set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(back_color, "modulate", Color.TRANSPARENT, 0.5)
 	tw.finished.connect(func():
 		match_done.emit()
 		queue_free()
@@ -40,8 +44,10 @@ func _set_shader_value(value: float):
 	mat.set_shader_parameter("progress", value)
 
 func _to_special(special: Specials.Type):
+	SoundManager.play_special_match()
 	var texture = normal_texture
 	back_color.hide()
+	anim.play("special_match")
 	
 	match special:
 		Specials.Type.ROW: texture = row_texture
