@@ -13,7 +13,7 @@
 bg_color = Color(0.266667, 0.32549, 0.368627, 0.784314)
 shadow_size = 10
 
-[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker", "grid", "turns_label", "gameover", "end_score")]
+[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker", "grid", "turns_label", "gameover", "end_score", "score_ui")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,6 +27,7 @@ grid = NodePath("Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid
 turns_label = NodePath("Top/MarginContainer/HBoxContainer/Label2")
 gameover = NodePath("GameOver")
 end_score = NodePath("GameOver/PanelContainer/MarginContainer/VBoxContainer/EndScore")
+score_ui = NodePath("Score")
 
 [node name="Data" type="Node" parent="."]
 script = ExtResource("4_egjxx")

@@ -65,6 +65,14 @@ func _ready():
 			await slot.swap_done
 		)
 	)
+	data.wrong_swap.connect(func(pos, dest):
+		queue.append(func():
+			var slot = _get_slot(pos)
+			var other = _get_slot(dest)
+			slot.swap_wrong(other)
+			await slot.swap_wrong_done
+		)
+	)
 	data.invalid_swap.connect(func(pos, dir):
 		var slot = _get_slot(pos)
 		slot.invalid_swap(dir)

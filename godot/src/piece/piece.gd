@@ -24,14 +24,16 @@ enum Type {
 @export var type: Type
 @export var slight_move_distance := 10
 
+@onready var sprite := $Sprite2D
+
 var special: Specials.Type
 
-func move(dest: Vector2, fade_in = false):
+func move(dest: Vector2, fade_in = false, time = 0.5):
 	var tw = create_tween()
-	tw.tween_property(self, "global_position", dest, 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_property(self, "global_position", dest, time).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	if fade_in:
 		modulate = Color.TRANSPARENT
-		tw.parallel().tween_property(self, "modulate", Color.WHITE, 0.5).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN_OUT)
+		tw.parallel().tween_property(self, "modulate", Color.WHITE, time).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN_OUT)
 		
 	tw.finished.connect(func(): move_done.emit())
 
@@ -52,9 +54,12 @@ func despawn(finish_signal = despawn_done):
 
 func pressed():
 	modulate = Color.GRAY
+	sprite.scale = Vector2(0.9, 0.9)
+	
 
 func released():
 	modulate = Color.WHITE
+	sprite.scale = Vector2(1.0, 1.0)
 
 func matched():
 	despawn(match_done)

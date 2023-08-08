@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://diptf1fbeqwco"]
+[gd_scene load_steps=6 format=3 uid="uid://diptf1fbeqwco"]
 
 [ext_resource type="Script" path="res://src/grid/slot.gd" id="1_ysysd"]
 [ext_resource type="Script" path="res://src/grid/SwipeControl.gd" id="2_arkt7"]
 [ext_resource type="AudioStream" uid="uid://bdvv60tqtat27" path="res://assets/sound/カーソル移動9.mp3" id="3_iqce0"]
 [ext_resource type="AudioStream" uid="uid://d1nk5wmji7rr0" path="res://assets/sound/カーソル移動3.mp3" id="4_bo2sh"]
+[ext_resource type="AudioStream" uid="uid://d12kbr3s2031k" path="res://assets/sound/ニュッ2.mp3" id="5_002jb"]
 
 [node name="Slot" type="Control"]
 layout_mode = 3
@@ -40,6 +41,10 @@ stream = ExtResource("3_iqce0")
 stream = ExtResource("4_bo2sh")
 volume_db = -20.0
 pitch_scale = 0.7
+
+[node name="WrongSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_002jb")
+volume_db = -10.0
 
 [connection signal="press_click" from="SwipeControl" to="." method="_on_swipe_control_press_click"]
 [connection signal="press_released" from="SwipeControl" to="." method="_on_swipe_control_press_released"]

@@ -4,6 +4,7 @@ extends Control
 signal match_done
 signal move_done
 signal swap_done
+signal swap_wrong_done
 signal fill_done
 signal change_done
 signal replace_done
@@ -18,6 +19,7 @@ var slight_moving = false
 
 @onready var click_sound := $ClickSound
 @onready var swipe_sound := $SwipeSound
+@onready var wrong_sound := $WrongSound
 @onready var swipe_control := $SwipeControl
 
 const piece_size = Vector2(128, 128)
@@ -28,6 +30,14 @@ func invalid_swap(dir: Vector2i):
 		await piece.slight_move(dir)
 		slight_moving = false
 
+func swap_wrong(other_slot: Slot):
+	swap(other_slot)
+	await swap_done
+	swap(other_slot)
+	wrong_sound.play()
+	await swap_done
+	swap_wrong_done.emit()
+
 func swap(other_slot: Slot):
 	if piece == null:
 		return
@@ -35,8 +45,8 @@ func swap(other_slot: Slot):
 	var other = other_slot.piece
 	var piece_pos = get_pos()
 	if other:
-		other.move(piece_pos)
-	piece.move(other_slot.get_pos())
+		other.move(piece_pos, false, 0.3)
+	piece.move(other_slot.get_pos(), false, 0.3)
 
 	var temp = piece
 	other_slot.piece = piece

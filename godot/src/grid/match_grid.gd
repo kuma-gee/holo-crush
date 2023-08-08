@@ -2,7 +2,7 @@ class_name MatchGrid
 extends Node
 
 signal invalid_swap(pos, dir)
-signal swap_no_match(pos, dest)
+signal wrong_swap(pos, dest)
 signal swapped(pos, dest)
 signal moved(pos, dest)
 
@@ -92,7 +92,7 @@ func swap(pos: Vector2i, dest: Vector2i):
 
 		return true
 	else:
-		swap_no_match.emit(pos, dest)
+		wrong_swap.emit(pos, dest)
 	
 	return false
 
