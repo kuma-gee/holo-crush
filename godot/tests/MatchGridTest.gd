@@ -86,9 +86,8 @@ func test_swap_not_match():
 	watch_signals(data)
 	data.swap(Vector2(0, 0), Vector2(1, 0))
 
-	assert_signal_emit_count(data, 'swapped', 2)
-	assert_signal_emitted_with_parameters(data, 'swapped', [Vector2i(1, 0), Vector2i(0, 0)], 1)
-	assert_signal_emitted_with_parameters(data, 'swapped', [Vector2i(0, 0), Vector2i(1, 0)], 0)
+	assert_signal_emit_count(data, 'swap_no_match', 1)
+	assert_contains_exact(get_signal_parameters(data, 'swap_no_match'), [Vector2i(1, 0), Vector2i(0, 0)])
 	assert_eq_deep(data.get_data(), [
 		[1, 2, 1, 0],
 		[0, 1, 2, 0],

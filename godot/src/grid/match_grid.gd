@@ -2,6 +2,7 @@ class_name MatchGrid
 extends Node
 
 signal invalid_swap(pos, dir)
+signal swap_no_match(pos, dest)
 signal swapped(pos, dest)
 signal moved(pos, dest)
 
@@ -74,21 +75,26 @@ func swap(pos: Vector2i, dest: Vector2i):
 	if other == null:
 		invalid_swap.emit(pos, dest - pos)
 		return
+	
+	var test_swap = _data.duplicate()
+	test_swap.swap_value(pos, dest)
+	var count = test_swap.get_match_counts()
+	if count.size() > 0:
+		_swap_value_with_special(pos, dest)
+		swapped.emit(pos, dest)
+		check_matches(dest)
 
-	_swap_value_with_special(pos, dest)
-	swapped.emit(pos, dest)
-	if not check_matches(dest):
-		if not debug:
-			_swap_value_with_special(dest, pos)
-			swapped.emit(dest, pos)
-		return false
-	else:
 		if is_deadlocked():
 			_data.refill(_specials.get_all_specials())
 			check_matches() # Usually does not contain matches, but just in case, let it be a win for the player
 			refilled.emit()
 		_data.print_data('Swap')
-	return true
+
+		return true
+	else:
+		swap_no_match.emit(pos, dest)
+	
+	return false
 
 func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 	var counts = _data.get_match_counts()
