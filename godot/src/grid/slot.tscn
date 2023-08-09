@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://diptf1fbeqwco"]
+[gd_scene load_steps=11 format=3 uid="uid://diptf1fbeqwco"]
 
 [ext_resource type="Script" path="res://src/grid/slot.gd" id="1_ysysd"]
 [ext_resource type="Shader" path="res://src/grid/highlight.gdshader" id="2_aqplq"]
@@ -6,6 +6,8 @@
 [ext_resource type="AudioStream" uid="uid://bdvv60tqtat27" path="res://assets/sound/カーソル移動9.mp3" id="3_iqce0"]
 [ext_resource type="AudioStream" uid="uid://d1nk5wmji7rr0" path="res://assets/sound/カーソル移動3.mp3" id="4_bo2sh"]
 [ext_resource type="AudioStream" uid="uid://d12kbr3s2031k" path="res://assets/sound/ニュッ2.mp3" id="5_002jb"]
+[ext_resource type="Script" path="res://src/grid/special_mark.gd" id="7_3ro44"]
+[ext_resource type="Shader" path="res://src/grid/special.gdshader" id="7_7kj06"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g606w"]
 shader = ExtResource("2_aqplq")
@@ -13,6 +15,15 @@ shader_parameter/frequency = 7.0
 shader_parameter/phase = -6.635
 shader_parameter/size = 0.45
 shader_parameter/speed = 3.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pihnw"]
+shader = ExtResource("7_7kj06")
+shader_parameter/size = 0.45
+shader_parameter/speed = 0.0
+shader_parameter/top = true
+shader_parameter/left = true
+shader_parameter/right = true
+shader_parameter/bot = true
 
 [node name="Slot" type="Control"]
 layout_mode = 3
@@ -24,6 +35,7 @@ size_flags_vertical = 3
 script = ExtResource("1_ysysd")
 
 [node name="Highlight" type="ColorRect" parent="."]
+visible = false
 material = SubResource("ShaderMaterial_g606w")
 layout_mode = 1
 anchors_preset = 15
@@ -31,6 +43,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="SpecialMark" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_pihnw")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(20, 20)
+script = ExtResource("7_3ro44")
 
 [node name="SwipeControl" type="Control" parent="."]
 layout_mode = 1

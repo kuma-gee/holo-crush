@@ -10,7 +10,7 @@ signal filled(pos, value)
 signal created()
 signal matched(pos)
 signal special_matched(pos, affected, type, value)
-signal special_activate(pos)
+signal special_activate(pos, fields)
 
 signal refilled()
 signal update()
@@ -205,7 +205,7 @@ func _remove_value(p: Vector2i):
 
 	var fields = _specials.activate_specials(p, _data)
 	if fields.size() > 0:
-		special_activate.emit(p)
+		special_activate.emit(p, fields)
 		for sp in fields:
 			if sp != p:
 				_append_unique(removed, [_remove_value(sp)])

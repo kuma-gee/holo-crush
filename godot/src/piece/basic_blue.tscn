@@ -180,6 +180,7 @@ libraries = {
 
 [node name="MatchParticles" type="GPUParticles2D" parent="." index="4"]
 visible = false
+emitting = false
 process_material = SubResource("ParticleProcessMaterial_31y3t")
 texture = ExtResource("11_w00wj")
 lifetime = 0.5

@@ -293,12 +293,12 @@ func test_match_special_with_special():
 	data.swap(Vector2(2, 2), Vector2(1, 2))
 	data.swap(Vector2(1, 3), Vector2(1, 4))
 
-	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(1, 4)])
+	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(1, 4), [Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4), Vector2i(4, 4)]])
 	assert_contains_exact(get_signal_parameters(data, 'matched')[0], [Vector2i(4, 4)])
 
 	var actual = get_signal_parameters(data, 'special_matched')
 	assert_eq(actual[0], Vector2i(1, 4))
-	assert_contains_exact(actual[1], [Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4) ])
+	assert_contains_exact(actual[1], [Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4)])
 	assert_eq(actual[2], Specials.Type.COL)
 	assert_eq(actual[3], 0)
 
@@ -316,8 +316,8 @@ func test_special_activation_immediately_after_matched():
 	data.swap(Vector2(2, 4), Vector2(2, 3))
 
 	assert_signal_emit_count(data, 'special_activate', 2)
-	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(1, 3)], 0)
-	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(2, 3)], 1)
+	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(1, 3), [Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3)]], 0)
+	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(2, 3), [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3), Vector2i(2, 4)]], 1)
 
 	assert_signal_emit_count(data, 'matched', 2)
 	assert_contains_exact(get_signal_parameters(data, 'matched')[0], [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3), Vector2i(2, 4)])
@@ -374,7 +374,7 @@ func test_activate_all_specials():
 
 	data.activate_all_specials()
 
-	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(2, 0)])
+	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(2, 0), [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3)]])
 	assert_contains_exact(get_signal_parameters(data, 'matched', 1)[0], [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3)])
 
 func test_get_possible_move(params=use_parameters([

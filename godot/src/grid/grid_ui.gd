@@ -40,6 +40,7 @@ var moving = []
 var matches = []
 var filling = []
 var specials = []
+var special_activate = []
 
 var match_called = {}
 var move_called = {}
@@ -85,7 +86,7 @@ func _ready():
 	)
 	data.refilled.connect(func(): queue.append(_refresh_slots))
 
-	data.special_activate.connect(func(p):) # TODO: activate special
+	data.special_activate.connect(func(pos, fields): special_activate.append([pos, fields]))
 	data.special_matched.connect(func(pos, aff, type, val): specials.append([pos, aff, type, val]))
 	data.matched.connect(func(m): matches.append(m))
 	data.moved.connect(func(pos, dest): moving.append([pos, dest]))
@@ -97,11 +98,13 @@ func _ready():
 
 			var x = matches.duplicate()
 			var y = specials.duplicate()
+			var z = special_activate.duplicate()
 
-			queue.append(func(): await _remove_matched(x, y))
+			queue.append(func(): await _remove_matched(x, y, z))
 
 			matches = []
 			specials = []
+			special_activate = []
 		
 		if moving.size() > 0:
 			logger.debug("Queue Move %s" % [moving])
@@ -303,7 +306,7 @@ func _move_collapsed(moves):
 	if not _is_fill_finished():
 		await fill_finished
 
-func _remove_matched(matched: Array, special_matches: Array):
+func _remove_matched(matched: Array, special_matches: Array, activate: Array):
 	logger.debug("Staring match %s - %s" % [matched, special_matches])
 	combo += 1
 	match_called = {}
@@ -312,6 +315,33 @@ func _remove_matched(matched: Array, special_matches: Array):
 	for m in matched:
 		for p in m:
 			all_matched.append(p)
+			
+	for p in activate:
+		var pos = p[0]
+		var fields = p[1]
+		
+		if fields.size() == 0:
+			continue
+		
+		var min_x = data.height
+		var max_x = 0
+		var min_y = data.height
+		var max_y = 0
+		for f in fields:
+			min_x = min(min_x, f.x)
+			max_x = max(max_x, f.x)
+			min_y = min(min_y, f.y)
+			max_y = max(max_y, f.y)
+		
+		var is_horizontal = min_y == max_y
+		var is_vertical =  min_x == max_x
+		for f in fields:
+			var is_top = f.y == min_y
+			var is_right = f.x == max_x
+			var is_left = f.x == min_x
+			var is_bot = f.y == max_y
+			_get_slot(f).special(is_horizontal || is_top, is_vertical || is_right, is_horizontal || is_bot, is_vertical || is_left)
+
 
 	for x in special_matches:
 		var dest = x[0]

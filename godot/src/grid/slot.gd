@@ -22,20 +22,41 @@ var slight_moving = false
 @onready var wrong_sound := $WrongSound
 @onready var swipe_control := $SwipeControl
 @onready var highlight_rect := $Highlight
+@onready var special_rect := $SpecialMark
 
 const piece_size = Vector2(128, 128)
 
+var showing_special = false
+
 func _ready():
+	var mat = special_rect.get_material() as ShaderMaterial
+	special_rect.material = mat.duplicate()
+	
 	highlight_rect.modulate = Color.TRANSPARENT
+	special_rect.modulate = Color.TRANSPARENT
 
 func highlight():
-	var tw = create_tween()
-	tw.tween_property(highlight_rect, "modulate", Color.WHITE, 0.5)
-	get_tree().create_timer(3.0).timeout.connect(_unhighlight)
+	_show_brief(highlight_rect)
 
-func _unhighlight():
+func special(top: bool, right: bool, bot: bool, left: bool):
+	if showing_special:
+		return
+	var mat = special_rect.get_material() as ShaderMaterial
+	mat.set_shader_parameter("top", top)
+	mat.set_shader_parameter("right", right)
+	mat.set_shader_parameter("bot", bot)
+	mat.set_shader_parameter("left", left)
+	await _show_brief(special_rect, 0.2, 0.2)
+	showing_special = false
+
+func _show_brief(node, time = 0.5, hold_time = 3.0):
 	var tw = create_tween()
-	tw.tween_property(highlight_rect, "modulate", Color.TRANSPARENT, 0.5)
+	tw.tween_property(node, "modulate", Color.WHITE, time / 2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	get_tree().create_timer(hold_time).timeout.connect(func():
+		var t = create_tween()
+		t.tween_property(node, "modulate", Color.TRANSPARENT, time / 2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	)
+	await tw.finished
 
 func jump():
 	piece.jump()
