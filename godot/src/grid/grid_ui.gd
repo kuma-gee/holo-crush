@@ -51,6 +51,12 @@ var logger = Logger.new('Grid')
 # https://www.youtube.com/watch?v=YhykrMFHOV4&list=PL4vbr3u7UKWqwQlvwvgNcgDL1p_3hcNn2
 # https://medium.com/@thrivevolt/making-a-grid-inventory-system-with-godot-727efedb71f7
 
+# Swap
+
+# Match
+# Move
+# Fill/Move -> Repeat
+
 
 func _ready():
 	get_tree().get_root().size_changed.connect(_update_slots)

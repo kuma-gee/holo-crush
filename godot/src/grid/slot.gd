@@ -76,16 +76,16 @@ func move(slot: Slot):
 	if piece == null:
 		return
 	
-	if slot.piece != null:
-		# Please don't happen
-		print("Other slot still has a piece. Cannot move there.")
-		return
-	
-	piece.move(slot.get_pos())
+	# if slot.piece != null:
+	# 	# Please don't happen
+	# 	print("Other slot still has a piece. Cannot move there.")
+	# 	return
 
 	var temp = piece
-	slot.piece = piece
 	piece = null
+	slot.piece = temp
+	
+	temp.move(slot.get_pos())
 
 	await temp.move_done
 	move_done.emit()
