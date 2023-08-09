@@ -234,11 +234,13 @@ func collapse_columns(check = true, fill = true):
 				_swap_value_with_special(Vector2i(x, yy), Vector2i(x, y))
 				moved.emit(Vector2i(x, yy), Vector2i(x, y))
 
+	# only false when testing
 	if fill:
-		update.emit()
 		_data.print_data('Collapse')
 		fill_empty()
+		update.emit()
 
+	# only false when testing
 	if check:
 		check_matches()
 
@@ -255,5 +257,4 @@ func fill_empty():
 				var value = _data.fill_random(x, y)
 				filled.emit(Vector2i(x, y), value)
 	
-	update.emit()
 	_data.print_data('Fill')
