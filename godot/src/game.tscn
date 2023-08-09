@@ -34,7 +34,7 @@ score_ui = NodePath("Score")
 script = ExtResource("4_egjxx")
 
 [node name="HighlightTimer" type="Timer" parent="."]
-wait_time = 8.0
+wait_time = 10.0
 autostart = true
 
 [node name="Top" type="PanelContainer" parent="."]

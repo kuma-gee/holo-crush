@@ -11,12 +11,17 @@ extends Control
 @export var end_score: Label
 @export var score_ui: ScoreUI
 
+var hint_shown = false
 
 func _ready():
 	gameover.hide()
 	input_blocker.hide()
 	turns_label.text = str(turns)
-	move_timer.timeout.connect(func(): grid.highlight_possible_move())
+	move_timer.timeout.connect(func():
+		if not hint_shown:
+			grid.highlight_possible_move()
+			hint_shown = true
+	)
 
 
 func _on_grid_processing():
@@ -54,6 +59,7 @@ func _on_grid_turn_used():
 	turns -= 1
 	turns_label.text = str(turns)
 	move_timer.start()
+	hint_shown = false
 
 
 func _on_menu_pressed():

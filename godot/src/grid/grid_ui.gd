@@ -98,7 +98,7 @@ func _ready():
 			var x = matches.duplicate()
 			var y = specials.duplicate()
 
-			queue.append(func(): await _remove_matched(x, y, z))
+			queue.append(func(): await _remove_matched(x, y))
 
 			matches = []
 			specials = []
