@@ -21,8 +21,24 @@ var slight_moving = false
 @onready var swipe_sound := $SwipeSound
 @onready var wrong_sound := $WrongSound
 @onready var swipe_control := $SwipeControl
+@onready var highlight_rect := $Highlight
 
 const piece_size = Vector2(128, 128)
+
+func _ready():
+	highlight_rect.modulate = Color.TRANSPARENT
+
+func highlight():
+	var tw = create_tween()
+	tw.tween_property(highlight_rect, "modulate", Color.WHITE, 0.5)
+	get_tree().create_timer(3.0).timeout.connect(_unhighlight)
+
+func _unhighlight():
+	var tw = create_tween()
+	tw.tween_property(highlight_rect, "modulate", Color.TRANSPARENT, 0.5)
+
+func jump():
+	piece.jump()
 
 func invalid_swap(dir: Vector2i):
 	if piece:

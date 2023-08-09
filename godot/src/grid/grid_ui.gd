@@ -110,6 +110,13 @@ func _ready():
 	
 	data.create_data(pieces)
 
+func highlight_possible_move():
+	var move = data.get_possible_move()
+	if move and move.size() > 0:
+		for p in move:
+			_get_slot(p).highlight()
+		_get_slot(move[move.size() - 1]).jump()
+
 func activate_specials():
 	if data.has_specials():
 		queue.append(func(): data.activate_all_specials())

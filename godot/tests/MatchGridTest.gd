@@ -376,3 +376,41 @@ func test_activate_all_specials():
 
 	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(2, 0)])
 	assert_contains_exact(get_signal_parameters(data, 'matched', 1)[0], [Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3)])
+
+func test_get_possible_move(params=use_parameters([
+	[
+		[
+			[2, 2, 0, 2],
+			[5, 0, 1, 2],
+			[1, 3, 4, 3],
+			[0, 2, 5, 1]
+		],
+		[Vector2i(0, 0), Vector2i(1, 0), Vector2i(3, 0)]
+	],
+	[
+		[
+			[2, 2, 0, 1],
+			[5, 2, 4, 2],
+			[1, 3, 4, 3],
+			[0, 2, 5, 1]
+		],
+		[Vector2i(1, 0), Vector2i(1, 1), Vector2i(1, 3)]
+	],
+	[
+		[
+			[2, 1, 0, 1],
+			[5, 2, 4, 2],
+			[1, 3, 4, 3],
+			[0, 2, 5, 1]
+		],
+		null
+	]
+])):
+	var data = _create(params[0])
+
+	var move = data.get_possible_move()
+	if params[1] != null:
+		assert_not_null(move)
+		assert_contains_exact(move, params[1])
+	else:
+		assert_null(move)

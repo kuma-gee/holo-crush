@@ -2,6 +2,7 @@ extends Control
 
 @export var input_blocker: Control
 @export var grid: GridUI
+@export var move_timer: Timer
 
 @export var turns_label: Label
 @export var turns := 30
@@ -15,6 +16,7 @@ func _ready():
 	gameover.hide()
 	input_blocker.hide()
 	turns_label.text = str(turns)
+	move_timer.timeout.connect(func(): grid.highlight_possible_move())
 
 
 func _on_grid_processing():
@@ -51,6 +53,7 @@ func _on_restart_pressed():
 func _on_grid_turn_used():
 	turns -= 1
 	turns_label.text = str(turns)
+	move_timer.start()
 
 
 func _on_menu_pressed():

@@ -52,6 +52,9 @@ func despawn(finish_signal = despawn_done):
 		queue_free()
 	)
 
+func jump():
+	pass # TODO: jump
+
 func pressed():
 	modulate = Color.GRAY
 	sprite.scale = Vector2(0.9, 0.9)

@@ -37,24 +37,33 @@ func create_data(values: Array, init: Array = []):
 
 	created.emit()
 
-func is_deadlocked():
+func get_possible_move():
 	var copy = _data.duplicate()
 	for y in height:
 		for x in width:
-			var p = Vector2i(x, y)
+			var pos = Vector2i(x, y)
 			var dir_to_check = [Vector2i.UP, Vector2i.RIGHT]
 
 			for dir in dir_to_check:
-				copy.swap_value(p, p + dir)
+				var dest = pos + dir
+				copy.swap_value(pos, dest)
 
-				var has_match = copy.get_match_counts().size() > 0
-				if has_match:
-					return false
+				var matches = copy.get_match_counts()
+				if matches.size() > 0:
+					var result = matches.keys()
+					if pos in result:
+						result.erase(pos)
+						result.append(dest)
+					elif dest in result:
+						result.erase(dest)
+						result.append(pos)
+					return result
 				
-				copy.swap_value(p, p + dir)
+				copy.swap_value(pos, dest)
+	return null
 
-
-	return true
+func is_deadlocked():
+	return get_possible_move() == null
 
 func get_special_type(p: Vector2i):
 	return _specials.get_special_type(p)
