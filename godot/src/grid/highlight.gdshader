@@ -22,26 +22,4 @@ void fragment() {
 	
 	COLOR = COLOR;
 	COLOR.a *= a * wave; // smoothstep(0.3, 0.5, wave);
-	
-//	if (abs(dist.x) < 0.5 || abs(dist.y) < 0.5) {
-//		COLOR = vec4(0.0);
-//	} else {
-	
-//	float outer_radius = diameter / 2.0;
-//	float inner_radius = outer_radius - thickness;
-//	float outer_circle = step(length(pos), outer_radius);
-//	float inner_circle = step(length(pos), inner_radius);
-//
-//
-//	float angle = atan(pos.y, pos.x);
-//	if (angle < 0.0) {
-//	angle += 2.0 * PI;
-//	}
-//
-//	float wave = 0.5 * sin(frequency * angle + phase) + 0.5;
-//
-//
-//	float ring = outer_circle - inner_circle;
-//	ring *= step(0.5, wave);
-//	COLOR = vec4(color.rgb, ring * color.a);
 }

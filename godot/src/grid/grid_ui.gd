@@ -105,18 +105,18 @@ func _ready():
 		
 		if moving.size() > 0:
 			logger.debug("Queue Move %s" % [moving])
-			logger.debug("With Fill %s" % [filling])
 
 			var x = moving.duplicate()
-			var y = filling.duplicate()
 
-			queue.append(func(): await _move_collapsed(x, y))
+			queue.append(func(): await _move_collapsed(x))
 
 			moving = []
-			filling = []
 
-		# if filling.size() > 0:
-		# 	queue.append(func(): await _fill_pieces(x))
+		if filling.size() > 0:
+			logger.debug("Queue Fill %s" % [filling])
+			var x = filling.duplicate()
+			queue.append(func(): await _fill_pieces(x))
+			filling = []
 
 	)
 	
@@ -275,19 +275,6 @@ func _create_pieces():
 func _fill_pieces(fills):
 	logger.debug("Start fill %s" % [fills])
 
-
-	logger.debug("Waiting for %s" % [fill_called.keys()])
-	await fill_finished
-
-func _move_collapsed(moves, fills):
-	logger.debug("Start moving %s and filling %s" % [moves, fills])
-
-	move_called = {}
-	for m in moves:
-		var slot = _get_slot(m[0])
-		slot.move(_get_slot(m[1]))
-		move_called[m[0]] = 0
-
 	fill_called = {}
 	for v in fills:
 		var pos = v[0]
@@ -296,6 +283,19 @@ func _move_collapsed(moves, fills):
 		slot.piece = _spawn_piece(piece)
 		slot.fill_drop()
 		fill_called[pos] = 0
+
+
+	logger.debug("Waiting for %s" % [fill_called.keys()])
+	await fill_finished
+
+func _move_collapsed(moves):
+	logger.debug("Start moving %s" % [moves])
+
+	move_called = {}
+	for m in moves:
+		var slot = _get_slot(m[0])
+		slot.move(_get_slot(m[1]))
+		move_called[m[0]] = 0
 	
 	logger.debug("Waiting for %s" % [move_called.keys()])
 	await move_finished
