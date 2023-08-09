@@ -53,7 +53,9 @@ func despawn(finish_signal = despawn_done):
 	)
 
 func jump():
-	pass # TODO: jump
+	var tw = create_tween()
+	tw.tween_property(sprite, "position", Vector2.UP * 10, 0.2)
+	tw.tween_property(sprite, "position", Vector2.ZERO, 0.2)
 
 func pressed():
 	modulate = Color.GRAY

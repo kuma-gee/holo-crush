@@ -1,13 +1,20 @@
-[gd_scene load_steps=10 format=3 uid="uid://di8g8e6s34cik"]
+[gd_scene load_steps=12 format=3 uid="uid://di8g8e6s34cik"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_f8tal"]
 [ext_resource type="Script" path="res://src/game.gd" id="1_vav6y"]
 [ext_resource type="PackedScene" uid="uid://diptf1fbeqwco" path="res://src/grid/slot.tscn" id="2_4abeq"]
 [ext_resource type="Script" path="res://src/grid/grid_ui.gd" id="2_gsofw"]
 [ext_resource type="LabelSettings" uid="uid://vvr077uf4r3l" path="res://src/menu/title_label.tres" id="3_iqyq2"]
+[ext_resource type="Shader" path="res://src/starfield.gdshader" id="3_jvk2f"]
 [ext_resource type="Script" path="res://src/grid/match_grid.gd" id="4_egjxx"]
 [ext_resource type="PackedScene" uid="uid://dqw32jg4upbcp" path="res://src/menu/score.tscn" id="4_gaq27"]
 [ext_resource type="AudioStream" uid="uid://8tfecoe8jxnl" path="res://assets/sound/Non-Fiction_Inst_hololive_202308052356.mp3" id="7_g8nju"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_68dt8"]
+shader = ExtResource("3_jvk2f")
+shader_parameter/mouse = null
+shader_parameter/time = null
+shader_parameter/speed2 = 0.2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ymwg1"]
 bg_color = Color(0.266667, 0.32549, 0.368627, 0.784314)
@@ -29,6 +36,15 @@ turns_label = NodePath("Top/MarginContainer/HBoxContainer/Label2")
 gameover = NodePath("GameOver")
 end_score = NodePath("GameOver/PanelContainer/MarginContainer/VBoxContainer/EndScore")
 score_ui = NodePath("Score")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_68dt8")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Data" type="Node" parent="."]
 script = ExtResource("4_egjxx")
