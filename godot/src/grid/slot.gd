@@ -105,6 +105,7 @@ func move(slot: Slot):
 
 func capture():
 	if piece:
+		piece.show()
 		piece.global_position = get_pos()
 		var actual_size = min(size.x, size.y)
 		piece.scale = Vector2(actual_size, actual_size) / piece_size
@@ -133,25 +134,12 @@ func matched(special_type):
 
 	match_done.emit()
 
-# func change_special(type: Specials.Type, special_piece):
-# 	if piece == null:
-# 		return
-	
-# 	piece.matched()
-# 	piece = special_piece
-# 	piece.change_to(type)
-# 	capture()
-# 	await piece.change_done
-# 	change_done.emit()
-
-
 func replace(p):
 	if piece:
 		piece.despawn()
 		await piece.despawn_done
 	piece = p
 	capture()
-	piece.show()
 	piece.spawn()
 	await piece.spawn_done
 	capture()

@@ -149,8 +149,6 @@ normal_texture = ExtResource("2_la2jm")
 row_texture = ExtResource("3_6fepw")
 col_texture = ExtResource("4_k8n1j")
 bomb_texture = ExtResource("6_2wluf")
-type = null
-slight_move_distance = null
 
 [node name="BackColor" type="ColorRect" parent="." index="0"]
 visible = false

@@ -31,8 +31,7 @@ func matched():
 	SoundManager.play_match()
 	
 	var tw = create_tween()
-	tw.tween_method(_set_shader_value, 1.0, -1.0, 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tw.parallel().tween_property(back_color, "modulate", Color.TRANSPARENT, 0.5)
+	tw.tween_method(_set_shader_value, 0.5, -1.0, 0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.finished.connect(func():
 		match_done.emit()
 		queue_free()
