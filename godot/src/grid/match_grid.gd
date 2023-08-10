@@ -88,8 +88,6 @@ func swap(pos: Vector2i, dest: Vector2i):
 		_swap_value_with_special(pos, dest)
 		swapped.emit(pos, dest)
 		_data.print_data('Swap')
-
-		check_matches(dest)
 		return true
 	else:
 		wrong_swap.emit(pos, dest)
@@ -130,7 +128,8 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 					if not l in remove_matched:
 						remove_matched.append(l)
 		
-		matched.emit(remove_matched)
+		for m in remove_matched:
+			matched.emit(m)
 		_data.print_data('Match')
 
 	return has_matched
@@ -184,7 +183,8 @@ func activate_all_specials():
 	_append_unique(removed, [_remove_value(sp)])
 		
 	_data.print_data('Activate specials')
-	matched.emit(removed)
+	for m in removed:
+		matched.emit(m)
 
 func _remove_value(p: Vector2i):
 	var removed = []
@@ -242,7 +242,10 @@ func is_deadlocked():
 	return get_possible_move() == null
 
 func check_deadlock():
-	if is_deadlocked():
+	var deadlock = is_deadlocked()
+	if deadlock:
 		_data.refill(_specials.get_all_specials())
 		check_matches() # Usually does not contain matches, but just in case, let it be a win for the player
 		refilled.emit()
+	
+	return deadlock

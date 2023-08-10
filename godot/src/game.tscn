@@ -116,7 +116,7 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="Grid" type="GridContainer" parent="Main/AspectRatioContainer/MarginContainer/MarginContainer2" node_paths=PackedStringArray("data", "pieces_root")]
+[node name="Grid" type="GridContainer" parent="Main/AspectRatioContainer/MarginContainer/MarginContainer2" node_paths=PackedStringArray("data", "pieces_root", "collapse_timer", "fill_timer", "check_timer")]
 layout_mode = 2
 theme_override_constants/h_separation = 0
 theme_override_constants/v_separation = 0
@@ -125,9 +125,24 @@ slot_scene = ExtResource("2_4abeq")
 data = NodePath("../../../../../Data")
 pieces = Array[int]([0, 1, 2, 3, 4])
 pieces_root = NodePath("../../../../../Field")
+collapse_timer = NodePath("../CollapseTimer")
+fill_timer = NodePath("../FillTimer")
+check_timer = NodePath("../CheckTimer")
 
 [node name="InputBlocker" type="Control" parent="Main/AspectRatioContainer/MarginContainer/MarginContainer2"]
 layout_mode = 2
+
+[node name="CheckTimer" type="Timer" parent="Main/AspectRatioContainer/MarginContainer/MarginContainer2"]
+wait_time = 0.3
+one_shot = true
+
+[node name="CollapseTimer" type="Timer" parent="Main/AspectRatioContainer/MarginContainer/MarginContainer2"]
+wait_time = 0.3
+one_shot = true
+
+[node name="FillTimer" type="Timer" parent="Main/AspectRatioContainer/MarginContainer/MarginContainer2"]
+wait_time = 0.3
+one_shot = true
 
 [node name="Field" type="Node2D" parent="."]
 y_sort_enabled = true

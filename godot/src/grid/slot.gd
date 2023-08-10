@@ -94,14 +94,6 @@ func swap(other_slot: Slot):
 	swap_done.emit()
 
 func move(slot: Slot):
-	if piece == null:
-		return
-	
-	# if slot.piece != null:
-	# 	# Please don't happen
-	# 	print("Other slot still has a piece. Cannot move there.")
-	# 	return
-
 	var temp = piece
 	piece = null
 	slot.piece = temp
@@ -110,12 +102,6 @@ func move(slot: Slot):
 
 	await temp.move_done
 	move_done.emit()
-
-func move_match(slot: Slot):
-	if piece == null:
-		return
-	
-	matched()
 
 func change_special(type: Specials.Type, special_piece):
 	if piece == null:
@@ -150,11 +136,9 @@ func get_pos():
 	return global_position + size / 2
 
 func matched():
-	if piece:
-		var temp = piece
-		piece.matched()
-		piece = null
-		match_done.emit()
+	piece.matched()
+	piece = null
+	match_done.emit()
 
 func replace(p):
 	if piece:
@@ -174,9 +158,9 @@ func _can_move():
 
 func _on_swipe_control_swiped(dir):
 	if _can_move():
+		piece.released()
 		swiped.emit(dir)
 		swipe_sound.play()
-		piece.released()
 
 
 func _on_swipe_control_press_released():

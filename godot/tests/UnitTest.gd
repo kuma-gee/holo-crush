@@ -8,3 +8,12 @@ func assert_contains_exact(arr: Array, items: Array):
 func assert_contains_all(arr: Array, items: Array):
 	for i in items:
 		assert_has(arr, i)
+
+# Only one parameter supported
+func assert_signal_emitted_in_any_order(data, signal_name, params):
+	var actual_params = []
+	for i in get_signal_emit_count(data, signal_name):
+		var p = get_signal_parameters(data, signal_name, i)
+		if p: actual_params.append_array(p)
+	
+	assert_contains_all(actual_params, params)
