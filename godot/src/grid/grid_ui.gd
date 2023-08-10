@@ -31,7 +31,7 @@ const PIECE_MAP := {
 
 var queue = []
 var is_processing_queue = false
-var combo = 0
+var combo = 1
 var default_score_value = 50
 var special_multiplier = 2
 
@@ -74,7 +74,9 @@ func _ready():
 	data.matched.connect(func(m, special):
 		var slot = _get_slot(m) as Slot
 		slot.matched(special)
-		scored.emit(default_score_value * combo, combo)
+
+		var multiplier = special_multiplier if special != null else 1
+		scored.emit(default_score_value * combo * multiplier, combo)
 		collapse_timer.start()
 	)
 	collapse_timer.timeout.connect(func():
@@ -141,12 +143,15 @@ func _activate_special(_pos, fields):
 		_get_slot(f).special(is_horizontal || is_top, is_vertical || is_right, is_horizontal || is_bot, is_vertical || is_left)
 
 func _finish_check():
+	combo += 1
+
 	if data.check_matches():
 		return
 
 	if data.check_deadlock():
 		return
 
+	combo = 1
 	processing_finished.emit()
 
 func highlight_possible_move():
