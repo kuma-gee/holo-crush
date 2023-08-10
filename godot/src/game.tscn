@@ -133,15 +133,15 @@ check_timer = NodePath("../CheckTimer")
 layout_mode = 2
 
 [node name="CheckTimer" type="Timer" parent="Main/AspectRatioContainer/MarginContainer/MarginContainer2"]
-wait_time = 0.3
+wait_time = 0.5
 one_shot = true
 
 [node name="CollapseTimer" type="Timer" parent="Main/AspectRatioContainer/MarginContainer/MarginContainer2"]
-wait_time = 0.3
+wait_time = 0.2
 one_shot = true
 
 [node name="FillTimer" type="Timer" parent="Main/AspectRatioContainer/MarginContainer/MarginContainer2"]
-wait_time = 0.3
+wait_time = 0.2
 one_shot = true
 
 [node name="Field" type="Node2D" parent="."]

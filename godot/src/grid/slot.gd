@@ -25,6 +25,7 @@ var slight_moving = false
 @onready var special_rect := $SpecialMark
 
 const piece_size = Vector2(128, 128)
+const BASE_MOVE_TIME = 0.5
 
 var showing_special = false
 
@@ -98,7 +99,8 @@ func move(slot: Slot):
 	piece = null
 	slot.piece = temp
 	
-	temp.move(slot.get_pos())
+	var dist = abs(slot.pos.y) - abs(pos.y)
+	temp.move(slot.get_pos(), false, BASE_MOVE_TIME)
 
 	await temp.move_done
 	move_done.emit()
@@ -116,8 +118,11 @@ func fill_drop():
 		return
 	
 	capture()
-	piece.global_position = get_pos() + Vector2.UP * (height - (abs(pos.y) + 1)) * size.y
-	piece.move(get_pos(), true)
+	var above = abs(pos.y) - height - 1
+	piece.global_position = get_pos() + above * Vector2(0, size.y)
+
+	var dist = abs(pos.y) - above
+	piece.move(get_pos(), true, BASE_MOVE_TIME)
 
 	await piece.move_done
 	fill_done.emit()
