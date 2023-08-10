@@ -42,7 +42,7 @@ func test_collapse(params=use_parameters([
 	]
 ])):
 	var data = _create(params[0])
-	data.collapse_columns(false, false)
+	data.collapse_columns()
 	assert_eq_deep(data.get_data(), params[1])
 
 func test_fill_empty(params=use_parameters([
@@ -105,14 +105,16 @@ func test_swap_and_collapse_vertical():
 	])
 
 	watch_signals(data)
-	data.swap(Vector2(1, 3), Vector2(0, 3))
 
+	data.swap(Vector2(1, 3), Vector2(0, 3))
 	assert_signal_emit_count(data, 'matched', 1)
 	assert_signal_emitted_with_parameters(data, 'matched', [[Vector2i(0, 3), Vector2i(0, 2), Vector2i(0, 1)]])
 
+	data.collapse_columns()
 	assert_signal_emit_count(data, 'moved', 1)
 	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(0, 0), Vector2i(0, 3)])
 
+	data.fill_empty()
 	assert_signal_emit_count(data, 'filled', 3)
 	var p = [0, 1, 2].map(func(i): return get_signal_parameters(data, 'filled', i)[0])
 	assert_contains_exact(p, [Vector2i(0, 2), Vector2i(0, 1), Vector2i(0, 0)])
@@ -126,16 +128,18 @@ func test_swap_and_collapse_horizontal():
 	])
 
 	watch_signals(data)
-	data.swap(Vector2(2, 1), Vector2(2, 2))
 
+	data.swap(Vector2(2, 1), Vector2(2, 2))
 	assert_signal_emit_count(data, 'matched', 1)
 	assert_signal_emitted_with_parameters(data, 'matched', [[Vector2i(3, 1), Vector2i(2, 1), Vector2i(1, 1)]])
 
+	data.collapse_columns()
 	assert_signal_emit_count(data, 'moved', 3)
 	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(1, 0), Vector2i(1, 1)], 0)
 	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(2, 0), Vector2i(2, 1)], 1)
 	assert_signal_emitted_with_parameters(data, 'moved', [Vector2i(3, 0), Vector2i(3, 1)], 2)
 
+	data.fill_empty()
 	assert_signal_emit_count(data, 'filled', 3)
 	var p = [0, 1, 2].map(func(i): return get_signal_parameters(data, 'filled', i)[0])
 	assert_contains_exact(p, [Vector2i(3, 0), Vector2i(2, 0), Vector2i(1, 0)])
@@ -275,6 +279,8 @@ func test_activate_special(params=use_parameters([
 	watch_signals(data)
 	for swap in params[1]:
 		data.swap(swap[0], swap[1])
+		data.collapse_columns()
+		data.fill_empty()
 
 	assert_signal_emitted(data, 'special_activate', params[2])
 	assert_contains_all(get_signal_parameters(data, 'matched', params[1].size() - 1)[0], params[3])
@@ -291,7 +297,12 @@ func test_match_special_with_special():
 
 	watch_signals(data)
 	data.swap(Vector2(2, 2), Vector2(1, 2))
+	data.collapse_columns()
+	data.fill_empty()
+
 	data.swap(Vector2(1, 3), Vector2(1, 4))
+	data.collapse_columns()
+	data.fill_empty()
 
 	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(1, 4), [Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4), Vector2i(4, 4)]])
 	assert_contains_exact(get_signal_parameters(data, 'matched')[0], [Vector2i(4, 4)])
@@ -313,7 +324,12 @@ func test_special_activation_immediately_after_matched():
 
 	watch_signals(data)
 	data.swap(Vector2(2, 2), Vector2(1, 2))
+	data.collapse_columns()
+	data.fill_empty()
+
 	data.swap(Vector2(2, 4), Vector2(2, 3))
+	data.collapse_columns()
+	data.fill_empty()
 
 	assert_signal_emit_count(data, 'special_activate', 2)
 	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(1, 3), [Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3)]], 0)
@@ -357,6 +373,9 @@ func test_refill_on_deadlocked():
 
 	watch_signals(data)
 	data.swap(Vector2i(3, 0), Vector2i(2, 0))
+	data.collapse_columns()
+	data.fill_empty()
+	data.check_deadlock()
 
 	assert_signal_emitted(data, 'refilled')
 

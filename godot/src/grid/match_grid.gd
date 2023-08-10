@@ -13,7 +13,6 @@ signal special_matched(pos, affected, type, value)
 signal special_activate(pos, fields)
 
 signal refilled()
-signal update()
 
 @export var width := 9
 @export var height := 9
@@ -62,9 +61,6 @@ func get_possible_move():
 				copy.swap_value(pos, dest)
 	return null
 
-func is_deadlocked():
-	return get_possible_move() == null
-
 func get_special_type(p: Vector2i):
 	return _specials.get_special_type(p)
 
@@ -91,14 +87,9 @@ func swap(pos: Vector2i, dest: Vector2i):
 	if count.size() > 0:
 		_swap_value_with_special(pos, dest)
 		swapped.emit(pos, dest)
-		check_matches(dest)
-
-		if is_deadlocked():
-			_data.refill(_specials.get_all_specials())
-			check_matches() # Usually does not contain matches, but just in case, let it be a win for the player
-			refilled.emit()
 		_data.print_data('Swap')
 
+		check_matches(dest)
 		return true
 	else:
 		wrong_swap.emit(pos, dest)
@@ -126,7 +117,7 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 						remove_matched.append(l)
 			else: # All others
 				_append_unique(remove_matched, [_remove_value(m)])
-		
+
 		for special in create_specials:
 			var pair = create_specials[special]
 			var type = pair[0]
@@ -140,10 +131,7 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 						remove_matched.append(l)
 		
 		matched.emit(remove_matched)
-		update.emit()
-		
 		_data.print_data('Match')
-		collapse_columns()
 
 	return has_matched
 
@@ -195,10 +183,8 @@ func activate_all_specials():
 	var removed = [sp]
 	_append_unique(removed, [_remove_value(sp)])
 		
-	matched.emit(removed)
-	update.emit()
 	_data.print_data('Activate specials')
-	collapse_columns()
+	matched.emit(removed)
 
 func _remove_value(p: Vector2i):
 	var removed = []
@@ -223,7 +209,7 @@ func _append_unique(arr, items: Array):
 			if not i in arr:
 				arr.append(i)
 
-func collapse_columns(check = true, fill = true):
+func collapse_columns():
 	for x in width:
 		for y in range(height-1, -1, -1):
 			if get_value(x, y) == null:
@@ -234,15 +220,7 @@ func collapse_columns(check = true, fill = true):
 				_swap_value_with_special(Vector2i(x, yy), Vector2i(x, y))
 				moved.emit(Vector2i(x, yy), Vector2i(x, y))
 
-	# only false when testing
-	if fill:
-		_data.print_data('Collapse')
-		fill_empty()
-		update.emit()
-
-	# only false when testing
-	if check:
-		check_matches()
+	_data.print_data('Collapse')
 
 func _first_non_null_above(x: int, y: int):
 	for yy in range(y-1, -1, -1):
@@ -258,3 +236,13 @@ func fill_empty():
 				filled.emit(Vector2i(x, y), value)
 	
 	_data.print_data('Fill')
+
+
+func is_deadlocked():
+	return get_possible_move() == null
+
+func check_deadlock():
+	if is_deadlocked():
+		_data.refill(_specials.get_all_specials())
+		check_matches() # Usually does not contain matches, but just in case, let it be a win for the player
+		refilled.emit()
