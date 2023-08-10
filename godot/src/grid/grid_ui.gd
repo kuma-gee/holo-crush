@@ -92,7 +92,7 @@ func _ready():
 		processing_finished.emit()
 	)
 
-	# data.special_activate.connect(func(pos, fields): special_activate.append([pos, fields]))
+	data.special_activate.connect(func(pos, fields): _activate_special(pos, fields))
 
 	data.matched.connect(func(m, special):
 		var slot = _get_slot(m) as Slot
@@ -173,6 +173,29 @@ func _ready():
 	# )
 	
 	data.create_data(pieces)
+
+func _activate_special(_pos, fields):
+	if fields.size() == 0:
+		return
+	
+	var min_x = data.height
+	var max_x = 0
+	var min_y = data.height
+	var max_y = 0
+	for f in fields:
+		min_x = min(min_x, f.x)
+		max_x = max(max_x, f.x)
+		min_y = min(min_y, f.y)
+		max_y = max(max_y, f.y)
+	
+	var is_horizontal = min_y == max_y
+	var is_vertical =  min_x == max_x
+	for f in fields:
+		var is_top = f.y == min_y
+		var is_right = f.x == max_x
+		var is_left = f.x == min_x
+		var is_bot = f.y == max_y
+		_get_slot(f).special(is_horizontal || is_top, is_vertical || is_right, is_horizontal || is_bot, is_vertical || is_left)
 
 func _finish_check():
 	if data.check_matches():
