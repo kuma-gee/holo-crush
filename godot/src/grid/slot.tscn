@@ -35,7 +35,6 @@ size_flags_vertical = 3
 script = ExtResource("1_ysysd")
 
 [node name="Highlight" type="ColorRect" parent="."]
-visible = false
 material = SubResource("ShaderMaterial_g606w")
 layout_mode = 1
 anchors_preset = 15

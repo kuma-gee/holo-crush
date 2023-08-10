@@ -19,14 +19,10 @@ func get_all_specials():
 func set_special(pos: Vector2i, type: Type):
 	_specials[pos] = type
 
-func get_special(p: Vector2i):
+func get_special_type(p: Vector2i):
 	if not p in _specials:
 		return null
 	return _specials[p]
-
-func get_special_type(p: Vector2i):
-	var sp = get_special(p)
-	return sp
 
 func swap_special(pos: Vector2i, target: Vector2i):
 	var v1 = _specials[pos] if pos in _specials else null

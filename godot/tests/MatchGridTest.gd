@@ -220,16 +220,12 @@ func test_swap_and_collapse_special_matches(params=use_parameters([
 	data.swap(move[0], move[1])
 
 	data.check_matches(move[1])
-	assert_signal_emit_count(data, 'matched', 0)
-	# assert_contains_exact(get_signal_parameters(data, 'matched')[0], []) 
 
-	assert_signal_emit_count(data, 'special_matched', 1)
-
-	var actual = get_signal_parameters(data, 'special_matched')
 	var expected = params[2]
-	assert_eq(actual[0], expected[0])
-	assert_contains_exact(actual[1], expected[1])
-	assert_eq(actual[2], expected[2])
+	assert_signal_emitted_in_any_order(data, 'matched', expected[1]) 
+
+	var special_match = get_all_signal_parameters(data, 'matched').filter(func(x): return x[0] == expected[0] and x[1] == expected[2])
+	assert_eq(special_match.size(), 1, 'Special match not found')
 
 func test_activate_special(params=use_parameters([
 	[
@@ -311,13 +307,10 @@ func test_match_special_with_special():
 	data.fill_empty()
 
 	assert_signal_emitted_with_parameters(data, 'special_activate', [Vector2i(1, 4), [Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4), Vector2i(4, 4)]], 0)
-	assert_signal_emitted_in_any_order(data, 'matched', [Vector2i(4, 4)])
+	assert_signal_emitted_in_any_order(data, 'matched', [Vector2i(4, 4), Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4)])
 
-	var actual = get_signal_parameters(data, 'special_matched')
-	assert_eq(actual[0], Vector2i(1, 4))
-	assert_contains_exact(actual[1], [Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4)])
-	assert_eq(actual[2], Specials.Type.COL)
-	assert_eq(actual[3], 0)
+	var special_match = get_all_signal_parameters(data, 'matched').filter(func(x): return x[0] == Vector2i(1, 4) and x[1] == Specials.Type.COL)
+	assert_eq(special_match.size(), 1, 'Special match not found')
 
 func test_special_activation_immediately_after_matched():
 	var data = _create([

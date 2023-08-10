@@ -11,9 +11,14 @@ func assert_contains_all(arr: Array, items: Array):
 
 # Only one parameter supported
 func assert_signal_emitted_in_any_order(data, signal_name, params):
-	var actual_params = []
-	for i in get_signal_emit_count(data, signal_name):
-		var p = get_signal_parameters(data, signal_name, i)
-		if p: actual_params.append_array(p)
+	var flatten = []
+	for x in get_all_signal_parameters(data, signal_name):
+		flatten.append_array(x)
 	
-	assert_contains_all(actual_params, params)
+	assert_contains_all(flatten, params)
+
+func get_all_signal_parameters(data, signal_name):
+	var all_params = []
+	for i in get_signal_emit_count(data, signal_name):
+		all_params.append(get_signal_parameters(data, signal_name, i));
+	return all_params

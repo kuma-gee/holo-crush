@@ -8,8 +8,7 @@ signal moved(pos, dest)
 
 signal filled(pos, value)
 signal created()
-signal matched(pos)
-signal special_matched(pos, affected, type, value)
+signal matched(pos, special)
 signal special_activate(pos, fields)
 
 signal refilled()
@@ -128,8 +127,13 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 					if not l in remove_matched:
 						remove_matched.append(l)
 		
+		# Add separately afterwards so newly created are not immediatelly removed
+		for s in special_matches:
+			if not s in remove_matched:
+				remove_matched.append(s)
+		
 		for m in remove_matched:
-			matched.emit(m)
+			matched.emit(m, _specials.get_special_type(m))
 		_data.print_data('Match')
 
 	return has_matched
@@ -161,15 +165,10 @@ func _get_special_match_data(all_matched: Array, dest: Vector2i):
 		if actual_match != null and type != null:
 			if actual_match.size() > 0:
 				_append_unique(special_matches, [actual_match])
-				var special_pos = _create_special(actual_match, dest, type)
+				var special_pos = dest if dest in actual_match else actual_match[0]
 				created_specials[special_pos] = [type, _data.get_value_v(special_pos)]
 
 	return [special_matches, created_specials]
-
-func _create_special(matches: Array, dest: Vector2i, type: int):
-	var pos = dest if dest in matches else matches[0]
-	special_matched.emit(pos, matches, type, get_value(pos.x, pos.y))
-	return pos
 
 func has_specials():
 	return _specials.get_all_specials().size() > 0

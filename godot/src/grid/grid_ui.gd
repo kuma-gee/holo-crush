@@ -93,11 +93,10 @@ func _ready():
 	)
 
 	# data.special_activate.connect(func(pos, fields): special_activate.append([pos, fields]))
-	# data.special_matched.connect(func(pos, aff, type, val): specials.append([pos, aff, type, val]))
 
-	data.matched.connect(func(m):
+	data.matched.connect(func(m, special):
 		var slot = _get_slot(m) as Slot
-		slot.matched()
+		slot.matched(special)
 		scored.emit(default_score_value * combo, combo)
 		collapse_timer.start()
 	)

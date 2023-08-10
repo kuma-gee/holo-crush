@@ -103,17 +103,6 @@ func move(slot: Slot):
 	await temp.move_done
 	move_done.emit()
 
-func change_special(type: Specials.Type, special_piece):
-	if piece == null:
-		return
-	
-	piece.matched()
-	piece = special_piece
-	piece.change_to(type)
-	capture()
-	await piece.change_done
-	change_done.emit()
-
 func capture():
 	if piece:
 		piece.global_position = get_pos()
@@ -135,10 +124,26 @@ func fill_drop():
 func get_pos():
 	return global_position + size / 2
 
-func matched():
-	piece.matched()
-	piece = null
+func matched(special_type):
+	if special_type == null:
+		piece.matched()
+		piece = null
+	else:
+		piece.change_to(special_type)
+
 	match_done.emit()
+
+# func change_special(type: Specials.Type, special_piece):
+# 	if piece == null:
+# 		return
+	
+# 	piece.matched()
+# 	piece = special_piece
+# 	piece.change_to(type)
+# 	capture()
+# 	await piece.change_done
+# 	change_done.emit()
+
 
 func replace(p):
 	if piece:
