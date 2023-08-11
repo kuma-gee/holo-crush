@@ -16,7 +16,7 @@ jobs:
     env:
       GAME: holo-crush
       CHANNEL: ${{matrix.channel}}
-      GODOT_VERSION: 4.1
+      GODOT_VERSION: 4.1.1
     steps:
       - uses: actions/checkout@v3
         with:
