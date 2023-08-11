@@ -33,7 +33,7 @@ func move(dest: Vector2, fade_in = false, time = 0.5):
 	tw.tween_property(self, "global_position", dest, time).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	if fade_in:
 		modulate = Color.TRANSPARENT
-		tw.parallel().tween_property(self, "modulate", Color.WHITE, time).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN_OUT)
+		tw.parallel().tween_property(self, "modulate", Color.WHITE, time).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
 		
 	tw.finished.connect(func(): move_done.emit())
 

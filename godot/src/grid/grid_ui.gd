@@ -194,7 +194,6 @@ func _get_slot(pos: Vector2i):
 func _spawn_piece(piece):
 	var scene = PIECE_MAP[piece]
 	var node = scene.instantiate()
-	node.hide()
 	pieces_root.add_child(node)
 	node.type = piece
 	return node

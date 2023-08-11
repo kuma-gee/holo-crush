@@ -109,10 +109,10 @@ func move(slot: Slot):
 
 func capture():
 	if piece:
-		piece.show()
 		piece.global_position = get_pos()
 		var actual_size = min(size.x, size.y)
 		piece.scale = Vector2(actual_size, actual_size) / piece_size
+		piece.show()
 		
 
 func fill_drop():
