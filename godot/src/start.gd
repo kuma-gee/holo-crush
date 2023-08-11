@@ -3,6 +3,8 @@ extends Control
 @export var energy: Label
 @export var points: Label
 
+@onready var anim := $AnimationPlayer
+
 func _ready():
 	energy.text = str(GameManager.energy)
 	points.text = str(GameManager.points)

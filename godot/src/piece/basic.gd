@@ -20,6 +20,7 @@ func _ready():
 	match_particles.emitting = false
 	
 	sprite.material = sprite.material.duplicate()
+	anim.play("RESET")
 
 func _create_gradient():
 	var gradient = Gradient.new()

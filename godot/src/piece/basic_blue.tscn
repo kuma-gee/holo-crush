@@ -88,18 +88,6 @@ tracks/4/keys = {
 "update": 0,
 "values": [1.0]
 }
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("BackColor:modulate")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 1)]
-}
 
 [sub_resource type="Animation" id="Animation_wylev"]
 resource_name = "match"
@@ -245,7 +233,6 @@ material = SubResource("ShaderMaterial_tnkub")
 texture = ExtResource("2_la2jm")
 
 [node name="BackColor" type="ColorRect" parent="." index="1"]
-visible = false
 material = SubResource("ShaderMaterial_yj06x")
 offset_left = -80.0
 offset_top = -80.0

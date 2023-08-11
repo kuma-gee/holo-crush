@@ -1,9 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://qdwfqb2qwrxb"]
+[gd_scene load_steps=12 format=3 uid="uid://qdwfqb2qwrxb"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
 [ext_resource type="AudioStream" uid="uid://cfwc8qonkflxm" path="res://assets/sound/astro_Inst_hololive_202308052333.mp3" id="4_lb12p"]
-[ext_resource type="Shader" path="res://src/stripes.gdshader" id="4_rfiu1"]
 [ext_resource type="Shader" path="res://src/dots.gdshader" id="4_samfo"]
 
 [sub_resource type="Gradient" id="Gradient_h65kn"]
@@ -18,15 +17,6 @@ fill_to = Vector2(0, 0)
 shader = ExtResource("4_samfo")
 shader_parameter/background = SubResource("GradientTexture2D_jd218")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_tqp75"]
-shader = ExtResource("4_rfiu1")
-shader_parameter/color_gap = Color(0.25, 0.25, 0.25, 0.25)
-shader_parameter/color_stripe = Color(0.113725, 0.254902, 0.419608, 1)
-shader_parameter/divisions = 20.0
-shader_parameter/stripe_bias = 1.2
-shader_parameter/speed = 0.01
-shader_parameter/angle = 0.8
-
 [sub_resource type="LabelSettings" id="LabelSettings_pco7m"]
 font_size = 72
 
@@ -35,6 +25,18 @@ resource_name = "start"
 
 [sub_resource type="Animation" id="Animation_vbnuf"]
 length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:material:shader_parameter/background")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("GradientTexture2D_jd218")]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xanik"]
 _data = {
@@ -56,16 +58,6 @@ points = NodePath("PanelContainer/Top/Points")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_7ekah")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ColorRect2" type="ColorRect" parent="."]
-visible = false
-material = SubResource("ShaderMaterial_tqp75")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
