@@ -23,6 +23,7 @@ var slight_moving = false
 @onready var swipe_control := $SwipeControl
 @onready var highlight_rect := $Highlight
 @onready var special_rect := $SpecialMark
+@onready var ring := $Ring
 
 const piece_size = Vector2(128, 128)
 const BASE_MOVE_TIME = 0.5
@@ -35,6 +36,7 @@ func _ready():
 	
 	highlight_rect.modulate = Color.TRANSPARENT
 	special_rect.modulate = Color.TRANSPARENT
+	ring.modulate = Color.TRANSPARENT
 
 func highlight():
 	_show_brief(highlight_rect)
@@ -138,6 +140,16 @@ func matched(special_type):
 		piece.change_to(special_type)
 
 	match_done.emit()
+
+func pulse_ring():
+	var tw = create_tween()
+	ring.modulate = Color.WHITE
+	tw.tween_property(ring, "modulate", Color.TRANSPARENT, 0.5)
+	tw.parallel().tween_method(_set_ring_radius, 0.0, 1.0, 0.5)
+
+func _set_ring_radius(value: float):
+	var mat = ring.material as ShaderMaterial
+	mat.set_shader_parameter("radius", value)
 
 func replace(p):
 	if piece:

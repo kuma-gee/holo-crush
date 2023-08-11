@@ -137,7 +137,9 @@ func _activate_special(pos, fields):
 #		var is_bot = f.y == max_y
 #		_get_slot(f).special(is_horizontal || is_top and not is_vertical, is_vertical || is_right and not is_horizontal, is_horizontal || is_bot and not is_vertical, is_vertical || is_left and not is_horizontal)
 
-	explosion.emit(_get_slot(pos).get_pos())
+	var slot = _get_slot(pos)
+	slot.pulse_ring()
+	explosion.emit(slot.get_pos())
 
 func _finish_check():
 	combo += 1

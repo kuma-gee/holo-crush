@@ -36,16 +36,16 @@ func matched():
 	match_done.emit()
 	queue_free()
 
-func _play_sound():
+func _play_sound(default_sound = func(): SoundManager.play_match()):
 	match special_type:
 		Specials.Type.BOMB: SoundManager.play_bomb()
 		Specials.Type.ROW: SoundManager.play_bomb()
 		Specials.Type.COL: SoundManager.play_bomb()
 		Specials.Type.COLOR_BOMB: SoundManager.play_bomb()
-		_: SoundManager.play_match()
+		_: default_sound.call()
 
 func _to_special(special: Specials.Type):
-	SoundManager.play_special_match()
+	_play_sound(func(): SoundManager.play_special_match())
 	var texture = normal_texture
 	back_color.hide()
 	anim.play("special_match")
