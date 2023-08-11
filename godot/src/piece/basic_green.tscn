@@ -3,8 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://cmwklckfgwegu" path="res://src/piece/basic_blue.tscn" id="1_f5la7"]
 
 [node name="BasicGreen" instance=ExtResource("1_f5la7")]
-type = 0
-slight_move_distance = 10
 
-[node name="Sprite2D" parent="." index="1"]
+[node name="Sprite2D" parent="." index="0"]
 modulate = Color(0.321569, 0.74902, 0.407843, 1)

@@ -9,8 +9,8 @@ func scored(score: int):
 	points += floor(score / 100)
 
 func start_game():
-	if GameManager.energy > 0:
-		energy -= 1
-		get_tree().change_scene_to_file("res://src/game.tscn")
-	else:
-		print("No energy")
+#	if GameManager.energy > 0:
+#		energy -= 1
+	SceneManager.change_scene("res://src/game.tscn")
+#	else:
+#		print("No energy")

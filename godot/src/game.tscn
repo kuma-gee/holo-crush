@@ -37,7 +37,7 @@ shader_parameter/aberration = 0.425
 shader_parameter/width = 0.04
 shader_parameter/feather = 0.135
 
-[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker", "grid", "move_timer", "turns_label", "gameover", "end_score", "score_ui", "shockwave")]
+[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker", "grid", "move_timer", "turns_label", "gameover", "end_score", "score_ui", "shockwave", "turn_end")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -54,6 +54,7 @@ gameover = NodePath("GameOver")
 end_score = NodePath("GameOver/PanelContainer/MarginContainer/VBoxContainer/EndScore")
 score_ui = NodePath("Score")
 shockwave = NodePath("Shockwave")
+turn_end = NodePath("TurnEnd")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_68dt8")
@@ -70,6 +71,15 @@ script = ExtResource("4_egjxx")
 [node name="HighlightTimer" type="Timer" parent="."]
 wait_time = 10.0
 autostart = true
+
+[node name="TurnEnd" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.392157)
 
 [node name="Top" type="PanelContainer" parent="."]
 layout_mode = 1

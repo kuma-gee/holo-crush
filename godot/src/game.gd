@@ -11,15 +11,17 @@ extends Control
 @export var end_score: Label
 @export var score_ui: ScoreUI
 @export var shockwave: Control
+@export var turn_end: Control
 
 var hint_shown = false
 
 func _ready():
+	turn_end.hide()
 	gameover.hide()
 	input_blocker.hide()
 	turns_label.text = str(turns)
 	move_timer.timeout.connect(func():
-		if not hint_shown:
+		if not hint_shown and turns > 0:
 			grid.highlight_possible_move()
 			hint_shown = true
 	)
@@ -35,7 +37,9 @@ func _on_grid_processing():
 func _on_grid_processing_finished():
 	if turns > 0:
 		input_blocker.hide()
+		move_timer.start()
 	else:
+		turn_end.show()
 		if not grid.activate_specials():
 			_on_gameover()
 
@@ -67,7 +71,7 @@ func _on_grid_turn_used():
 
 
 func _on_menu_pressed():
-	get_tree().change_scene_to_file("res://src/start.tscn")
+	SceneManager.change_scene("res://src/start.tscn")
 
 
 func _set_shockwave_radius(value: float):

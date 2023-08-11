@@ -183,7 +183,7 @@ func activate_all_specials():
 		
 	_data.print_data('Activate specials')
 	for m in removed:
-		matched.emit(m)
+		matched.emit(m, null)
 
 func _remove_value(p: Vector2i):
 	var removed = []
