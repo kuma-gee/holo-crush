@@ -9,6 +9,8 @@ extends Piece
 @export var col_texture: Texture2D
 @export var bomb_texture: Texture2D
 
+var special_type
+
 func _ready():
 	var mat = (back_color.material as ShaderMaterial).duplicate()
 	mat.set_shader_parameter("color_gradient", _create_gradient())
@@ -16,8 +18,7 @@ func _ready():
 	back_color.hide()
 	match_particles.emitting = false
 	
-	var mat2 = (sprite.material as ShaderMaterial).duplicate()
-	sprite.material = mat2
+	sprite.material = sprite.material.duplicate()
 
 func _create_gradient():
 	var gradient = Gradient.new()
@@ -28,24 +29,27 @@ func _create_gradient():
 	return gradient_tex
 
 func matched():
-	SoundManager.play_match()
+	_play_sound()
 	
-	var tw = create_tween()
-	tw.tween_method(_set_shader_value, 0.5, -1.0, 0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tw.finished.connect(func():
-		match_done.emit()
-		queue_free()
-	)
+	anim.play("match")
+	await anim.animation_finished
+	match_done.emit()
+	queue_free()
 
-func _set_shader_value(value: float):
-	var mat = sprite.material as ShaderMaterial
-	mat.set_shader_parameter("progress", value)
+func _play_sound():
+	match special_type:
+		Specials.Type.BOMB: SoundManager.play_bomb()
+		Specials.Type.ROW: SoundManager.play_bomb()
+		Specials.Type.COL: SoundManager.play_bomb()
+		Specials.Type.COLOR_BOMB: SoundManager.play_bomb()
+		_: SoundManager.play_match()
 
 func _to_special(special: Specials.Type):
 	SoundManager.play_special_match()
 	var texture = normal_texture
 	back_color.hide()
 	anim.play("special_match")
+	special_type = special
 	
 	match special:
 		Specials.Type.ROW: texture = row_texture

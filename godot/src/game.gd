@@ -10,6 +10,7 @@ extends Control
 @export var gameover: Control
 @export var end_score: Label
 @export var score_ui: ScoreUI
+@export var shockwave: Control
 
 var hint_shown = false
 
@@ -22,6 +23,9 @@ func _ready():
 			grid.highlight_possible_move()
 			hint_shown = true
 	)
+	
+	var mat = shockwave.material as ShaderMaterial
+	mat.set_shader_parameter("radius", 0.0)
 
 
 func _on_grid_processing():
@@ -64,3 +68,17 @@ func _on_grid_turn_used():
 
 func _on_menu_pressed():
 	get_tree().change_scene_to_file("res://src/start.tscn")
+
+
+func _set_shockwave_radius(value: float):
+	var mat = shockwave.material as ShaderMaterial
+	mat.set_shader_parameter("radius", value)
+
+
+func _on_grid_explosion(pos):
+	var center = (Vector2(pos) - shockwave.global_position) / shockwave.size
+	var mat = shockwave.material as ShaderMaterial
+	mat.set_shader_parameter("center", center)
+	
+	var tw = create_tween()
+	tw.tween_method(_set_shockwave_radius, 0.3, 1.5, 0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)

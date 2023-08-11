@@ -5,6 +5,7 @@ signal processing
 signal processing_finished
 signal turn_used
 signal scored(value, combo)
+signal explosion(pos)
 
 const PIECE_MAP := {
 	Piece.Type.BLUE: preload("res://src/piece/basic_blue.tscn"),
@@ -141,6 +142,8 @@ func _activate_special(_pos, fields):
 		var is_left = f.x == min_x
 		var is_bot = f.y == max_y
 		_get_slot(f).special(is_horizontal || is_top, is_vertical || is_right, is_horizontal || is_bot, is_vertical || is_left)
+
+	explosion.emit(_get_slot(_pos).get_pos())
 
 func _finish_check():
 	combo += 1

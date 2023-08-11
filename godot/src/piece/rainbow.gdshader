@@ -18,6 +18,7 @@ void fragment() {
 	//opacity = step(0.5, opacity);
 	opacity *= smoothstep(0.0, 1.0, 1.0 - dist);
 	
+	COLOR = COLOR;
 	COLOR.rgb = texture(color_gradient, vec2(dist, 0)).rgb;
 	COLOR.a *= opacity;
 }

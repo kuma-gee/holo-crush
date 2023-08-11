@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://di8g8e6s34cik"]
+[gd_scene load_steps=15 format=3 uid="uid://di8g8e6s34cik"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_f8tal"]
 [ext_resource type="Script" path="res://src/game.gd" id="1_vav6y"]
@@ -8,6 +8,7 @@
 [ext_resource type="Shader" path="res://src/starfield.gdshader" id="3_jvk2f"]
 [ext_resource type="Script" path="res://src/grid/match_grid.gd" id="4_egjxx"]
 [ext_resource type="PackedScene" uid="uid://dqw32jg4upbcp" path="res://src/menu/score.tscn" id="4_gaq27"]
+[ext_resource type="Shader" path="res://src/grid/shockwave.gdshader" id="6_2vgwy"]
 [ext_resource type="AudioStream" uid="uid://8tfecoe8jxnl" path="res://assets/sound/Non-Fiction_Inst_hololive_202308052356.mp3" id="7_g8nju"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_68dt8"]
@@ -16,11 +17,27 @@ shader_parameter/mouse = null
 shader_parameter/time = null
 shader_parameter/speed2 = 0.2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ymwg1"]
-bg_color = Color(0.266667, 0.32549, 0.368627, 0.784314)
-shadow_size = 10
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s84n1"]
+shader = ExtResource("6_2vgwy")
+shader_parameter/strength = 0.08
+shader_parameter/center = Vector2(0.5, 0.5)
+shader_parameter/radius = 0.263
+shader_parameter/aberration = 0.425
+shader_parameter/width = 0.04
+shader_parameter/feather = 0.135
 
-[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker", "grid", "move_timer", "turns_label", "gameover", "end_score", "score_ui")]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fu7q5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0bf4e"]
+shader = ExtResource("6_2vgwy")
+shader_parameter/strength = 0.08
+shader_parameter/center = Vector2(0, 0)
+shader_parameter/radius = 1.0
+shader_parameter/aberration = 0.425
+shader_parameter/width = 0.04
+shader_parameter/feather = 0.135
+
+[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker", "grid", "move_timer", "turns_label", "gameover", "end_score", "score_ui", "shockwave")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,6 +53,7 @@ turns_label = NodePath("Top/MarginContainer/HBoxContainer/Label2")
 gameover = NodePath("GameOver")
 end_score = NodePath("GameOver/PanelContainer/MarginContainer/VBoxContainer/EndScore")
 score_ui = NodePath("Score")
+shockwave = NodePath("Shockwave")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_68dt8")
@@ -88,6 +106,15 @@ size_flags_vertical = 0
 layout_mode = 1
 offset_bottom = 131.0
 
+[node name="Shockwave" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_s84n1")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="Main" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -107,7 +134,7 @@ ratio = 0.8
 
 [node name="MarginContainer" type="PanelContainer" parent="Main/AspectRatioContainer"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_ymwg1")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_fu7q5")
 
 [node name="MarginContainer2" type="MarginContainer" parent="Main/AspectRatioContainer/MarginContainer"]
 layout_mode = 2
@@ -117,6 +144,7 @@ theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
 [node name="Grid" type="GridContainer" parent="Main/AspectRatioContainer/MarginContainer/MarginContainer2" node_paths=PackedStringArray("data", "pieces_root", "collapse_timer", "fill_timer", "check_timer")]
+material = SubResource("ShaderMaterial_0bf4e")
 layout_mode = 2
 theme_override_constants/h_separation = 0
 theme_override_constants/v_separation = 0
@@ -190,6 +218,7 @@ stream = ExtResource("7_g8nju")
 volume_db = -30.0
 autoplay = true
 
+[connection signal="explosion" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_explosion"]
 [connection signal="processing" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing"]
 [connection signal="processing_finished" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing_finished"]
 [connection signal="scored" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="Score" method="add_score"]
