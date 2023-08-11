@@ -1,11 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://c0o3d7dki4axs"]
 
 [ext_resource type="Script" path="res://src/piece/piece.gd" id="1_pju4m"]
-[ext_resource type="Texture2D" uid="uid://bwve2nq30wldn" path="res://icon.svg" id="2_cnm5w"]
+[ext_resource type="Texture2D" uid="uid://desstdk3rwkrr" path="res://assets/Piece_Ina.png" id="2_p0jvx"]
 
 [node name="Ina" type="Node2D"]
 script = ExtResource("1_pju4m")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(0.537255, 0, 0.658824, 1)
-texture = ExtResource("2_cnm5w")
+texture = ExtResource("2_p0jvx")

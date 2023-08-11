@@ -1,9 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://depkbwlf7l043"]
+[gd_scene load_steps=3 format=3 uid="uid://depkbwlf7l043"]
 
 [ext_resource type="PackedScene" uid="uid://c0o3d7dki4axs" path="res://src/piece/ina.tscn" id="1_vpeco"]
+[ext_resource type="Texture2D" uid="uid://bx0jjifu88kr7" path="res://assets/Piece_Gura.png" id="2_2p0gf"]
 
 [node name="Gura" instance=ExtResource("1_vpeco")]
 type = 3
 
 [node name="Sprite2D" parent="." index="0"]
-modulate = Color(0, 0.85098, 1, 1)
+texture = ExtResource("2_2p0gf")

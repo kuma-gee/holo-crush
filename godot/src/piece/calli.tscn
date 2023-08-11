@@ -1,9 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://cg1n0f5o4tvqy"]
+[gd_scene load_steps=3 format=3 uid="uid://cg1n0f5o4tvqy"]
 
 [ext_resource type="PackedScene" uid="uid://c0o3d7dki4axs" path="res://src/piece/ina.tscn" id="1_6qnps"]
+[ext_resource type="Texture2D" uid="uid://bjeg7m4bbmyhp" path="res://assets/Piece_Calli.png" id="2_bqpqr"]
 
 [node name="Calli" instance=ExtResource("1_6qnps")]
 type = 4
 
 [node name="Sprite2D" parent="." index="0"]
-modulate = Color(1, 0.458824, 0.890196, 1)
+texture = ExtResource("2_bqpqr")
