@@ -25,7 +25,7 @@ jobs:
         run: ./scripts/prepare-templates.sh $GODOT_VERSION
 
       - name: Prepare Build
-        run: ./addons/debug/prepare-build.sh $GITHUB_REF_NAME
+        run: ./scripts/prepare-build.sh $GITHUB_REF_NAME
 
       - name: Build
         run: ./scripts/build-channel.sh $CHANNEL
