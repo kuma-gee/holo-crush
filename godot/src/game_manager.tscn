@@ -1,6 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://cn81olkklufoh"]
+[gd_scene load_steps=4 format=3 uid="uid://cn81olkklufoh"]
 
 [ext_resource type="Script" path="res://src/game_manager.gd" id="1_hnxtg"]
+[ext_resource type="Script" path="res://addons/save-system/SaveManager.gd" id="2_etxdi"]
+[ext_resource type="Script" path="res://src/Energy.gd" id="3_vf6rt"]
 
 [node name="GameManager" type="Node"]
 script = ExtResource("1_hnxtg")
+
+[node name="SaveManager" type="Node" parent="."]
+script = ExtResource("2_etxdi")
+
+[node name="Energy" type="Node" parent="."]
+script = ExtResource("3_vf6rt")

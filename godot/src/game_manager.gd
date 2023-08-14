@@ -2,21 +2,40 @@ extends Node
 
 signal energy_updated(energy)
 
+const SAVE_SLOT = 0
+
+@onready var save_manager := $SaveManager
+@onready var energy := $Energy
+
 var points := 0
 
-var max_energy := 5
-@onready var energy := max_energy : set = _set_energy
+func _ready():
+	_load_game()
 
-func _set_energy(v):
-	energy = v
-	energy_updated.emit(energy)
+func _exit_tree():
+	_save_game()
 
 func scored(score: int):
 	points += floor(score / 100)
 
 func start_game():
-	if energy > 0:
-		self.energy -= 1
+	if energy.use_energy():
 		SceneManager.change_scene("res://src/game.tscn")
 	else:
 		print("No energy")
+
+func get_energy():
+	return energy.energy
+
+func _save_game():
+	save_manager.save_to_slot(SAVE_SLOT, {
+		"energy": get_energy()
+	})
+
+func _load_game():
+	var data = save_manager.load_from_slot(SAVE_SLOT)
+	if data == null:
+		return
+	
+	if "energy" in data:
+		energy.energy = data.energy
