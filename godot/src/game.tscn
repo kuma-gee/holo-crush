@@ -9,7 +9,7 @@
 [ext_resource type="Script" path="res://src/grid/match_grid.gd" id="4_egjxx"]
 [ext_resource type="PackedScene" uid="uid://dqw32jg4upbcp" path="res://src/menu/score.tscn" id="4_gaq27"]
 [ext_resource type="Shader" path="res://src/grid/shockwave.gdshader" id="6_2vgwy"]
-[ext_resource type="AudioStream" uid="uid://8tfecoe8jxnl" path="res://assets/sound/Non-Fiction_Inst_hololive_202308052356.mp3" id="7_g8nju"]
+[ext_resource type="AudioStream" uid="uid://b7ilfb8f6t6wg" path="res://assets/sound/Shiny Smily Story_Inst_hololive_202308151841.mp3" id="10_chsc8"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_68dt8"]
 shader = ExtResource("3_jvk2f")
@@ -187,6 +187,7 @@ one_shot = true
 y_sort_enabled = true
 
 [node name="GameOver" type="CenterContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -224,8 +225,8 @@ text = "Restart"
 layout_mode = 2
 text = "Back"
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("7_g8nju")
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_chsc8")
 volume_db = -30.0
 autoplay = true
 

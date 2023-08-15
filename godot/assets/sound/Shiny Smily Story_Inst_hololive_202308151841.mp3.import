@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b7ilfb8f6t6wg"
+path="res://.godot/imported/Shiny Smily Story_Inst_hololive_202308151841.mp3-d096cc68b0594df7d490e1ab31b9b594.mp3str"
+
+[deps]
+
+source_file="res://assets/sound/Shiny Smily Story_Inst_hololive_202308151841.mp3"
+dest_files=["res://.godot/imported/Shiny Smily Story_Inst_hololive_202308151841.mp3-d096cc68b0594df7d490e1ab31b9b594.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4
