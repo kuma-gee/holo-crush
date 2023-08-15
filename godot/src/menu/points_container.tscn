@@ -7,7 +7,7 @@
 [sub_resource type="LabelSettings" id="LabelSettings_vh1le"]
 font_size = 32
 
-[node name="Points" type="Control" node_paths=PackedStringArray("label", "added_label")]
+[node name="Points" type="Control" node_paths=PackedStringArray("label", "added_label", "icon")]
 layout_mode = 3
 anchors_preset = 0
 size_flags_horizontal = 8
@@ -15,6 +15,7 @@ theme = ExtResource("1_ybp07")
 script = ExtResource("1_un7cm")
 label = NodePath("HBoxContainer/Label")
 added_label = NodePath("Added")
+icon = NodePath("HBoxContainer/MarginContainer/TextureRect")
 
 [node name="Added" type="Label" parent="."]
 layout_mode = 1

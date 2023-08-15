@@ -66,7 +66,7 @@ stretch_mode = 5
 
 [node name="EnergyContainer" type="HBoxContainer" parent="Top/Energy"]
 layout_mode = 2
-theme_override_constants/separation = -25
+theme_override_constants/separation = -30
 script = ExtResource("4_xnla4")
 
 [node name="EnergyBar" parent="Top/Energy/EnergyContainer" instance=ExtResource("4_6vu0n")]
@@ -87,9 +87,9 @@ layout_mode = 2
 [node name="Points" parent="Top" instance=ExtResource("7_oie0n")]
 layout_mode = 2
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="BGM" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_lb12p")
-volume_db = -15.0
+volume_db = -20.0
 autoplay = true
 
 [node name="CenterContainer2" type="CenterContainer" parent="."]
@@ -131,4 +131,8 @@ layout_mode = 2
 disabled = true
 text = "Store"
 
+[node name="CheckEnergyTimer" type="Timer" parent="."]
+autostart = true
+
 [connection signal="pressed" from="CenterContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]
+[connection signal="timeout" from="CheckEnergyTimer" to="." method="_on_check_energy_timer_timeout"]

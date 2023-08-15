@@ -2,6 +2,7 @@ extends Control
 
 @export var label: Label
 @export var added_label: Label
+@export var icon: TextureRect
 
 func _ready():
 	_update_label()
@@ -26,6 +27,10 @@ func _on_points_added(curr, added):
 	var tw = create_tween()
 	tw.tween_property(added_label, "modulate", Color.WHITE, 0.5).set_delay(1.0)
 	tw.parallel().tween_property(added_label, "scale", Vector2(1, 1), 0.5).set_delay(1.0).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	
+#	var orig_pos = icon.position
+#	tw.parallel().tween_property(icon, "position", orig_pos + Vector2.UP * 3, 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+#	tw.parallel().tween_property(icon, "position", orig_pos, 0.5).set_trans(Tween.TRANS_CUBIC).set_delay(0.5)
 	
 	tw.chain().tween_property(added_label, "modulate", Color.TRANSPARENT, 1.0).set_delay(0.5)
 	tw.parallel().tween_method(_update_label, curr, curr + added, 1.0)

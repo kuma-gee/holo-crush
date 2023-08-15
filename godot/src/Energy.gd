@@ -1,6 +1,9 @@
 class_name Energy
 extends Node
 
+signal out_of_energy
+signal energy_updated(energy)
+
 @export var max_energy := 5
 @onready var energy := max_energy : set = _set_energy
 
@@ -20,7 +23,7 @@ func set_last_used_time(time: int):
 
 func _set_energy(v):
 	energy = min(v, max_energy)
-	GameManager.energy_updated.emit(energy)
+	energy_updated.emit(energy)
 	
 func use_energy(datetime: DateTime = DateTime.now()):
 	if energy > 0:
@@ -29,6 +32,8 @@ func use_energy(datetime: DateTime = DateTime.now()):
 			_logger.debug("Set last used time to %s" % _last_used)
 		self.energy -= 1
 		return true
+	
+	out_of_energy.emit()
 	return false
 
 func restore(now: DateTime = DateTime.now()):

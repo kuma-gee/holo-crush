@@ -1,7 +1,5 @@
 extends Node
 
-signal energy_updated(energy)
-
 const SAVE_SLOT = 0
 
 @onready var save_manager := $SaveManager
@@ -23,8 +21,6 @@ func _exit_tree():
 func start_game():
 	if energy.use_energy():
 		SceneManager.change_scene("res://src/game.tscn")
-	else:
-		print("No energy")
 
 func back_to_start():
 	SceneManager.change_scene("res://src/start.tscn")
