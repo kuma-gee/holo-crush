@@ -11,6 +11,7 @@ var points := 0
 
 func _ready():
 	_load_game()
+	energy.restore()
 
 func _exit_tree():
 	_save_game()
@@ -29,7 +30,8 @@ func get_energy():
 
 func _save_game():
 	save_manager.save_to_slot(SAVE_SLOT, {
-		"energy": get_energy()
+		"energy": get_energy(),
+		"energyUsedTime": energy.get_last_used_time()
 	})
 
 func _load_game():
@@ -39,3 +41,5 @@ func _load_game():
 	
 	if "energy" in data:
 		energy.energy = data.energy
+	if "energyUsedTime" in data:
+		energy.set_last_used_time(data.energyUsedTime)
