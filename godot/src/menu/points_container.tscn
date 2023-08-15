@@ -1,13 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://c7iikn51h7sbb"]
+[gd_scene load_steps=6 format=3 uid="uid://c7iikn51h7sbb"]
 
 [ext_resource type="Script" path="res://src/menu/PointsContainer.gd" id="1_un7cm"]
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_ybp07"]
 [ext_resource type="Texture2D" uid="uid://c5rwvb50kljse" path="res://assets/ui/holo-coin.svg" id="2_1fopf"]
+[ext_resource type="AudioStream" uid="uid://bhhhou2m70io" path="res://assets/ui/お金を落とす2.mp3" id="4_1cxlj"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_vh1le"]
 font_size = 32
 
-[node name="Points" type="Control" node_paths=PackedStringArray("label", "added_label", "icon")]
+[node name="Points" type="Control" node_paths=PackedStringArray("label", "added_label", "icon", "coin_sounds")]
 layout_mode = 3
 anchors_preset = 0
 size_flags_horizontal = 8
@@ -16,6 +17,7 @@ script = ExtResource("1_un7cm")
 label = NodePath("HBoxContainer/Label")
 added_label = NodePath("Added")
 icon = NodePath("HBoxContainer/MarginContainer/TextureRect")
+coin_sounds = NodePath("CoinSounds")
 
 [node name="Added" type="Label" parent="."]
 layout_mode = 1
@@ -56,3 +58,45 @@ layout_mode = 2
 texture = ExtResource("2_1fopf")
 expand_mode = 2
 stretch_mode = 5
+
+[node name="CoinSounds" type="Node" parent="."]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="CoinSounds"]
+stream = ExtResource("4_1cxlj")
+volume_db = -10.0
+pitch_scale = 2.0
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="CoinSounds"]
+stream = ExtResource("4_1cxlj")
+volume_db = -10.0
+pitch_scale = 2.0
+
+[node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="CoinSounds"]
+stream = ExtResource("4_1cxlj")
+volume_db = -10.0
+pitch_scale = 2.0
+
+[node name="AudioStreamPlayer4" type="AudioStreamPlayer" parent="CoinSounds"]
+stream = ExtResource("4_1cxlj")
+volume_db = -10.0
+pitch_scale = 2.0
+
+[node name="AudioStreamPlayer5" type="AudioStreamPlayer" parent="CoinSounds"]
+stream = ExtResource("4_1cxlj")
+volume_db = -10.0
+pitch_scale = 2.0
+
+[node name="AudioStreamPlayer6" type="AudioStreamPlayer" parent="CoinSounds"]
+stream = ExtResource("4_1cxlj")
+volume_db = -10.0
+pitch_scale = 2.0
+
+[node name="AudioStreamPlayer7" type="AudioStreamPlayer" parent="CoinSounds"]
+stream = ExtResource("4_1cxlj")
+volume_db = -10.0
+pitch_scale = 2.0
+
+[node name="AudioStreamPlayer8" type="AudioStreamPlayer" parent="CoinSounds"]
+stream = ExtResource("4_1cxlj")
+volume_db = -10.0
+pitch_scale = 2.0

@@ -2,6 +2,8 @@ extends Node
 
 const SAVE_SLOT = 0
 
+signal game_started()
+
 @onready var save_manager := $SaveManager
 @onready var energy := $Energy
 @onready var points := $Points
@@ -21,6 +23,7 @@ func _exit_tree():
 func start_game():
 	if energy.use_energy():
 		SceneManager.change_scene("res://src/game.tscn")
+		game_started.emit()
 
 func back_to_start():
 	SceneManager.change_scene("res://src/start.tscn")

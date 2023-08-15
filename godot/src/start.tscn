@@ -2,12 +2,12 @@
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
-[ext_resource type="PackedScene" uid="uid://cshy8jupbbtdh" path="res://src/menu/energy_bar.tscn" id="4_6vu0n"]
 [ext_resource type="Texture2D" uid="uid://cd0ttwvxp2h5j" path="res://assets/ui/energy_icon.svg" id="4_10xj2"]
 [ext_resource type="AudioStream" uid="uid://cfwc8qonkflxm" path="res://assets/sound/astro_Inst_hololive_202308052333.mp3" id="4_lb12p"]
 [ext_resource type="Shader" path="res://src/dots.gdshader" id="4_samfo"]
-[ext_resource type="Script" path="res://src/menu/energy_container.gd" id="4_xnla4"]
+[ext_resource type="PackedScene" uid="uid://bwglf6d8qxqov" path="res://src/menu/energy_container.tscn" id="5_m4gqq"]
 [ext_resource type="PackedScene" uid="uid://c7iikn51h7sbb" path="res://src/menu/points_container.tscn" id="7_oie0n"]
+[ext_resource type="AudioStream" uid="uid://bnsctl8drghdb" path="res://assets/ui/ニュースタイトル表示3.mp3" id="8_5k2wf"]
 
 [sub_resource type="Gradient" id="Gradient_h65kn"]
 colors = PackedColorArray(0.1404, 0.4068, 0.54, 1, 0.308, 0.8514, 0.88, 1)
@@ -64,33 +64,11 @@ texture = ExtResource("4_10xj2")
 expand_mode = 2
 stretch_mode = 5
 
-[node name="EnergyContainer" type="HBoxContainer" parent="Top/Energy"]
-layout_mode = 2
-theme_override_constants/separation = -30
-script = ExtResource("4_xnla4")
-
-[node name="EnergyBar" parent="Top/Energy/EnergyContainer" instance=ExtResource("4_6vu0n")]
-layout_mode = 2
-
-[node name="EnergyBar2" parent="Top/Energy/EnergyContainer" instance=ExtResource("4_6vu0n")]
-layout_mode = 2
-
-[node name="EnergyBar3" parent="Top/Energy/EnergyContainer" instance=ExtResource("4_6vu0n")]
-layout_mode = 2
-
-[node name="EnergyBar4" parent="Top/Energy/EnergyContainer" instance=ExtResource("4_6vu0n")]
-layout_mode = 2
-
-[node name="EnergyBar5" parent="Top/Energy/EnergyContainer" instance=ExtResource("4_6vu0n")]
+[node name="EnergyContainer" parent="Top/Energy" instance=ExtResource("5_m4gqq")]
 layout_mode = 2
 
 [node name="Points" parent="Top" instance=ExtResource("7_oie0n")]
 layout_mode = 2
-
-[node name="BGM" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("4_lb12p")
-volume_db = -20.0
-autoplay = true
 
 [node name="CenterContainer2" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -133,6 +111,15 @@ text = "Store"
 
 [node name="CheckEnergyTimer" type="Timer" parent="."]
 autostart = true
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_lb12p")
+volume_db = -20.0
+autoplay = true
+
+[node name="StartSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_5k2wf")
+volume_db = -15.0
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]
 [connection signal="timeout" from="CheckEnergyTimer" to="." method="_on_check_energy_timer_timeout"]
