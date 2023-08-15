@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cn81olkklufoh"]
+[gd_scene load_steps=5 format=3 uid="uid://cn81olkklufoh"]
 
 [ext_resource type="Script" path="res://src/game_manager.gd" id="1_hnxtg"]
 [ext_resource type="Script" path="res://addons/save-system/SaveManager.gd" id="2_etxdi"]
 [ext_resource type="Script" path="res://src/Energy.gd" id="3_vf6rt"]
+[ext_resource type="Script" path="res://src/Points.gd" id="4_0q6fw"]
 
 [node name="GameManager" type="Node"]
 script = ExtResource("1_hnxtg")
@@ -12,3 +13,7 @@ script = ExtResource("2_etxdi")
 
 [node name="Energy" type="Node" parent="."]
 script = ExtResource("3_vf6rt")
+restore_minutes = 1
+
+[node name="Points" type="Node" parent="."]
+script = ExtResource("4_0q6fw")

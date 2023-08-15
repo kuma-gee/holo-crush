@@ -18,11 +18,11 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-SceneManager="*res://addons/scene-manager/SceneManager.tscn"
 Env="*res://addons/debug/Env.gd"
 Debug="*res://addons/debug/Debug.tscn"
 GameManager="*res://src/game_manager.tscn"
 SoundManager="*res://src/sound_manager.tscn"
+SceneManager="*res://addons/scene_manager/SceneManager.tscn"
 
 [debug]
 
@@ -41,7 +41,7 @@ export/convert_text_resources_to_binary=false
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/scene_manager/plugin.cfg")
 
 [importer_defaults]
 

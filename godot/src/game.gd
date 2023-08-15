@@ -56,11 +56,11 @@ func _on_gameover():
 	tw.tween_property(gameover, "scale", Vector2(1, 1), 0.5).set_trans(Tween.TRANS_BACK)
 	tw.parallel().tween_property(gameover, "modulate", Color.WHITE, 0.5).set_trans(Tween.TRANS_BACK)
 	
-	GameManager.scored(score)
+	GameManager.points.scored(score)
 
 
 func _on_restart_pressed():
-	get_tree().reload_current_scene()
+	GameManager.start_game()
 
 
 func _on_grid_turn_used():

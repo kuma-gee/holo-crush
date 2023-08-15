@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d1jbkm2eljqkp"
-path="res://.godot/imported/full.png-6d7bdfdb6c68a51ec5f5e005e8597f8f.ctex"
+uid="uid://c5rwvb50kljse"
+path="res://.godot/imported/holo-coin.svg-7847f7769a469a59161606bbfbf982cc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/scene-manager/shader_patterns/full.png"
-dest_files=["res://.godot/imported/full.png-6d7bdfdb6c68a51ec5f5e005e8597f8f.ctex"]
+source_file="res://assets/ui/holo-coin.svg"
+dest_files=["res://.godot/imported/holo-coin.svg-7847f7769a469a59161606bbfbf982cc.ctex"]
 
 [params]
 
@@ -32,3 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

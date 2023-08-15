@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://qdwfqb2qwrxb"]
+[gd_scene load_steps=13 format=3 uid="uid://qdwfqb2qwrxb"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://cfwc8qonkflxm" path="res://assets/sound/astro_Inst_hololive_202308052333.mp3" id="4_lb12p"]
 [ext_resource type="Shader" path="res://src/dots.gdshader" id="4_samfo"]
 [ext_resource type="Script" path="res://src/menu/energy_container.gd" id="4_xnla4"]
+[ext_resource type="PackedScene" uid="uid://c7iikn51h7sbb" path="res://src/menu/points_container.tscn" id="7_oie0n"]
 
 [sub_resource type="Gradient" id="Gradient_h65kn"]
 colors = PackedColorArray(0.1404, 0.4068, 0.54, 1, 0.308, 0.8514, 0.88, 1)
@@ -23,31 +24,7 @@ shader_parameter/background = SubResource("GradientTexture2D_jd218")
 [sub_resource type="LabelSettings" id="LabelSettings_pco7m"]
 font_size = 72
 
-[sub_resource type="Animation" id="Animation_vbnuf"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ColorRect:material:shader_parameter/background")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [SubResource("GradientTexture2D_jd218")]
-}
-
-[sub_resource type="Animation" id="Animation_36i50"]
-resource_name = "start"
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_xanik"]
-_data = {
-"RESET": SubResource("Animation_vbnuf"),
-"start": SubResource("Animation_36i50")
-}
-
-[node name="Start" type="Control" node_paths=PackedStringArray("energy", "points")]
+[node name="Start" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -56,8 +33,6 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_rg8bf")
 script = ExtResource("2_af8bd")
-energy = NodePath("Top/HBoxContainer/EnergyContainer")
-points = NodePath("Top/Points")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_7ekah")
@@ -72,53 +47,45 @@ grow_vertical = 2
 layout_mode = 2
 offset_right = 1080.0
 offset_bottom = 90.0
-theme_override_constants/margin_left = 30
+theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 30
+theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Top"]
+[node name="Energy" type="HBoxContainer" parent="Top"]
 layout_mode = 2
 theme_override_constants/separation = -45
 
-[node name="TextureRect" type="TextureRect" parent="Top/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="Top/Energy"]
 modulate = Color(1, 0.533333, 0.14902, 1)
 z_index = 1
 layout_mode = 2
 texture = ExtResource("4_10xj2")
+expand_mode = 2
+stretch_mode = 5
 
-[node name="EnergyContainer" type="HBoxContainer" parent="Top/HBoxContainer"]
+[node name="EnergyContainer" type="HBoxContainer" parent="Top/Energy"]
 layout_mode = 2
-theme_override_constants/separation = -45
+theme_override_constants/separation = -25
 script = ExtResource("4_xnla4")
 
-[node name="EnergyBar" parent="Top/HBoxContainer/EnergyContainer" instance=ExtResource("4_6vu0n")]
+[node name="EnergyBar" parent="Top/Energy/EnergyContainer" instance=ExtResource("4_6vu0n")]
 layout_mode = 2
 
-[node name="EnergyBar2" parent="Top/HBoxContainer/EnergyContainer" instance=ExtResource("4_6vu0n")]
+[node name="EnergyBar2" parent="Top/Energy/EnergyContainer" instance=ExtResource("4_6vu0n")]
 layout_mode = 2
 
-[node name="EnergyBar3" parent="Top/HBoxContainer/EnergyContainer" instance=ExtResource("4_6vu0n")]
+[node name="EnergyBar3" parent="Top/Energy/EnergyContainer" instance=ExtResource("4_6vu0n")]
 layout_mode = 2
 
-[node name="EnergyBar4" parent="Top/HBoxContainer/EnergyContainer" instance=ExtResource("4_6vu0n")]
+[node name="EnergyBar4" parent="Top/Energy/EnergyContainer" instance=ExtResource("4_6vu0n")]
 layout_mode = 2
 
-[node name="EnergyBar5" parent="Top/HBoxContainer/EnergyContainer" instance=ExtResource("4_6vu0n")]
+[node name="EnergyBar5" parent="Top/Energy/EnergyContainer" instance=ExtResource("4_6vu0n")]
 layout_mode = 2
 
-[node name="Energy" type="Label" parent="Top"]
-visible = false
+[node name="Points" parent="Top" instance=ExtResource("7_oie0n")]
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-text = "5/5"
-
-[node name="Points" type="Label" parent="Top"]
-layout_mode = 2
-size_flags_horizontal = 8
-text = "10000$"
-horizontal_alignment = 1
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_lb12p")
@@ -163,10 +130,5 @@ visible = false
 layout_mode = 2
 disabled = true
 text = "Store"
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_xanik")
-}
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]

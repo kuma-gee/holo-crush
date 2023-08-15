@@ -199,8 +199,6 @@ func _spawn_piece(piece):
 	return node
 
 func _create_pieces():
-	logger.debug("Creating initial pieces")
-	
 	for x in data.width:
 		for y in data.height:
 			var pos = Vector2i(x, y)

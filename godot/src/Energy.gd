@@ -10,10 +10,13 @@ var _logger = Logger.new("Energy")
 var _last_used
 
 func get_last_used_time():
+	if _last_used == null:
+		return -1
 	return _last_used.get_time() 
 
 func set_last_used_time(time: int):
-	_last_used = DateTime.new(time)
+	if time >= 0:
+		_last_used = DateTime.new(time)
 
 func _set_energy(v):
 	energy = min(v, max_energy)
@@ -36,6 +39,7 @@ func restore(now: DateTime = DateTime.now()):
 
 	var diff_min = _last_used.get_diff_in_minutes(now)
 	if diff_min < restore_minutes:
+		_logger.debug("%sm since last used, still %sm left" % [diff_min, restore_minutes - diff_min])
 		return
 
 	var restore_count = int(diff_min / restore_minutes)

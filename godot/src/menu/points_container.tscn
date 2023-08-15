@@ -1,0 +1,57 @@
+[gd_scene load_steps=5 format=3 uid="uid://c7iikn51h7sbb"]
+
+[ext_resource type="Script" path="res://src/menu/PointsContainer.gd" id="1_un7cm"]
+[ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_ybp07"]
+[ext_resource type="Texture2D" uid="uid://c5rwvb50kljse" path="res://assets/ui/holo-coin.svg" id="2_1fopf"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_vh1le"]
+font_size = 32
+
+[node name="Points" type="Control" node_paths=PackedStringArray("label", "added_label")]
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 8
+theme = ExtResource("1_ybp07")
+script = ExtResource("1_un7cm")
+label = NodePath("HBoxContainer/Label")
+added_label = NodePath("Added")
+
+[node name="Added" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -50.0
+offset_bottom = 26.0
+grow_horizontal = 0
+text = "+ 1000"
+label_settings = SubResource("LabelSettings_vh1le")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -85.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "100000"
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("2_1fopf")
+expand_mode = 2
+stretch_mode = 5
