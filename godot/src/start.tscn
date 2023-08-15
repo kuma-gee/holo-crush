@@ -1,9 +1,12 @@
-[gd_scene load_steps=12 format=3 uid="uid://qdwfqb2qwrxb"]
+[gd_scene load_steps=15 format=3 uid="uid://qdwfqb2qwrxb"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
+[ext_resource type="PackedScene" uid="uid://cshy8jupbbtdh" path="res://src/menu/energy_bar.tscn" id="4_6vu0n"]
+[ext_resource type="Texture2D" uid="uid://cd0ttwvxp2h5j" path="res://assets/ui/energy_icon.svg" id="4_10xj2"]
 [ext_resource type="AudioStream" uid="uid://cfwc8qonkflxm" path="res://assets/sound/astro_Inst_hololive_202308052333.mp3" id="4_lb12p"]
 [ext_resource type="Shader" path="res://src/dots.gdshader" id="4_samfo"]
+[ext_resource type="Script" path="res://src/menu/energy_container.gd" id="4_xnla4"]
 
 [sub_resource type="Gradient" id="Gradient_h65kn"]
 colors = PackedColorArray(0.1404, 0.4068, 0.54, 1, 0.308, 0.8514, 0.88, 1)
@@ -20,9 +23,6 @@ shader_parameter/background = SubResource("GradientTexture2D_jd218")
 [sub_resource type="LabelSettings" id="LabelSettings_pco7m"]
 font_size = 72
 
-[sub_resource type="Animation" id="Animation_36i50"]
-resource_name = "start"
-
 [sub_resource type="Animation" id="Animation_vbnuf"]
 length = 0.001
 tracks/0/type = "value"
@@ -37,6 +37,9 @@ tracks/0/keys = {
 "update": 1,
 "values": [SubResource("GradientTexture2D_jd218")]
 }
+
+[sub_resource type="Animation" id="Animation_36i50"]
+resource_name = "start"
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xanik"]
 _data = {
@@ -53,8 +56,8 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_rg8bf")
 script = ExtResource("2_af8bd")
-energy = NodePath("PanelContainer/Top/Energy")
-points = NodePath("PanelContainer/Top/Points")
+energy = NodePath("Top/HBoxContainer/EnergyContainer")
+points = NodePath("Top/Points")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_7ekah")
@@ -65,28 +68,53 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 70.0
-grow_horizontal = 2
-
-[node name="Top" type="MarginContainer" parent="PanelContainer"]
+[node name="Top" type="MarginContainer" parent="."]
 layout_mode = 2
+offset_right = 1080.0
+offset_bottom = 90.0
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 10
 
-[node name="Energy" type="Label" parent="PanelContainer/Top"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Top"]
+layout_mode = 2
+theme_override_constants/separation = -45
+
+[node name="TextureRect" type="TextureRect" parent="Top/HBoxContainer"]
+modulate = Color(1, 0.533333, 0.14902, 1)
+z_index = 1
+layout_mode = 2
+texture = ExtResource("4_10xj2")
+
+[node name="EnergyContainer" type="HBoxContainer" parent="Top/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = -45
+script = ExtResource("4_xnla4")
+
+[node name="EnergyBar" parent="Top/HBoxContainer/EnergyContainer" instance=ExtResource("4_6vu0n")]
+layout_mode = 2
+
+[node name="EnergyBar2" parent="Top/HBoxContainer/EnergyContainer" instance=ExtResource("4_6vu0n")]
+layout_mode = 2
+
+[node name="EnergyBar3" parent="Top/HBoxContainer/EnergyContainer" instance=ExtResource("4_6vu0n")]
+layout_mode = 2
+
+[node name="EnergyBar4" parent="Top/HBoxContainer/EnergyContainer" instance=ExtResource("4_6vu0n")]
+layout_mode = 2
+
+[node name="EnergyBar5" parent="Top/HBoxContainer/EnergyContainer" instance=ExtResource("4_6vu0n")]
+layout_mode = 2
+
+[node name="Energy" type="Label" parent="Top"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "5/5"
 
-[node name="Points" type="Label" parent="PanelContainer/Top"]
+[node name="Points" type="Label" parent="Top"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "10000$"

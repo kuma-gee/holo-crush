@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="17.173853mm"
+   height="24.258993mm"
+   viewBox="0 0 17.173851 24.258994"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   sodipodi:docname="energy_icon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="2.1220118"
+     inkscape:cx="-176.95472"
+     inkscape:cy="-42.176957"
+     inkscape:window-width="2560"
+     inkscape:window-height="1395"
+     inkscape:window-x="1080"
+     inkscape:window-y="262"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-79.923241,-98.367916)">
+    <rect
+       style="fill:#000000;stroke-width:0.094037"
+       id="rect4"
+       width="8.7623663"
+       height="13.864501"
+       x="141.3623"
+       y="112.34737"
+       transform="matrix(1,0,-0.48309236,0.8755694,0,0)" />
+    <path
+       id="path4"
+       style="stroke-width:0.0760027"
+       inkscape:transform-center-y="1.520318"
+       d="m 87.099885,105.49991 9.997209,-0.011 -17.173853,17.138 z"
+       sodipodi:nodetypes="cccc"
+       inkscape:transform-center-x="0.13794058" />
+    <rect
+       style="fill:#ffffff;stroke-width:0.081978"
+       id="rect4-6"
+       width="7.5720639"
+       height="12.193011"
+       x="141.15089"
+       y="112.79556"
+       transform="matrix(1,0,-0.47788303,0.87842348,0,0)" />
+    <path
+       id="path4-0"
+       style="fill:#ffffff;stroke-width:0.0636379"
+       inkscape:transform-center-y="1.2878369"
+       d="m 87.522018,106.09266 8.289198,-0.007 -14.51776,14.49134 z"
+       sodipodi:nodetypes="cccc"
+       inkscape:transform-center-x="0.13918407" />
+  </g>
+</svg>

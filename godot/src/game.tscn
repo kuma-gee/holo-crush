@@ -50,6 +50,7 @@ input_blocker = NodePath("Main/AspectRatioContainer/MarginContainer/MarginContai
 grid = NodePath("Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid")
 move_timer = NodePath("HighlightTimer")
 turns_label = NodePath("Top/MarginContainer/HBoxContainer/Label2")
+turns = 5
 gameover = NodePath("GameOver")
 end_score = NodePath("GameOver/PanelContainer/MarginContainer/VBoxContainer/EndScore")
 score_ui = NodePath("Score")

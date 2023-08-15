@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://cshy8jupbbtdh"]
+
+[ext_resource type="Texture2D" uid="uid://dxoaah8nac23n" path="res://assets/ui/energy_bar.svg" id="1_rd2hn"]
+[ext_resource type="Script" path="res://src/menu/energy_bar.gd" id="2_ned5p"]
+
+[node name="EnergyBar" type="TextureRect"]
+modulate = Color(1, 0.945098, 0.360784, 1)
+texture = ExtResource("1_rd2hn")
+stretch_mode = 3
+script = ExtResource("2_ned5p")
+enable_color = Color(1, 0.945098, 0.360784, 1)
+disable_color = Color(0.411765, 0.309804, 0.0784314, 1)
