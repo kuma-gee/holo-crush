@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
 [ext_resource type="PackedScene" uid="uid://cshy8jupbbtdh" path="res://src/menu/energy_bar.tscn" id="4_6vu0n"]
-[ext_resource type="Texture2D" uid="uid://bhiitydt4dt0l" path="res://assets/ui/UI_Energy_Icon.png" id="4_i8se5"]
+[ext_resource type="Texture2D" uid="uid://cd0ttwvxp2h5j" path="res://assets/ui/energy_icon.svg" id="4_10xj2"]
 [ext_resource type="AudioStream" uid="uid://cfwc8qonkflxm" path="res://assets/sound/astro_Inst_hololive_202308052333.mp3" id="4_lb12p"]
 [ext_resource type="Shader" path="res://src/dots.gdshader" id="4_samfo"]
 [ext_resource type="Script" path="res://src/menu/energy_container.gd" id="4_xnla4"]
@@ -79,17 +79,17 @@ theme_override_constants/margin_bottom = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Top"]
 layout_mode = 2
-theme_override_constants/separation = -30
+theme_override_constants/separation = -45
 
 [node name="TextureRect" type="TextureRect" parent="Top/HBoxContainer"]
 modulate = Color(1, 0.533333, 0.14902, 1)
 z_index = 1
 layout_mode = 2
-texture = ExtResource("4_i8se5")
+texture = ExtResource("4_10xj2")
 
 [node name="EnergyContainer" type="HBoxContainer" parent="Top/HBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = -18
+theme_override_constants/separation = -45
 script = ExtResource("4_xnla4")
 
 [node name="EnergyBar" parent="Top/HBoxContainer/EnergyContainer" instance=ExtResource("4_6vu0n")]
