@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://7fw3rk8y5fn7"]
+
+[ext_resource type="Script" path="res://src/menu/piece_select/piece_selectable.gd" id="1_c174e"]
+[ext_resource type="Script" path="res://src/grid/SwipeControl.gd" id="2_ac6mj"]
+
+[node name="SelectablePiece" type="TextureButton"]
+custom_minimum_size = Vector2(128, 128)
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_c174e")
+
+[node name="SwipeControl" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_ac6mj")
+
+[connection signal="press_released" from="SwipeControl" to="." method="_on_swipe_control_press_released"]
+[connection signal="swiped" from="SwipeControl" to="." method="_on_swipe_control_swiped"]

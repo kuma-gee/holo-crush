@@ -22,7 +22,19 @@ const PIECE_MAP := {
 	Piece.Type.CALLI: preload("res://src/piece/calli.tscn"),
 }
 
-var unlocked_pieces = Piece.Type.values()
+var unlocked_pieces = [
+	Piece.Type.BLUE,
+	Piece.Type.RED,
+	Piece.Type.YELLOW,
+	Piece.Type.GREEN,
+	Piece.Type.PURPLE,
+	
+	Piece.Type.INA,
+	Piece.Type.AME,
+	Piece.Type.GURA,
+	Piece.Type.KIARA,
+	Piece.Type.CALLI,
+]
 
 var selected_pieces: Array[Piece.Type] = [
 	Piece.Type.BLUE,

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://qdwfqb2qwrxb"]
+[gd_scene load_steps=18 format=3 uid="uid://qdwfqb2qwrxb"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
@@ -8,6 +8,11 @@
 [ext_resource type="PackedScene" uid="uid://bwglf6d8qxqov" path="res://src/menu/energy_container.tscn" id="5_m4gqq"]
 [ext_resource type="PackedScene" uid="uid://c7iikn51h7sbb" path="res://src/menu/points_container.tscn" id="7_oie0n"]
 [ext_resource type="AudioStream" uid="uid://bnsctl8drghdb" path="res://assets/ui/ニュースタイトル表示3.mp3" id="8_5k2wf"]
+[ext_resource type="Script" path="res://src/menu/overlay.gd" id="9_qgams"]
+[ext_resource type="Script" path="res://src/menu/piece_select/piece_select.gd" id="10_ung14"]
+[ext_resource type="PackedScene" uid="uid://c5mbc2vykt7r7" path="res://src/menu/piece_select/piece_select_slot.tscn" id="11_76xru"]
+[ext_resource type="Script" path="res://src/menu/piece_select/piece_selectables.gd" id="12_frfar"]
+[ext_resource type="PackedScene" uid="uid://7fw3rk8y5fn7" path="res://src/menu/piece_select/piece_selectable.tscn" id="13_b40w3"]
 
 [sub_resource type="Gradient" id="Gradient_h65kn"]
 colors = PackedColorArray(0.1404, 0.4068, 0.54, 1, 0.308, 0.8514, 0.88, 1)
@@ -121,5 +126,70 @@ autoplay = true
 stream = ExtResource("8_5k2wf")
 volume_db = -15.0
 
+[node name="PieceSelect" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_rg8bf")
+script = ExtResource("9_qgams")
+
+[node name="PieceSelect" type="PanelContainer" parent="PieceSelect"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PieceSelect/PieceSelect"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PieceSelect/PieceSelect/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PieceSelect/PieceSelect/MarginContainer/VBoxContainer" node_paths=PackedStringArray("piece_selectable_container")]
+layout_mode = 2
+alignment = 1
+script = ExtResource("10_ung14")
+piece_selectable_container = NodePath("../../../../Selectables")
+select_slot = ExtResource("11_76xru")
+
+[node name="Start" type="Button" parent="PieceSelect/PieceSelect/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Start"
+
+[node name="Selectables" type="PanelContainer" parent="PieceSelect" node_paths=PackedStringArray("selectable_container")]
+visible = false
+clip_contents = true
+custom_minimum_size = Vector2(128, 300)
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 300.0
+mouse_filter = 2
+script = ExtResource("12_frfar")
+selectable_container = NodePath("VBoxContainer")
+selectable_scene = ExtResource("13_b40w3")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PieceSelect/Selectables"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+alignment = 1
+
 [connection signal="pressed" from="CenterContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]
 [connection signal="timeout" from="CheckEnergyTimer" to="." method="_on_check_energy_timer_timeout"]
+[connection signal="pressed" from="PieceSelect/PieceSelect/MarginContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]

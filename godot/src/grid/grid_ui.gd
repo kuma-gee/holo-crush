@@ -15,7 +15,7 @@ signal explosion(pos)
 @export var fill_timer: Timer
 @export var check_timer: Timer
 
-var pieces = GameManager.selected_pieces
+var pieces = []
 
 var combo = 1
 var default_score_value = 50
@@ -99,6 +99,7 @@ func _ready():
 	)
 	check_timer.timeout.connect(func(): _finish_check())
 	
+	pieces = GameManager.selected_pieces
 	data.create_data(pieces)
 
 func _activate_special(pos, fields):

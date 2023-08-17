@@ -12,7 +12,7 @@ extends Piece
 var special_type
 
 func _ready():
-	hide()
+	#hide()
 	var mat = (back_color.material as ShaderMaterial).duplicate()
 	mat.set_shader_parameter("color_gradient", _create_gradient())
 	back_color.material = mat
