@@ -7,28 +7,15 @@ signal turn_used
 signal scored(value, combo)
 signal explosion(pos)
 
-const PIECE_MAP := {
-	Piece.Type.BLUE: preload("res://src/piece/basic_blue.tscn"),
-	Piece.Type.RED: preload("res://src/piece/basic_red.tscn"),
-	Piece.Type.YELLOW: preload("res://src/piece/basic_yellow.tscn"),
-	Piece.Type.GREEN: preload("res://src/piece/basic_green.tscn"),
-	Piece.Type.PURPLE: preload("res://src/piece/basic_purple.tscn"),
-	
-	Piece.Type.INA: preload("res://src/piece/ina.tscn"),
-	Piece.Type.AME: preload("res://src/piece/ame.tscn"),
-	Piece.Type.GURA: preload("res://src/piece/gura.tscn"),
-	Piece.Type.KIARA: preload("res://src/piece/kiara.tscn"),
-	Piece.Type.CALLI: preload("res://src/piece/calli.tscn"),
-}
-
 @export var slot_scene: PackedScene
 @export var data: MatchGrid
-@export var pieces: Array[Piece.Type]
 @export var pieces_root: Node2D
 
 @export var collapse_timer: Timer
 @export var fill_timer: Timer
 @export var check_timer: Timer
+
+var pieces = GameManager.selected_pieces
 
 var combo = 1
 var default_score_value = 50
@@ -192,7 +179,7 @@ func _get_slot(pos: Vector2i):
 	return get_child(idx)
 
 func _spawn_piece(piece):
-	var scene = PIECE_MAP[piece]
+	var scene = GameManager.PIECE_MAP[piece]
 	var node = scene.instantiate()
 	pieces_root.add_child(node)
 	node.type = piece

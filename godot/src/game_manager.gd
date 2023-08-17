@@ -8,6 +8,30 @@ signal game_started()
 @onready var energy := $Energy
 @onready var points := $Points
 
+const PIECE_MAP := {
+	Piece.Type.BLUE: preload("res://src/piece/basic_blue.tscn"),
+	Piece.Type.RED: preload("res://src/piece/basic_red.tscn"),
+	Piece.Type.YELLOW: preload("res://src/piece/basic_yellow.tscn"),
+	Piece.Type.GREEN: preload("res://src/piece/basic_green.tscn"),
+	Piece.Type.PURPLE: preload("res://src/piece/basic_purple.tscn"),
+	
+	Piece.Type.INA: preload("res://src/piece/ina.tscn"),
+	Piece.Type.AME: preload("res://src/piece/ame.tscn"),
+	Piece.Type.GURA: preload("res://src/piece/gura.tscn"),
+	Piece.Type.KIARA: preload("res://src/piece/kiara.tscn"),
+	Piece.Type.CALLI: preload("res://src/piece/calli.tscn"),
+}
+
+var unlocked_pieces = Piece.Type.values()
+
+var selected_pieces: Array[Piece.Type] = [
+	Piece.Type.BLUE,
+	Piece.Type.RED,
+	Piece.Type.YELLOW,
+	Piece.Type.GREEN,
+	Piece.Type.PURPLE,
+]
+
 func _ready():
 	_load_game()
 	energy.restore()
