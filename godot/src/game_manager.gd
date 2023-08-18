@@ -34,11 +34,11 @@ var unlocked_pieces = []
 var selected_pieces = []
 
 func _ready():
-	if selected_pieces.size() == 0:
-		selected_pieces.append_array(default_pieces)
-	
 	_load_game()
 	energy.restore()
+	
+	if selected_pieces.size() == 0:
+		selected_pieces.append_array(default_pieces)
 	
 	SceneManager.scene_loaded.connect(func():
 		points.add_scored_points()
@@ -51,6 +51,11 @@ func _exit_tree():
 func unlock_piece(p):
 	if not p in unlocked_pieces:
 		unlocked_pieces.append(p)
+	_save_game()
+
+func set_selected_piece(idx: int, piece):
+	selected_pieces[idx] = piece
+	_save_game()
 
 func get_selectable_pieces():
 	var result = unlocked_pieces.duplicate()
@@ -70,7 +75,9 @@ func _save_game():
 	save_manager.save_to_slot(SAVE_SLOT, {
 		"energy": energy.energy,
 		"energyUsedTime": energy.get_last_used_time(),
-		"points": points.get_points()
+		"points": points.get_points(),
+		"unlockedPieces": unlocked_pieces,
+		"selectedPieces": selected_pieces,
 	})
 
 func _load_game():
@@ -84,3 +91,7 @@ func _load_game():
 		energy.set_last_used_time(data.energyUsedTime)
 	if "points" in data:
 		points.set_points(data.points)
+	if "unlocked_pieces" in data:
+		unlocked_pieces = data.unlocked_pieces
+	if "selected_pieces" in data:
+		selected_pieces = data.selected_pieces

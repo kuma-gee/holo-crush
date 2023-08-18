@@ -78,7 +78,7 @@ func _pressed_selectable(node):
 func close():
 	if visible:
 		var s = selectable_container.get_child(_selected_index())
-		GameManager.selected_pieces[current_index] = s.piece
+		GameManager.set_selected_piece(current_index, s.piece)
 		selected.emit(current_index, s.piece)
 		hide()
 

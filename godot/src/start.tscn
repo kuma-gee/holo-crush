@@ -13,7 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://c5mbc2vykt7r7" path="res://src/menu/piece_select/piece_select_slot.tscn" id="11_76xru"]
 [ext_resource type="Script" path="res://src/menu/piece_select/piece_selectables.gd" id="12_frfar"]
 [ext_resource type="PackedScene" uid="uid://7fw3rk8y5fn7" path="res://src/menu/piece_select/piece_selectable.tscn" id="13_b40w3"]
-[ext_resource type="PackedScene" uid="uid://djrft25koko4s" path="res://src/menu/store.tscn" id="14_4rvvx"]
+[ext_resource type="PackedScene" uid="uid://djrft25koko4s" path="res://src/menu/store/store.tscn" id="14_6p00d"]
 
 [sub_resource type="Gradient" id="Gradient_h65kn"]
 colors = PackedColorArray(0.1404, 0.4068, 0.54, 1, 0.308, 0.8514, 0.88, 1)
@@ -75,7 +75,7 @@ layout_mode = 2
 [node name="Points" parent="Top" instance=ExtResource("7_oie0n")]
 layout_mode = 2
 
-[node name="CenterContainer2" type="CenterContainer" parent="."]
+[node name="Title" type="CenterContainer" parent="."]
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -86,14 +86,14 @@ offset_bottom = -353.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="CenterContainer2"]
+[node name="Label" type="Label" parent="Title"]
 layout_mode = 2
 text = "Holo
 Crush"
 label_settings = SubResource("LabelSettings_pco7m")
 horizontal_alignment = 1
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="Menu" type="CenterContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -101,30 +101,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu"]
 layout_mode = 2
 
-[node name="Play" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="Play" type="Button" parent="Menu/VBoxContainer"]
 layout_mode = 2
 text = "Play"
 
-[node name="Store" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="Store" type="Button" parent="Menu/VBoxContainer"]
 visible = false
 layout_mode = 2
 disabled = true
 text = "Store"
-
-[node name="CheckEnergyTimer" type="Timer" parent="."]
-autostart = true
-
-[node name="BGM" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("4_lb12p")
-volume_db = -20.0
-autoplay = true
-
-[node name="StartSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("8_5k2wf")
-volume_db = -15.0
 
 [node name="PieceSelect" type="Control" parent="."]
 layout_mode = 1
@@ -190,10 +178,22 @@ size_flags_horizontal = 3
 size_flags_vertical = 4
 alignment = 1
 
-[node name="Store" parent="." instance=ExtResource("14_4rvvx")]
+[node name="Store" parent="." instance=ExtResource("14_6p00d")]
 layout_mode = 1
 
-[connection signal="pressed" from="CenterContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]
-[connection signal="timeout" from="CheckEnergyTimer" to="." method="_on_check_energy_timer_timeout"]
+[node name="CheckEnergyTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_lb12p")
+volume_db = -20.0
+autoplay = true
+
+[node name="StartSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_5k2wf")
+volume_db = -15.0
+
+[connection signal="pressed" from="Menu/VBoxContainer/Play" to="." method="_on_play_pressed"]
 [connection signal="hidden" from="PieceSelect" to="PieceSelect/Selectables" method="close"]
 [connection signal="pressed" from="PieceSelect/PieceSelect/MarginContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="timeout" from="CheckEnergyTimer" to="." method="_on_check_energy_timer_timeout"]

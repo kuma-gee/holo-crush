@@ -118,11 +118,11 @@ theme_override_constants/separation = 50
 
 [node name="AllPack" parent="PanelContainer/CenterContainer/VBoxContainer" instance=ExtResource("2_4wsp4")]
 layout_mode = 2
-price = 50000
+price = 20000
 
 [node name="MythPack" parent="PanelContainer/CenterContainer/VBoxContainer" instance=ExtResource("2_4wsp4")]
 layout_mode = 2
-price = 100000
+price = 50000
 pieces = Array[int]([5, 6, 7, 8, 9])
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
