@@ -2,6 +2,7 @@ extends Control
 
 @onready var bgm := $BGM
 @onready var start_sound := $StartSound
+
 @onready var piece_select := $PieceSelect
 
 func _ready():

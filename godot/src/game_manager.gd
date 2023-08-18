@@ -22,29 +22,26 @@ const PIECE_MAP := {
 	Piece.Type.CALLI: preload("res://src/piece/calli.tscn"),
 }
 
-var unlocked_pieces = [
+var default_pieces = [
 	Piece.Type.BLUE,
 	Piece.Type.RED,
 	Piece.Type.YELLOW,
 	Piece.Type.GREEN,
-	Piece.Type.PURPLE,
-	
-	Piece.Type.INA,
-	Piece.Type.AME,
-	Piece.Type.GURA,
-	Piece.Type.KIARA,
-	Piece.Type.CALLI,
+	Piece.Type.PURPLE
 ]
 
-var selected_pieces: Array[Piece.Type] = [
-	Piece.Type.BLUE,
-	Piece.Type.RED,
-	Piece.Type.YELLOW,
-	Piece.Type.GREEN,
-	Piece.Type.PURPLE,
-]
+var unlocked_pieces = []
+var selected_pieces = []
+
+func get_selectable_pieces():
+	var result = unlocked_pieces.duplicate()
+	result.append_array(default_pieces)
+	return result
 
 func _ready():
+	if selected_pieces.size() == 0:
+		selected_pieces.append_array(default_pieces)
+	
 	_load_game()
 	energy.restore()
 	

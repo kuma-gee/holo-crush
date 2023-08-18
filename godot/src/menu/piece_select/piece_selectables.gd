@@ -13,7 +13,7 @@ func _ready():
 
 func show_selectable_pieces(idx, pos):
 	if visible:
-		_on_close()
+		close()
 	
 	current_index = idx
 	for child in selectable_container.get_children():
@@ -45,7 +45,7 @@ func _scroll_dir(dir):
 
 func _selectable_pieces():
 	var result = []
-	for p in GameManager.unlocked_pieces:
+	for p in GameManager.get_selectable_pieces():
 		if p in GameManager.selected_pieces:
 			continue
 		result.append(p)
@@ -69,17 +69,18 @@ func _pressed_selectable(node):
 	var diff = center - idx
 	
 	if diff == 0:
-		_on_close()
+		close()
 	else:
 		while diff != 0:
 			_scroll_dir(Vector2(0, sign(diff)))
 			diff -= diff / abs(diff)
 
-func _on_close():
-	var s = selectable_container.get_child(_selected_index())
-	GameManager.selected_pieces[current_index] = s.piece
-	selected.emit(current_index, s.piece)
-	hide()
+func close():
+	if visible:
+		var s = selectable_container.get_child(_selected_index())
+		GameManager.selected_pieces[current_index] = s.piece
+		selected.emit(current_index, s.piece)
+		hide()
 
 func _find_idx_for_selectable(node):
 	for i in selectable_container.get_child_count():
