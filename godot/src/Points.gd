@@ -1,11 +1,16 @@
 extends Node
 
-signal points_added(curr, added)
+signal points_changed(curr, diff)
 
 var _logger = Logger.new("Points")
 
-var points := 0
+var points := 0 : set = _set_points
 var scored_points := 0
+
+func _set_points(p):
+	var diff = p - points
+	points_changed.emit(points, diff)
+	points = p
 
 func scored(p):
 	scored_points = p * 0.05
@@ -15,8 +20,7 @@ func add_scored_points():
 	if scored_points <= 0:
 		return
 	
-	points_added.emit(points, scored_points)
-	points += scored_points
+	self.points += scored_points
 	_logger.debug("Adding scored to points %s" % points)
 
 func get_points():
@@ -24,3 +28,10 @@ func get_points():
 	
 func set_points(p):
 	points = p
+
+func use_points(p):
+	if points < p:
+		return false
+	
+	self.points -= p
+	return true

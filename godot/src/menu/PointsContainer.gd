@@ -11,14 +11,14 @@ var adding_coins := 1.0
 
 func _ready():
 	_update_label()
-	GameManager.points.points_added.connect(_on_points_added)
+	GameManager.points.points_changed.connect(_on_points_changed)
 	added_label.modulate = Color.TRANSPARENT
 
 func _update_label(points = GameManager.points.points):
 	label.text = str(points)
 	
 func _update_added_label(points):
-	added_label.text = "+ %s" % points
+	added_label.text = "%s%s" % ["+" if points > 0 else "", points]
 	
 	if points / adding_coins < 0.25 and not started_volume_decrease:
 		for child in coin_sounds.get_children():
@@ -29,7 +29,7 @@ func _update_added_label(points):
 func _get_label_center():
 	return label.global_position + label.size/2
 
-func _on_points_added(curr, added):
+func _on_points_changed(curr, added):
 	adding_coins = added
 	
 	_update_added_label(added)
@@ -37,7 +37,7 @@ func _on_points_added(curr, added):
 	added_label.global_position = _get_label_center() + Vector2.DOWN * 30 - added_label.size / 2
 	added_label.scale = Vector2(0, 0)
 	
-	var delay = 1.0
+	var delay = 0.2
 	started_volume_decrease = false
 	
 	get_tree().create_timer(delay + 0.5).timeout.connect(func():

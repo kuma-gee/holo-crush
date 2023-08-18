@@ -33,11 +33,6 @@ var default_pieces = [
 var unlocked_pieces = []
 var selected_pieces = []
 
-func get_selectable_pieces():
-	var result = unlocked_pieces.duplicate()
-	result.append_array(default_pieces)
-	return result
-
 func _ready():
 	if selected_pieces.size() == 0:
 		selected_pieces.append_array(default_pieces)
@@ -52,6 +47,16 @@ func _ready():
 
 func _exit_tree():
 	_save_game()
+
+func unlock_piece(p):
+	if not p in unlocked_pieces:
+		unlocked_pieces.append(p)
+
+func get_selectable_pieces():
+	var result = unlocked_pieces.duplicate()
+	result.append_array(default_pieces)
+	return result
+
 
 func start_game():
 	if energy.use_energy():
