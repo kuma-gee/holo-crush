@@ -30,7 +30,7 @@ shader_parameter/background = SubResource("GradientTexture2D_jd218")
 [sub_resource type="LabelSettings" id="LabelSettings_pco7m"]
 font_size = 72
 
-[node name="Start" type="Control"]
+[node name="Start" type="Control" node_paths=PackedStringArray("selectables")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,6 +39,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_rg8bf")
 script = ExtResource("2_af8bd")
+selectables = NodePath("PieceSelect/Selectables")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_7ekah")

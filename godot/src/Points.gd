@@ -13,7 +13,7 @@ func _set_points(p):
 	points = p
 
 func scored(p):
-	scored_points = p * 0.05
+	scored_points += p * 0.05
 	_logger.debug("Scored %s points" % scored_points)
 
 func add_scored_points():

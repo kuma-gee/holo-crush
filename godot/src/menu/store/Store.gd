@@ -1,6 +1,7 @@
 extends Control
 
 @export var pack_container: Control
+@export var showcase_container: Control
 
 @onready var showcase := $Showcase
 @onready var store_container := $PanelContainer
@@ -27,6 +28,7 @@ func _unpack_gacha(pack: GachaPack):
 		var new_piece = pack.get_pieces().pick_random()
 		GameManager.unlock_piece(new_piece)
 		print("unlocked %s" % Piece.Type.keys()[new_piece])
+		showcase_container.pivot_offset = showcase_container.size / 2
 		anim.play("showcase")
 		await anim.animation_finished
 		showing_showcase = true

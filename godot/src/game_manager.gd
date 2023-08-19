@@ -91,7 +91,7 @@ func _load_game():
 		energy.set_last_used_time(data.energyUsedTime)
 	if "points" in data:
 		points.set_points(data.points)
-	if "unlocked_pieces" in data:
-		unlocked_pieces = data.unlocked_pieces
-	if "selected_pieces" in data:
-		selected_pieces = data.selected_pieces
+	if "unlockedPieces" in data:
+		unlocked_pieces = data.unlockedPieces
+	if "selectedPieces" in data:
+		selected_pieces = data.selectedPieces
