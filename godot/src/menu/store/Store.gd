@@ -7,21 +7,27 @@ extends Control
 @onready var store_container := $PanelContainer
 @onready var anim := $AnimationPlayer
 
+@onready var store_pos = store_container.position
+
 var showing_showcase = false
 
 func _ready():
-	store_container.hide()
-	showcase.hide()
+	anim.play("RESET")
 	
 	for child in pack_container.get_children():
 		child.pressed.connect(func(): _unpack_gacha(child))
 
 func _on_store_pressed():
-	if store_container.visible:
-		store_container.hide()
-		showcase.hide()
+	if anim.is_playing():
+		return
+	
+	if store_container.position.y < 0:
+		anim.play("show_store")
+		print("show")
 	else:
-		store_container.show()
+		anim.play_backwards("show_store")
+		print("hide")
+
 
 func _unpack_gacha(pack: GachaPack):
 	if GameManager.points.use_points(pack.price):
