@@ -1,0 +1,168 @@
+[gd_scene load_steps=8 format=3 uid="uid://dqo00u4klgmf0"]
+
+[ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_nfntf"]
+[ext_resource type="Script" path="res://addons/menu-system/AudioSlider.gd" id="2_5nebq"]
+[ext_resource type="Script" path="res://src/menu/settings.gd" id="2_n4qpr"]
+[ext_resource type="Texture2D" uid="uid://bwve2nq30wldn" path="res://icon.svg" id="3_gx15h"]
+
+[sub_resource type="Animation" id="Animation_eksmo"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PanelContainer:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, -2000)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PanelContainer:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("PanelContainer:size")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1080, 1920)]
+}
+
+[sub_resource type="Animation" id="Animation_1ky24"]
+resource_name = "show_store"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PanelContainer:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(3, 1),
+"update": 0,
+"values": [Vector2(0, -2000), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PanelContainer:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rej5w"]
+_data = {
+"RESET": SubResource("Animation_eksmo"),
+"show": SubResource("Animation_1ky24")
+}
+
+[node name="Settings" type="Control" node_paths=PackedStringArray("container")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("1_nfntf")
+script = ExtResource("2_n4qpr")
+container = NodePath("PanelContainer")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -2000.0
+offset_right = 1080.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="PanelContainer/CenterContainer"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 2
+
+[node name="Master" type="Label" parent="PanelContainer/CenterContainer/GridContainer"]
+layout_mode = 2
+text = "Master "
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/CenterContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+script = ExtResource("2_5nebq")
+
+[node name="Master2" type="Label" parent="PanelContainer/CenterContainer/GridContainer"]
+layout_mode = 2
+text = "BGM"
+
+[node name="HSlider2" type="HSlider" parent="PanelContainer/CenterContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+script = ExtResource("2_5nebq")
+bus_name = "BGM"
+
+[node name="Master3" type="Label" parent="PanelContainer/CenterContainer/GridContainer"]
+layout_mode = 2
+text = "SFX"
+
+[node name="HSlider3" type="HSlider" parent="PanelContainer/CenterContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+script = ExtResource("2_5nebq")
+bus_name = "SFX"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -188.0
+offset_right = 188.0
+grow_vertical = 0
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Toggle" type="TextureButton" parent="MarginContainer"]
+layout_mode = 2
+texture_normal = ExtResource("3_gx15h")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_rej5w")
+}
+
+[connection signal="pressed" from="MarginContainer/Toggle" to="." method="_on_toggle_pressed"]

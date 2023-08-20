@@ -26,3 +26,4 @@ layout_mode = 2
 [node name="NoEnergy" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_6qg33")
 volume_db = -10.0
+bus = &"SFX"

@@ -23,10 +23,8 @@ func _on_store_pressed():
 	
 	if store_container.position.y < 0:
 		anim.play("show_store")
-		print("show")
 	else:
 		anim.play_backwards("show_store")
-		print("hide")
 
 
 func _unpack_gacha(pack: GachaPack):

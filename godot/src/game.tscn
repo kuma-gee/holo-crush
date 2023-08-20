@@ -228,6 +228,7 @@ text = "Back"
 stream = ExtResource("10_chsc8")
 volume_db = -30.0
 autoplay = true
+bus = &"BGM"
 
 [connection signal="explosion" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_explosion"]
 [connection signal="processing" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing"]

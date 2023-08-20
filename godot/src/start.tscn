@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://qdwfqb2qwrxb"]
+[gd_scene load_steps=25 format=3 uid="uid://qdwfqb2qwrxb"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
@@ -8,12 +8,14 @@
 [ext_resource type="PackedScene" uid="uid://bwglf6d8qxqov" path="res://src/menu/energy_container.tscn" id="5_m4gqq"]
 [ext_resource type="PackedScene" uid="uid://c7iikn51h7sbb" path="res://src/menu/points_container.tscn" id="7_oie0n"]
 [ext_resource type="AudioStream" uid="uid://bnsctl8drghdb" path="res://assets/ui/ニュースタイトル表示3.mp3" id="8_5k2wf"]
+[ext_resource type="PackedScene" uid="uid://hbh72ag1wvh" path="res://src/menu/store/gacha_pack.tscn" id="8_x8w2p"]
 [ext_resource type="Script" path="res://src/menu/overlay.gd" id="9_qgams"]
+[ext_resource type="Texture2D" uid="uid://bwve2nq30wldn" path="res://icon.svg" id="9_ys5c6"]
 [ext_resource type="Script" path="res://src/menu/piece_select/piece_select.gd" id="10_ung14"]
 [ext_resource type="PackedScene" uid="uid://c5mbc2vykt7r7" path="res://src/menu/piece_select/piece_select_slot.tscn" id="11_76xru"]
 [ext_resource type="Script" path="res://src/menu/piece_select/piece_selectables.gd" id="12_frfar"]
 [ext_resource type="PackedScene" uid="uid://7fw3rk8y5fn7" path="res://src/menu/piece_select/piece_selectable.tscn" id="13_b40w3"]
-[ext_resource type="PackedScene" uid="uid://djrft25koko4s" path="res://src/menu/store/store.tscn" id="14_6p00d"]
+[ext_resource type="Script" path="res://addons/menu-system/AudioSlider.gd" id="17_sr1fr"]
 
 [sub_resource type="Gradient" id="Gradient_h65kn"]
 colors = PackedColorArray(0.1404, 0.4068, 0.54, 1, 0.308, 0.8514, 0.88, 1)
@@ -29,6 +31,85 @@ shader_parameter/background = SubResource("GradientTexture2D_jd218")
 
 [sub_resource type="LabelSettings" id="LabelSettings_pco7m"]
 font_size = 72
+
+[sub_resource type="Animation" id="Animation_0sthp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PieceSelect:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PieceSelect/PieceSelect:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("PieceSelect/Blocker:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("PieceSelect/Selectables:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_2a0pg"]
+resource_name = "show_menu"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MenuContainer:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(3, 1),
+"update": 0,
+"values": [Vector2(0, -2000), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MenuContainer:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="Animation" id="Animation_20ldf"]
 resource_name = "show_pieces"
@@ -96,64 +177,14 @@ tracks/4/keys = {
 }]
 }
 
-[sub_resource type="Animation" id="Animation_0sthp"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("PieceSelect:visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("PieceSelect/PieceSelect:scale")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(1e-05, 1e-05)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("PieceSelect/Blocker:visible")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("PieceSelect/Selectables:visible")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_j8rit"]
 _data = {
 "RESET": SubResource("Animation_0sthp"),
+"show_menu": SubResource("Animation_2a0pg"),
 "show_pieces": SubResource("Animation_20ldf")
 }
 
-[node name="Start" type="Control" node_paths=PackedStringArray("selectables", "select_container")]
+[node name="Start" type="Control" node_paths=PackedStringArray("selectables", "select_container", "menu_container", "settings_menu", "store_menu")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -164,6 +195,9 @@ theme = ExtResource("1_rg8bf")
 script = ExtResource("2_af8bd")
 selectables = NodePath("PieceSelect/Selectables")
 select_container = NodePath("PieceSelect/PieceSelect")
+menu_container = NodePath("MenuContainer")
+settings_menu = NodePath("MenuContainer/PanelContainer/Settings")
+store_menu = NodePath("MenuContainer/PanelContainer/Store")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_7ekah")
@@ -239,8 +273,118 @@ layout_mode = 2
 disabled = true
 text = "Store"
 
-[node name="Store" parent="." instance=ExtResource("14_6p00d")]
+[node name="Bottom" type="HBoxContainer" parent="."]
 layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -188.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="SettingsBtn" type="MarginContainer" parent="Bottom"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Settings" type="TextureButton" parent="Bottom/SettingsBtn"]
+layout_mode = 2
+texture_normal = ExtResource("9_ys5c6")
+
+[node name="Control" type="Control" parent="Bottom"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StoreBtn" type="MarginContainer" parent="Bottom"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Store" type="TextureButton" parent="Bottom/StoreBtn"]
+layout_mode = 2
+texture_normal = ExtResource("9_ys5c6")
+
+[node name="MenuContainer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -2000.0
+offset_bottom = -2000.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="MenuContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Settings" type="CenterContainer" parent="MenuContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="MenuContainer/PanelContainer/Settings"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 2
+
+[node name="Master" type="Label" parent="MenuContainer/PanelContainer/Settings/GridContainer"]
+layout_mode = 2
+text = "Master "
+
+[node name="HSlider" type="HSlider" parent="MenuContainer/PanelContainer/Settings/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+script = ExtResource("17_sr1fr")
+
+[node name="Master2" type="Label" parent="MenuContainer/PanelContainer/Settings/GridContainer"]
+layout_mode = 2
+text = "BGM"
+
+[node name="HSlider2" type="HSlider" parent="MenuContainer/PanelContainer/Settings/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+script = ExtResource("17_sr1fr")
+bus_name = "BGM"
+
+[node name="Master3" type="Label" parent="MenuContainer/PanelContainer/Settings/GridContainer"]
+layout_mode = 2
+text = "SFX"
+
+[node name="HSlider3" type="HSlider" parent="MenuContainer/PanelContainer/Settings/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+script = ExtResource("17_sr1fr")
+bus_name = "SFX"
+
+[node name="Store" type="CenterContainer" parent="MenuContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="HBoxContainer" parent="MenuContainer/PanelContainer/Store"]
+layout_mode = 2
+theme_override_constants/separation = 50
+
+[node name="AllPack" parent="MenuContainer/PanelContainer/Store/VBoxContainer" instance=ExtResource("8_x8w2p")]
+layout_mode = 2
+price = 5
+
+[node name="MythPack" parent="MenuContainer/PanelContainer/Store/VBoxContainer" instance=ExtResource("8_x8w2p")]
+layout_mode = 2
+price = 50000
+pieces = Array[int]([5, 6, 7, 8, 9])
 
 [node name="PieceSelect" type="Control" parent="."]
 visible = false
@@ -324,10 +468,12 @@ autostart = true
 stream = ExtResource("4_lb12p")
 volume_db = -20.0
 autoplay = true
+bus = &"BGM"
 
 [node name="StartSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_5k2wf")
 volume_db = -15.0
+bus = &"SFX"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -335,6 +481,8 @@ libraries = {
 }
 
 [connection signal="pressed" from="Menu/VBoxContainer/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Bottom/SettingsBtn/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Bottom/StoreBtn/Store" to="." method="_on_store_pressed"]
 [connection signal="hidden" from="PieceSelect" to="PieceSelect/Selectables" method="close"]
 [connection signal="on_hide" from="PieceSelect" to="." method="_on_piece_select_on_hide"]
 [connection signal="pressed" from="PieceSelect/PieceSelect/MarginContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]

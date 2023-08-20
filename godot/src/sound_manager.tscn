@@ -12,15 +12,18 @@ script = ExtResource("1_odwfr")
 [node name="MatchSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_mukpa")
 volume_db = -10.0
+bus = &"SFX"
 script = ExtResource("3_0bakx")
 
 [node name="SpecialMatch" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_lypla")
 volume_db = -10.0
+bus = &"SFX"
 script = ExtResource("3_0bakx")
 
 [node name="BombSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_sd5hr")
 volume_db = -15.0
 pitch_scale = 1.5
+bus = &"SFX"
 script = ExtResource("3_0bakx")
