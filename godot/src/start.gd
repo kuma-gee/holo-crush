@@ -2,7 +2,6 @@ extends Control
 
 @export var selectables: Control
 @export var select_container: Control
-@export var menu_container: Control
 
 @export var settings_menu: Control
 @export var store_menu: Control
@@ -35,27 +34,3 @@ func _on_piece_select_on_hide():
 	anim.play_backwards("show_pieces")
 	await anim.animation_finished
 	piece_select.hide()
-
-
-func _on_settings_pressed():
-	store_menu.hide()
-	settings_menu.show()
-	_toggle_menu()
-	
-
-func _on_store_pressed():
-	settings_menu.hide()
-	store_menu.show()
-	_toggle_menu()
-
-func _is_menu_visible():
-	return menu_container.position.y >= 0
-
-func _toggle_menu():
-	if anim.is_playing():
-		return
-	
-	if _is_menu_visible():
-		anim.play_backwards("show_menu")
-	else:
-		anim.play("show_menu")

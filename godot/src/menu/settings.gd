@@ -1,17 +1,7 @@
-extends Control
+extends CenterContainer
 
-@export var container: Control
+signal close()
 
-@onready var anim := $AnimationPlayer
 
-func _ready():
-	anim.play("RESET")
-
-func _on_toggle_pressed():
-	if anim.is_playing():
-		return
-	
-	if container.position.y < 0:
-		anim.play("show")
-	else:
-		anim.play_backwards("show")
+func _on_texture_button_pressed():
+	close.emit()
