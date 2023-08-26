@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://qdwfqb2qwrxb"]
+[gd_scene load_steps=32 format=3 uid="uid://qdwfqb2qwrxb"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
@@ -13,24 +13,23 @@
 [ext_resource type="AudioStream" uid="uid://bnsctl8drghdb" path="res://assets/ui/ニュースタイトル表示3.mp3" id="8_5k2wf"]
 [ext_resource type="PackedScene" uid="uid://dc230wcy1bgpy" path="res://src/menu/settings.tscn" id="8_23aaf"]
 [ext_resource type="Texture2D" uid="uid://da4bdfvrmxj1i" path="res://assets/ui/play.svg" id="8_dqte7"]
-[ext_resource type="PackedScene" uid="uid://hbh72ag1wvh" path="res://src/menu/store/gacha_pack.tscn" id="8_x8w2p"]
 [ext_resource type="Script" path="res://src/menu/overlay.gd" id="9_qgams"]
 [ext_resource type="Texture2D" uid="uid://bwve2nq30wldn" path="res://icon.svg" id="9_ys5c6"]
 [ext_resource type="Script" path="res://src/menu/piece_select/piece_select.gd" id="10_ung14"]
 [ext_resource type="PackedScene" uid="uid://c5mbc2vykt7r7" path="res://src/menu/piece_select/piece_select_slot.tscn" id="11_76xru"]
-[ext_resource type="Texture2D" uid="uid://bxrlpvpemkprg" path="res://assets/ui/play_pressed.svg" id="11_nm8vw"]
 [ext_resource type="Script" path="res://src/menu/piece_select/piece_selectables.gd" id="12_frfar"]
 [ext_resource type="PackedScene" uid="uid://7fw3rk8y5fn7" path="res://src/menu/piece_select/piece_selectable.tscn" id="13_b40w3"]
 [ext_resource type="Texture2D" uid="uid://b7qsqisg7w3n0" path="res://assets/ui/setting.svg" id="13_lnhgn"]
 [ext_resource type="Script" path="res://src/menu/UIButton.gd" id="14_6yhda"]
 [ext_resource type="Texture2D" uid="uid://cj851nf6ocius" path="res://assets/ui/store.svg" id="15_br8ph"]
+[ext_resource type="PackedScene" uid="uid://dx3pmih1fkpfe" path="res://src/menu/store.tscn" id="17_bi2tb"]
 
 [sub_resource type="Gradient" id="Gradient_h65kn"]
-colors = PackedColorArray(0.1404, 0.4068, 0.54, 1, 0.308, 0.8514, 0.88, 1)
+colors = PackedColorArray(0.0468, 0.22428, 0.36, 1, 0.308, 0.8514, 0.88, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_jd218"]
 gradient = SubResource("Gradient_h65kn")
-fill_from = Vector2(0, 1)
+fill_from = Vector2(0, 0.989247)
 fill_to = Vector2(0, 0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7ekah"]
@@ -207,7 +206,7 @@ _data = {
 "show_pieces": SubResource("Animation_20ldf")
 }
 
-[node name="Start" type="Control" node_paths=PackedStringArray("selectables", "select_container", "store_menu")]
+[node name="Start" type="Control" node_paths=PackedStringArray("selectables", "select_container")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -218,10 +217,8 @@ theme = ExtResource("1_rg8bf")
 script = ExtResource("2_af8bd")
 selectables = NodePath("PieceSelect/Selectables")
 select_container = NodePath("PieceSelect/PieceSelect")
-store_menu = NodePath("MenuContainer/Store")
 
 [node name="ColorRect" type="ColorRect" parent="."]
-visible = false
 material = SubResource("ShaderMaterial_7ekah")
 layout_mode = 1
 anchors_preset = 15
@@ -229,6 +226,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0.882353, 0.882353, 0.882353, 1)
 
 [node name="Top" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -294,7 +292,7 @@ layout_mode = 2
 [node name="Play" type="TextureButton" parent="Menu/VBoxContainer"]
 layout_mode = 2
 texture_normal = ExtResource("8_dqte7")
-texture_pressed = ExtResource("11_nm8vw")
+script = ExtResource("14_6yhda")
 
 [node name="Play2" type="Button" parent="Menu/VBoxContainer"]
 visible = false
@@ -378,24 +376,8 @@ color = Color(0, 0, 0, 0.705882)
 visible = false
 layout_mode = 1
 
-[node name="Store" type="CenterContainer" parent="MenuContainer"]
-visible = false
-layout_mode = 2
-offset_right = 1080.0
-offset_bottom = 1920.0
-
-[node name="VBoxContainer" type="HBoxContainer" parent="MenuContainer/Store"]
-layout_mode = 2
-theme_override_constants/separation = 50
-
-[node name="AllPack" parent="MenuContainer/Store/VBoxContainer" instance=ExtResource("8_x8w2p")]
-layout_mode = 2
-price = 5
-
-[node name="MythPack" parent="MenuContainer/Store/VBoxContainer" instance=ExtResource("8_x8w2p")]
-layout_mode = 2
-price = 50000
-pieces = Array[int]([5, 6, 7, 8, 9])
+[node name="Store" parent="MenuContainer" instance=ExtResource("17_bi2tb")]
+layout_mode = 0
 
 [node name="PieceSelect" type="Control" parent="."]
 visible = false

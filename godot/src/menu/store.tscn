@@ -1,0 +1,53 @@
+[gd_scene load_steps=6 format=3 uid="uid://dx3pmih1fkpfe"]
+
+[ext_resource type="StyleBox" uid="uid://bd0c76q5d7ocf" path="res://theme/dialog.tres" id="1_16mmg"]
+[ext_resource type="Script" path="res://src/menu/store.gd" id="1_oiq8j"]
+[ext_resource type="PackedScene" uid="uid://hbh72ag1wvh" path="res://src/menu/store/gacha_pack.tscn" id="2_2e1y3"]
+[ext_resource type="Texture2D" uid="uid://bdotu11c1jmm" path="res://assets/ui/close.svg" id="3_wepua"]
+[ext_resource type="Script" path="res://src/menu/UIButton.gd" id="4_3mes3"]
+
+[node name="Store" type="CenterContainer"]
+offset_right = 1080.0
+offset_bottom = 1920.0
+script = ExtResource("1_oiq8j")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("1_16mmg")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 50
+
+[node name="AllPack" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("2_2e1y3")]
+layout_mode = 2
+price = 5
+
+[node name="MythPack" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("2_2e1y3")]
+layout_mode = 2
+price = 50000
+pieces = Array[int]([5, 6, 7, 8, 9])
+
+[node name="MarginContainer2" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_constants/margin_top = -25
+theme_override_constants/margin_right = -25
+
+[node name="TextureButton" type="TextureButton" parent="PanelContainer/MarginContainer2"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture_normal = ExtResource("3_wepua")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("4_3mes3")
+
+[connection signal="pressed" from="PanelContainer/MarginContainer2/TextureButton" to="." method="_on_texture_button_pressed"]

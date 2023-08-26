@@ -47,14 +47,12 @@ func _on_gameover():
 	var score = score_ui.score
 	end_score.text = tr("Score") + ": " + str(score)
 	
-	gameover.pivot_offset = gameover.size / 2
-	gameover.scale = Vector2(0.5, 0.5)
-	gameover.modulate = Color.TRANSPARENT
+	gameover.position = Vector2(0, -gameover.size.y)
 	gameover.show()
 	
 	var tw = create_tween()
-	tw.tween_property(gameover, "scale", Vector2(1, 1), 0.5).set_trans(Tween.TRANS_BACK)
-	tw.parallel().tween_property(gameover, "modulate", Color.WHITE, 0.5).set_trans(Tween.TRANS_BACK)
+	tw.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.tween_property(gameover, "position", Vector2.ZERO, 0.5)
 	
 	GameManager.points.scored(score)
 

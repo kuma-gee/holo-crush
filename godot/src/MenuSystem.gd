@@ -14,7 +14,8 @@ func _ready():
 	overlay.hide()
 	store.hide()
 	
-	settings.close.connect(func(): _hide_settings())
+	settings.close.connect(func(): _hide_node(settings))
+	store.close.connect(func(): _hide_node(store))
 
 func _show_overlay():
 	overlay.modulate = Color.TRANSPARENT
@@ -36,25 +37,27 @@ func _new_tween():
 	tw = create_tween()
 
 func _on_store_pressed():
-	pass
-
+	_show_node(store)
 
 func _on_settings_pressed():
+	_show_node(settings)
+
+func _show_node(node):
 	_new_tween()
 	_show_overlay()
 	
-	settings.position = outside_pos
-	settings.show()
-	tw.parallel().tween_property(settings, "position", Vector2.ZERO, move_speed) \
+	node.position = outside_pos
+	node.show()
+	tw.parallel().tween_property(node, "position", Vector2.ZERO, move_speed) \
 		.set_ease(Tween.EASE_OUT) \
 		.set_trans(Tween.TRANS_BACK)
 
-func _hide_settings():
+func _hide_node(node):
 	_new_tween()
 	
-	tw.tween_property(settings, "position", outside_pos, move_speed) \
+	tw.tween_property(node, "position", outside_pos, move_speed) \
 		.set_ease(Tween.EASE_IN) \
 		.set_trans(Tween.TRANS_BACK)
-	tw.finished.connect(func(): settings.hide())
+	tw.finished.connect(func(): node.hide())
 	
 	_hide_overlay()
