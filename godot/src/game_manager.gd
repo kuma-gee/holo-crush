@@ -37,6 +37,9 @@ func _ready():
 	_load_game()
 	energy.restore()
 	
+	if selected_pieces.size() > 0:
+		selected_pieces = []
+	
 	if selected_pieces.size() == 0:
 		selected_pieces.append_array(default_pieces)
 	

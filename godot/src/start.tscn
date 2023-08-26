@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://qdwfqb2qwrxb"]
+[gd_scene load_steps=32 format=3 uid="uid://qdwfqb2qwrxb"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
@@ -6,29 +6,132 @@
 [ext_resource type="AudioStream" uid="uid://cfwc8qonkflxm" path="res://assets/sound/astro_Inst_hololive_202308052333.mp3" id="4_lb12p"]
 [ext_resource type="Shader" path="res://src/dots.gdshader" id="4_samfo"]
 [ext_resource type="PackedScene" uid="uid://bwglf6d8qxqov" path="res://src/menu/energy_container.tscn" id="5_m4gqq"]
+[ext_resource type="Script" path="res://src/MenuSystem.gd" id="7_ampby"]
+[ext_resource type="Shader" path="res://src/clip_texture.gdshader" id="7_nxbx0"]
 [ext_resource type="PackedScene" uid="uid://c7iikn51h7sbb" path="res://src/menu/points_container.tscn" id="7_oie0n"]
+[ext_resource type="Texture2D" uid="uid://bdb0wpbfokxjq" path="res://assets/ui/hexagon.svg" id="7_qqkgn"]
 [ext_resource type="AudioStream" uid="uid://bnsctl8drghdb" path="res://assets/ui/ニュースタイトル表示3.mp3" id="8_5k2wf"]
+[ext_resource type="PackedScene" uid="uid://dc230wcy1bgpy" path="res://src/menu/settings.tscn" id="8_23aaf"]
+[ext_resource type="Texture2D" uid="uid://da4bdfvrmxj1i" path="res://assets/ui/play.svg" id="8_dqte7"]
 [ext_resource type="Script" path="res://src/menu/overlay.gd" id="9_qgams"]
+[ext_resource type="Texture2D" uid="uid://bwve2nq30wldn" path="res://icon.svg" id="9_ys5c6"]
 [ext_resource type="Script" path="res://src/menu/piece_select/piece_select.gd" id="10_ung14"]
 [ext_resource type="PackedScene" uid="uid://c5mbc2vykt7r7" path="res://src/menu/piece_select/piece_select_slot.tscn" id="11_76xru"]
 [ext_resource type="Script" path="res://src/menu/piece_select/piece_selectables.gd" id="12_frfar"]
 [ext_resource type="PackedScene" uid="uid://7fw3rk8y5fn7" path="res://src/menu/piece_select/piece_selectable.tscn" id="13_b40w3"]
-[ext_resource type="PackedScene" uid="uid://djrft25koko4s" path="res://src/menu/store/store.tscn" id="14_6p00d"]
+[ext_resource type="Texture2D" uid="uid://b7qsqisg7w3n0" path="res://assets/ui/setting.svg" id="13_lnhgn"]
+[ext_resource type="Script" path="res://src/menu/UIButton.gd" id="14_6yhda"]
+[ext_resource type="Texture2D" uid="uid://cj851nf6ocius" path="res://assets/ui/store.svg" id="15_br8ph"]
+[ext_resource type="PackedScene" uid="uid://dx3pmih1fkpfe" path="res://src/menu/store.tscn" id="17_bi2tb"]
 
 [sub_resource type="Gradient" id="Gradient_h65kn"]
-colors = PackedColorArray(0.1404, 0.4068, 0.54, 1, 0.308, 0.8514, 0.88, 1)
+colors = PackedColorArray(0.0468, 0.22428, 0.36, 1, 0.308, 0.8514, 0.88, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_jd218"]
 gradient = SubResource("Gradient_h65kn")
-fill_from = Vector2(0, 1)
+fill_from = Vector2(0, 0.989247)
 fill_to = Vector2(0, 0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7ekah"]
 shader = ExtResource("4_samfo")
 shader_parameter/background = SubResource("GradientTexture2D_jd218")
 
-[sub_resource type="LabelSettings" id="LabelSettings_pco7m"]
-font_size = 72
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_unebo"]
+shader = ExtResource("7_nxbx0")
+shader_parameter/clip_texture_size = Vector2(256, 256)
+shader_parameter/clip_texture_offset = Vector2(-0.085, 0.025)
+shader_parameter/clip_texture = ExtResource("9_ys5c6")
+
+[sub_resource type="Animation" id="Animation_0sthp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PieceSelect:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PieceSelect/PieceSelect:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("PieceSelect/Blocker:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("PieceSelect/Selectables:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("MenuContainer/Overlay:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_2a0pg"]
+resource_name = "show_menu"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MenuContainer:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MenuContainer/Overlay:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
 
 [sub_resource type="Animation" id="Animation_20ldf"]
 resource_name = "show_pieces"
@@ -96,60 +199,10 @@ tracks/4/keys = {
 }]
 }
 
-[sub_resource type="Animation" id="Animation_0sthp"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("PieceSelect:visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("PieceSelect/PieceSelect:scale")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(1e-05, 1e-05)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("PieceSelect/Blocker:visible")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("PieceSelect/Selectables:visible")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_j8rit"]
 _data = {
 "RESET": SubResource("Animation_0sthp"),
+"show_menu": SubResource("Animation_2a0pg"),
 "show_pieces": SubResource("Animation_20ldf")
 }
 
@@ -173,50 +226,57 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0.882353, 0.882353, 0.882353, 1)
 
 [node name="Top" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 91.0
+grow_horizontal = 2
+
+[node name="ColorRect2" type="ColorRect" parent="Top"]
 layout_mode = 2
-offset_right = 1080.0
-offset_bottom = 90.0
+color = Color(0, 0, 0, 0.705882)
+
+[node name="Top" type="MarginContainer" parent="Top"]
+layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Energy" type="HBoxContainer" parent="Top"]
+[node name="Energy" type="HBoxContainer" parent="Top/Top"]
 layout_mode = 2
 theme_override_constants/separation = -40
 
-[node name="TextureRect" type="TextureRect" parent="Top/Energy"]
+[node name="TextureRect" type="TextureRect" parent="Top/Top/Energy"]
 modulate = Color(1, 0.533333, 0.14902, 1)
 layout_mode = 2
 texture = ExtResource("4_10xj2")
 expand_mode = 2
 stretch_mode = 5
 
-[node name="EnergyContainer" parent="Top/Energy" instance=ExtResource("5_m4gqq")]
+[node name="EnergyContainer" parent="Top/Top/Energy" instance=ExtResource("5_m4gqq")]
 layout_mode = 2
 
-[node name="Points" parent="Top" instance=ExtResource("7_oie0n")]
+[node name="Points" parent="Top/Top" instance=ExtResource("7_oie0n")]
 layout_mode = 2
 
-[node name="Title" type="CenterContainer" parent="."]
+[node name="Hexagon" type="MarginContainer" parent="."]
 layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -626.0
-offset_bottom = -353.0
+offset_bottom = 182.0
 grow_horizontal = 2
-grow_vertical = 2
 
-[node name="Label" type="Label" parent="Title"]
+[node name="TextureRect" type="TextureRect" parent="Hexagon"]
+material = SubResource("ShaderMaterial_unebo")
+clip_contents = true
 layout_mode = 2
-text = "Holo
-Crush"
-label_settings = SubResource("LabelSettings_pco7m")
-horizontal_alignment = 1
+texture = ExtResource("7_qqkgn")
+expand_mode = 2
+stretch_mode = 5
 
 [node name="Menu" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -229,7 +289,13 @@ grow_vertical = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="Menu"]
 layout_mode = 2
 
-[node name="Play" type="Button" parent="Menu/VBoxContainer"]
+[node name="Play" type="TextureButton" parent="Menu/VBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("8_dqte7")
+script = ExtResource("14_6yhda")
+
+[node name="Play2" type="Button" parent="Menu/VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "Play"
 
@@ -239,8 +305,79 @@ layout_mode = 2
 disabled = true
 text = "Store"
 
-[node name="Store" parent="." instance=ExtResource("14_6p00d")]
+[node name="MenuContainer" type="Control" parent="." node_paths=PackedStringArray("overlay", "settings", "store")]
 layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("7_ampby")
+overlay = NodePath("Overlay")
+settings = NodePath("Settings")
+store = NodePath("Store")
+
+[node name="Bottom" type="HBoxContainer" parent="MenuContainer"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -188.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="SettingsBtn" type="MarginContainer" parent="MenuContainer/Bottom"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Settings" type="TextureButton" parent="MenuContainer/Bottom/SettingsBtn"]
+custom_minimum_size = Vector2(92, 92)
+layout_mode = 2
+texture_normal = ExtResource("13_lnhgn")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("14_6yhda")
+
+[node name="Control" type="Control" parent="MenuContainer/Bottom"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StoreBtn" type="MarginContainer" parent="MenuContainer/Bottom"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Store" type="TextureButton" parent="MenuContainer/Bottom/StoreBtn"]
+custom_minimum_size = Vector2(92, 92)
+layout_mode = 2
+texture_normal = ExtResource("15_br8ph")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("14_6yhda")
+
+[node name="Overlay" type="ColorRect" parent="MenuContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.705882)
+
+[node name="Settings" parent="MenuContainer" instance=ExtResource("8_23aaf")]
+visible = false
+layout_mode = 1
+
+[node name="Store" parent="MenuContainer" instance=ExtResource("17_bi2tb")]
+layout_mode = 0
 
 [node name="PieceSelect" type="Control" parent="."]
 visible = false
@@ -324,10 +461,12 @@ autostart = true
 stream = ExtResource("4_lb12p")
 volume_db = -20.0
 autoplay = true
+bus = &"BGM"
 
 [node name="StartSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_5k2wf")
 volume_db = -15.0
+bus = &"SFX"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -335,6 +474,9 @@ libraries = {
 }
 
 [connection signal="pressed" from="Menu/VBoxContainer/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Menu/VBoxContainer/Play2" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="MenuContainer/Bottom/SettingsBtn/Settings" to="MenuContainer" method="_on_settings_pressed"]
+[connection signal="pressed" from="MenuContainer/Bottom/StoreBtn/Store" to="MenuContainer" method="_on_store_pressed"]
 [connection signal="hidden" from="PieceSelect" to="PieceSelect/Selectables" method="close"]
 [connection signal="on_hide" from="PieceSelect" to="." method="_on_piece_select_on_hide"]
 [connection signal="pressed" from="PieceSelect/PieceSelect/MarginContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]

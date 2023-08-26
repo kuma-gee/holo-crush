@@ -3,6 +3,9 @@ extends Control
 @export var selectables: Control
 @export var select_container: Control
 
+@export var settings_menu: Control
+@export var store_menu: Control
+
 @onready var bgm := $BGM
 @onready var start_sound := $StartSound
 
@@ -18,8 +21,9 @@ func _on_game_start():
 	start_sound.play()
 
 func _on_play_pressed():
-	select_container.pivot_offset = select_container.size / 2
-	anim.play("show_pieces")
+	GameManager.start_game()
+#	select_container.pivot_offset = select_container.size / 2
+#	anim.play("show_pieces")
 
 func _on_check_energy_timer_timeout():
 	GameManager.energy.restore()
