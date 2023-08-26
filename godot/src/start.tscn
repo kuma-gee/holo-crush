@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://qdwfqb2qwrxb"]
+[gd_scene load_steps=33 format=3 uid="uid://qdwfqb2qwrxb"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
@@ -21,6 +21,9 @@
 [ext_resource type="Texture2D" uid="uid://bxrlpvpemkprg" path="res://assets/ui/play_pressed.svg" id="11_nm8vw"]
 [ext_resource type="Script" path="res://src/menu/piece_select/piece_selectables.gd" id="12_frfar"]
 [ext_resource type="PackedScene" uid="uid://7fw3rk8y5fn7" path="res://src/menu/piece_select/piece_selectable.tscn" id="13_b40w3"]
+[ext_resource type="Texture2D" uid="uid://b7qsqisg7w3n0" path="res://assets/ui/setting.svg" id="13_lnhgn"]
+[ext_resource type="Script" path="res://src/menu/UIButton.gd" id="14_6yhda"]
+[ext_resource type="Texture2D" uid="uid://cj851nf6ocius" path="res://assets/ui/store.svg" id="15_br8ph"]
 
 [sub_resource type="Gradient" id="Gradient_h65kn"]
 colors = PackedColorArray(0.1404, 0.4068, 0.54, 1, 0.308, 0.8514, 0.88, 1)
@@ -218,6 +221,7 @@ select_container = NodePath("PieceSelect/PieceSelect")
 store_menu = NodePath("MenuContainer/Store")
 
 [node name="ColorRect" type="ColorRect" parent="."]
+visible = false
 material = SubResource("ShaderMaterial_7ekah")
 layout_mode = 1
 anchors_preset = 15
@@ -328,14 +332,18 @@ grow_vertical = 0
 
 [node name="SettingsBtn" type="MarginContainer" parent="MenuContainer/Bottom"]
 layout_mode = 2
-theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 30
-theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 30
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
 
 [node name="Settings" type="TextureButton" parent="MenuContainer/Bottom/SettingsBtn"]
+custom_minimum_size = Vector2(92, 92)
 layout_mode = 2
-texture_normal = ExtResource("9_ys5c6")
+texture_normal = ExtResource("13_lnhgn")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("14_6yhda")
 
 [node name="Control" type="Control" parent="MenuContainer/Bottom"]
 layout_mode = 2
@@ -343,14 +351,18 @@ size_flags_horizontal = 3
 
 [node name="StoreBtn" type="MarginContainer" parent="MenuContainer/Bottom"]
 layout_mode = 2
-theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 30
-theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 30
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
 
 [node name="Store" type="TextureButton" parent="MenuContainer/Bottom/StoreBtn"]
+custom_minimum_size = Vector2(92, 92)
 layout_mode = 2
-texture_normal = ExtResource("9_ys5c6")
+texture_normal = ExtResource("15_br8ph")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("14_6yhda")
 
 [node name="Overlay" type="ColorRect" parent="MenuContainer"]
 modulate = Color(1, 1, 1, 0)

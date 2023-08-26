@@ -1,8 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://dc230wcy1bgpy"]
+[gd_scene load_steps=10 format=3 uid="uid://dc230wcy1bgpy"]
 
 [ext_resource type="Script" path="res://addons/menu-system/AudioSlider.gd" id="2_5nebq"]
 [ext_resource type="Script" path="res://src/menu/settings.gd" id="2_n4qpr"]
-[ext_resource type="Texture2D" uid="uid://bwve2nq30wldn" path="res://icon.svg" id="3_gx15h"]
+[ext_resource type="Texture2D" uid="uid://bdotu11c1jmm" path="res://assets/ui/close.svg" id="3_0f6sa"]
+[ext_resource type="Texture2D" uid="uid://dpmrhvpwm2x18" path="res://assets/ui/sound_music.svg" id="3_sr4w4"]
+[ext_resource type="Texture2D" uid="uid://2ovcuoh360df" path="res://assets/ui/sound_music_mute.svg" id="4_d6t0m"]
+[ext_resource type="Texture2D" uid="uid://lut7tqw0cix8" path="res://assets/ui/sound_sfx.svg" id="4_lna1p"]
+[ext_resource type="Script" path="res://src/menu/UIButton.gd" id="4_lwv1e"]
+[ext_resource type="Texture2D" uid="uid://dekt1q13mwogl" path="res://assets/ui/sound_sfx_mute.svg" id="7_feu51"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_flvlv"]
 bg_color = Color(0, 0, 0, 1)
@@ -38,35 +43,51 @@ theme_override_constants/v_separation = 20
 columns = 2
 
 [node name="Master" type="Label" parent="PanelContainer/MarginContainer/GridContainer"]
+visible = false
 layout_mode = 2
 text = "Master "
 
 [node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/GridContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 script = ExtResource("2_5nebq")
 
-[node name="Master2" type="Label" parent="PanelContainer/MarginContainer/GridContainer"]
+[node name="BGM" type="TextureButton" parent="PanelContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-text = "BGM"
+toggle_mode = true
+texture_normal = ExtResource("3_sr4w4")
+texture_pressed = ExtResource("4_d6t0m")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("4_lwv1e")
 
-[node name="HSlider2" type="HSlider" parent="PanelContainer/MarginContainer/GridContainer"]
+[node name="HSlider2" type="HSlider" parent="PanelContainer/MarginContainer/GridContainer" node_paths=PackedStringArray("button")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 script = ExtResource("2_5nebq")
+button = NodePath("../BGM")
 bus_name = "BGM"
 
-[node name="Master3" type="Label" parent="PanelContainer/MarginContainer/GridContainer"]
+[node name="SFX" type="TextureButton" parent="PanelContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-text = "SFX"
+toggle_mode = true
+texture_normal = ExtResource("4_lna1p")
+texture_pressed = ExtResource("7_feu51")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("4_lwv1e")
 
-[node name="HSlider3" type="HSlider" parent="PanelContainer/MarginContainer/GridContainer"]
+[node name="HSlider3" type="HSlider" parent="PanelContainer/MarginContainer/GridContainer" node_paths=PackedStringArray("button")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 script = ExtResource("2_5nebq")
+button = NodePath("../SFX")
 bus_name = "SFX"
 
 [node name="MarginContainer2" type="MarginContainer" parent="PanelContainer"]
@@ -79,8 +100,9 @@ theme_override_constants/margin_right = -25
 [node name="TextureButton" type="TextureButton" parent="PanelContainer/MarginContainer2"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-texture_normal = ExtResource("3_gx15h")
+texture_normal = ExtResource("3_0f6sa")
 ignore_texture_size = true
 stretch_mode = 5
+script = ExtResource("4_lwv1e")
 
 [connection signal="pressed" from="PanelContainer/MarginContainer2/TextureButton" to="." method="_on_texture_button_pressed"]
