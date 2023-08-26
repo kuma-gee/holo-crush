@@ -6,7 +6,6 @@
 [ext_resource type="AudioStream" uid="uid://cfwc8qonkflxm" path="res://assets/sound/astro_Inst_hololive_202308052333.mp3" id="4_lb12p"]
 [ext_resource type="Shader" path="res://src/dots.gdshader" id="4_samfo"]
 [ext_resource type="PackedScene" uid="uid://bwglf6d8qxqov" path="res://src/menu/energy_container.tscn" id="5_m4gqq"]
-[ext_resource type="Script" path="res://src/MenuSystem.gd" id="7_ampby"]
 [ext_resource type="Shader" path="res://src/clip_texture.gdshader" id="7_nxbx0"]
 [ext_resource type="PackedScene" uid="uid://c7iikn51h7sbb" path="res://src/menu/points_container.tscn" id="7_oie0n"]
 [ext_resource type="Texture2D" uid="uid://bdb0wpbfokxjq" path="res://assets/ui/hexagon.svg" id="7_qqkgn"]
@@ -17,6 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://bwve2nq30wldn" path="res://icon.svg" id="9_ys5c6"]
 [ext_resource type="Script" path="res://src/menu/piece_select/piece_select.gd" id="10_ung14"]
 [ext_resource type="PackedScene" uid="uid://c5mbc2vykt7r7" path="res://src/menu/piece_select/piece_select_slot.tscn" id="11_76xru"]
+[ext_resource type="Script" path="res://src/StartMenu.gd" id="12_fdvxc"]
 [ext_resource type="Script" path="res://src/menu/piece_select/piece_selectables.gd" id="12_frfar"]
 [ext_resource type="PackedScene" uid="uid://7fw3rk8y5fn7" path="res://src/menu/piece_select/piece_selectable.tscn" id="13_b40w3"]
 [ext_resource type="Texture2D" uid="uid://b7qsqisg7w3n0" path="res://assets/ui/setting.svg" id="13_lnhgn"]
@@ -305,7 +305,7 @@ layout_mode = 2
 disabled = true
 text = "Store"
 
-[node name="MenuContainer" type="Control" parent="." node_paths=PackedStringArray("overlay", "settings", "store")]
+[node name="MenuContainer" type="Control" parent="." node_paths=PackedStringArray("settings", "store", "overlay")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -313,39 +313,21 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("7_ampby")
-overlay = NodePath("Overlay")
+script = ExtResource("12_fdvxc")
 settings = NodePath("Settings")
 store = NodePath("Store")
+overlay = NodePath("Overlay")
 
-[node name="Bottom" type="HBoxContainer" parent="MenuContainer"]
+[node name="Bottom" type="VBoxContainer" parent="MenuContainer"]
 layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
+anchors_preset = 11
+anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -188.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="SettingsBtn" type="MarginContainer" parent="MenuContainer/Bottom"]
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="Settings" type="TextureButton" parent="MenuContainer/Bottom/SettingsBtn"]
-custom_minimum_size = Vector2(92, 92)
-layout_mode = 2
-texture_normal = ExtResource("13_lnhgn")
-ignore_texture_size = true
-stretch_mode = 5
-script = ExtResource("14_6yhda")
-
-[node name="Control" type="Control" parent="MenuContainer/Bottom"]
-layout_mode = 2
-size_flags_horizontal = 3
+offset_left = -132.0
+grow_horizontal = 0
+grow_vertical = 2
+alignment = 2
 
 [node name="StoreBtn" type="MarginContainer" parent="MenuContainer/Bottom"]
 layout_mode = 2
@@ -358,6 +340,21 @@ theme_override_constants/margin_bottom = 20
 custom_minimum_size = Vector2(92, 92)
 layout_mode = 2
 texture_normal = ExtResource("15_br8ph")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("14_6yhda")
+
+[node name="SettingsBtn" type="MarginContainer" parent="MenuContainer/Bottom"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Settings" type="TextureButton" parent="MenuContainer/Bottom/SettingsBtn"]
+custom_minimum_size = Vector2(92, 92)
+layout_mode = 2
+texture_normal = ExtResource("13_lnhgn")
 ignore_texture_size = true
 stretch_mode = 5
 script = ExtResource("14_6yhda")
@@ -377,6 +374,7 @@ visible = false
 layout_mode = 1
 
 [node name="Store" parent="MenuContainer" instance=ExtResource("17_bi2tb")]
+visible = false
 layout_mode = 0
 
 [node name="PieceSelect" type="Control" parent="."]
@@ -475,8 +473,8 @@ libraries = {
 
 [connection signal="pressed" from="Menu/VBoxContainer/Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Menu/VBoxContainer/Play2" to="." method="_on_play_pressed"]
-[connection signal="pressed" from="MenuContainer/Bottom/SettingsBtn/Settings" to="MenuContainer" method="_on_settings_pressed"]
 [connection signal="pressed" from="MenuContainer/Bottom/StoreBtn/Store" to="MenuContainer" method="_on_store_pressed"]
+[connection signal="pressed" from="MenuContainer/Bottom/SettingsBtn/Settings" to="MenuContainer" method="_on_settings_pressed"]
 [connection signal="hidden" from="PieceSelect" to="PieceSelect/Selectables" method="close"]
 [connection signal="on_hide" from="PieceSelect" to="." method="_on_piece_select_on_hide"]
 [connection signal="pressed" from="PieceSelect/PieceSelect/MarginContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]

@@ -7,17 +7,17 @@ extends Control
 @export var turns_label: Label
 @export var turns := 30
 
-@export var gameover: Control
 @export var end_score: Label
 @export var score_ui: ScoreUI
 @export var shockwave: Control
 @export var turn_end: Control
 
+@export var menu: MenuSystem
+
 var hint_shown = false
 
 func _ready():
 	turn_end.hide()
-	gameover.hide()
 	input_blocker.hide()
 	turns_label.text = str(turns)
 	move_timer.timeout.connect(func():
@@ -46,14 +46,7 @@ func _on_grid_processing_finished():
 func _on_gameover():
 	var score = score_ui.score
 	end_score.text = tr("Score") + ": " + str(score)
-	
-	gameover.position = Vector2(0, -gameover.size.y)
-	gameover.show()
-	
-	var tw = create_tween()
-	tw.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tw.tween_property(gameover, "position", Vector2.ZERO, 0.5)
-	
+	menu.show_gameover()
 	GameManager.points.scored(score)
 
 

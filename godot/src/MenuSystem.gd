@@ -1,8 +1,7 @@
+class_name MenuSystem
 extends Control
 
 @export var overlay: ColorRect
-@export var settings: Control
-@export var store: Control
 
 var tw: Tween
 var overlay_speed := 0.25
@@ -10,12 +9,7 @@ var move_speed := 0.5
 var outside_pos := Vector2(0, -2000)
 
 func _ready():
-	settings.hide()
 	overlay.hide()
-	store.hide()
-	
-	settings.close.connect(func(): _hide_node(settings))
-	store.close.connect(func(): _hide_node(store))
 
 func _show_overlay():
 	overlay.modulate = Color.TRANSPARENT
@@ -36,17 +30,11 @@ func _new_tween():
 		tw.kill()
 	tw = create_tween()
 
-func _on_store_pressed():
-	_show_node(store)
-
-func _on_settings_pressed():
-	_show_node(settings)
-
 func _show_node(node):
 	_new_tween()
 	_show_overlay()
 	
-	node.position = outside_pos
+	node.position = Vector2(0, -node.size.y)
 	node.show()
 	tw.parallel().tween_property(node, "position", Vector2.ZERO, move_speed) \
 		.set_ease(Tween.EASE_OUT) \

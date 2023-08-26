@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://di8g8e6s34cik"]
+[gd_scene load_steps=21 format=3 uid="uid://di8g8e6s34cik"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_f8tal"]
 [ext_resource type="Script" path="res://src/game.gd" id="1_vav6y"]
@@ -11,8 +11,11 @@
 [ext_resource type="Shader" path="res://src/grid/shockwave.gdshader" id="6_2vgwy"]
 [ext_resource type="StyleBox" uid="uid://bd0c76q5d7ocf" path="res://theme/dialog.tres" id="9_qa60b"]
 [ext_resource type="AudioStream" uid="uid://b7ilfb8f6t6wg" path="res://assets/sound/Shiny Smily Story_Inst_hololive_202308151841.mp3" id="10_chsc8"]
+[ext_resource type="Script" path="res://src/GameMenu.gd" id="10_vol56"]
 [ext_resource type="Texture2D" uid="uid://busl6ahwmudha" path="res://assets/ui/button_rect.svg" id="11_4c72u"]
 [ext_resource type="Script" path="res://src/menu/UIButton.gd" id="12_ew4qi"]
+[ext_resource type="Texture2D" uid="uid://b7qsqisg7w3n0" path="res://assets/ui/setting.svg" id="14_1yjkj"]
+[ext_resource type="PackedScene" uid="uid://dc230wcy1bgpy" path="res://src/menu/settings.tscn" id="16_1nxnw"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_68dt8"]
 shader = ExtResource("3_jvk2f")
@@ -40,7 +43,7 @@ shader_parameter/aberration = 0.425
 shader_parameter/width = 0.04
 shader_parameter/feather = 0.135
 
-[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker", "grid", "move_timer", "turns_label", "gameover", "end_score", "score_ui", "shockwave", "turn_end")]
+[node name="Game" type="Control" node_paths=PackedStringArray("input_blocker", "grid", "move_timer", "turns_label", "end_score", "score_ui", "shockwave", "turn_end", "menu")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -54,11 +57,11 @@ grid = NodePath("Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid
 move_timer = NodePath("HighlightTimer")
 turns_label = NodePath("Top/MarginContainer/HBoxContainer/Label2")
 turns = 5
-gameover = NodePath("GameOver")
-end_score = NodePath("GameOver/PanelContainer/MarginContainer/VBoxContainer/EndScore")
+end_score = NodePath("MenuContainer/GameOver/PanelContainer/MarginContainer/VBoxContainer/EndScore")
 score_ui = NodePath("Score")
 shockwave = NodePath("Shockwave")
 turn_end = NodePath("TurnEnd")
+menu = NodePath("MenuContainer")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_68dt8")
@@ -188,7 +191,60 @@ one_shot = true
 [node name="Field" type="Node2D" parent="."]
 y_sort_enabled = true
 
-[node name="GameOver" type="CenterContainer" parent="."]
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_chsc8")
+volume_db = -30.0
+autoplay = true
+bus = &"BGM"
+
+[node name="MenuContainer" type="Control" parent="." node_paths=PackedStringArray("settings", "gameover", "overlay")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("10_vol56")
+settings = NodePath("Settings")
+gameover = NodePath("GameOver")
+overlay = NodePath("Overlay")
+
+[node name="SettingsBtn" type="MarginContainer" parent="MenuContainer"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -132.0
+offset_top = -132.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Settings" type="TextureButton" parent="MenuContainer/SettingsBtn"]
+custom_minimum_size = Vector2(92, 92)
+layout_mode = 2
+texture_normal = ExtResource("14_1yjkj")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("12_ew4qi")
+
+[node name="Overlay" type="ColorRect" parent="MenuContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.705882)
+
+[node name="GameOver" type="CenterContainer" parent="MenuContainer"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -196,31 +252,31 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="GameOver"]
+[node name="PanelContainer" type="PanelContainer" parent="MenuContainer/GameOver"]
 layout_mode = 2
 theme_override_styles/panel = ExtResource("9_qa60b")
 
-[node name="MarginContainer" type="MarginContainer" parent="GameOver/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MenuContainer/GameOver/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
-[node name="VBoxContainer" type="VBoxContainer" parent="GameOver/PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuContainer/GameOver/PanelContainer/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="MenuContainer/GameOver/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Gameover"
 label_settings = ExtResource("3_iqyq2")
 
-[node name="EndScore" type="Label" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="EndScore" type="Label" parent="MenuContainer/GameOver/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Score: "
 
-[node name="Restart" type="TextureButton" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Restart" type="TextureButton" parent="MenuContainer/GameOver/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 texture_normal = ExtResource("11_4c72u")
@@ -228,7 +284,7 @@ ignore_texture_size = true
 stretch_mode = 0
 script = ExtResource("12_ew4qi")
 
-[node name="Label" type="Label" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer/Restart"]
+[node name="Label" type="Label" parent="MenuContainer/GameOver/PanelContainer/MarginContainer/VBoxContainer/Restart"]
 layout_mode = 2
 offset_left = 10.0
 offset_top = 1.0
@@ -239,7 +295,7 @@ grow_vertical = 2
 text = "Restart"
 horizontal_alignment = 1
 
-[node name="Menu" type="TextureButton" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Menu" type="TextureButton" parent="MenuContainer/GameOver/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 texture_normal = ExtResource("11_4c72u")
@@ -247,7 +303,7 @@ ignore_texture_size = true
 stretch_mode = 0
 script = ExtResource("12_ew4qi")
 
-[node name="Label" type="Label" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer/Menu"]
+[node name="Label" type="Label" parent="MenuContainer/GameOver/PanelContainer/MarginContainer/VBoxContainer/Menu"]
 layout_mode = 2
 offset_left = 10.0
 offset_top = 1.0
@@ -258,16 +314,14 @@ grow_vertical = 2
 text = "Back"
 horizontal_alignment = 1
 
-[node name="BGM" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("10_chsc8")
-volume_db = -30.0
-autoplay = true
-bus = &"BGM"
+[node name="Settings" parent="MenuContainer" instance=ExtResource("16_1nxnw")]
+layout_mode = 1
 
 [connection signal="explosion" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_explosion"]
 [connection signal="processing" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing"]
 [connection signal="processing_finished" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing_finished"]
 [connection signal="scored" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="Score" method="add_score"]
 [connection signal="turn_used" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_turn_used"]
-[connection signal="pressed" from="GameOver/PanelContainer/MarginContainer/VBoxContainer/Restart" to="." method="_on_restart_pressed"]
-[connection signal="pressed" from="GameOver/PanelContainer/MarginContainer/VBoxContainer/Menu" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="MenuContainer/SettingsBtn/Settings" to="MenuContainer" method="_on_settings_pressed"]
+[connection signal="pressed" from="MenuContainer/GameOver/PanelContainer/MarginContainer/VBoxContainer/Restart" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="MenuContainer/GameOver/PanelContainer/MarginContainer/VBoxContainer/Menu" to="." method="_on_menu_pressed"]
