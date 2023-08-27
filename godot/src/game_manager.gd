@@ -32,6 +32,7 @@ var default_pieces = [
 
 var unlocked_pieces = []
 var selected_pieces = []
+var selected_piece = null
 
 func _ready():
 	_load_game()
@@ -39,7 +40,6 @@ func _ready():
 	
 	if selected_pieces.size() > 0:
 		selected_pieces = []
-	
 	if selected_pieces.size() == 0:
 		selected_pieces.append_array(default_pieces)
 	
@@ -77,10 +77,11 @@ func back_to_start():
 func _save_game():
 	save_manager.save_to_slot(SAVE_SLOT, {
 		"energy": energy.energy,
-		"energyUsedTime": energy.get_last_used_time(),
+		"energy_used_time": energy.get_last_used_time(),
 		"points": points.get_points(),
-		"unlockedPieces": unlocked_pieces,
-		"selectedPieces": selected_pieces,
+		"unlocked_pieces": unlocked_pieces,
+		"selected_piece": selected_piece,
+		#"selectedPieces": selected_pieces,
 	})
 
 func _load_game():
@@ -90,11 +91,13 @@ func _load_game():
 	
 	if "energy" in data:
 		energy.energy = data.energy
-	if "energyUsedTime" in data:
-		energy.set_last_used_time(data.energyUsedTime)
+	if "energy_used_time" in data:
+		energy.set_last_used_time(data.energy_used_time)
 	if "points" in data:
 		points.set_points(data.points)
-	if "unlockedPieces" in data:
-		unlocked_pieces = data.unlockedPieces
-	if "selectedPieces" in data:
-		selected_pieces = data.selectedPieces
+	if "unlocked_pieces" in data:
+		unlocked_pieces = data.unlocked_pieces
+	if "selected_piece" in data:
+		selected_piece = data.selected_piece
+	#if "selectedPieces" in data:
+	#	selected_pieces = data.selectedPieces

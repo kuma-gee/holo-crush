@@ -1,3 +1,4 @@
+class_name Overlay
 extends Control
 
 signal on_hide()

@@ -1,15 +1,16 @@
 [gd_scene load_steps=6 format=3 uid="uid://dx3pmih1fkpfe"]
 
+[ext_resource type="Script" path="res://src/menu/store/Store.gd" id="1_7cxv8"]
 [ext_resource type="StyleBox" uid="uid://bd0c76q5d7ocf" path="res://theme/dialog.tres" id="1_16mmg"]
-[ext_resource type="Script" path="res://src/menu/store.gd" id="1_oiq8j"]
 [ext_resource type="PackedScene" uid="uid://hbh72ag1wvh" path="res://src/menu/store/gacha_pack.tscn" id="2_2e1y3"]
 [ext_resource type="Texture2D" uid="uid://bdotu11c1jmm" path="res://assets/ui/close.svg" id="3_wepua"]
 [ext_resource type="Script" path="res://src/menu/UIButton.gd" id="4_3mes3"]
 
-[node name="Store" type="CenterContainer"]
+[node name="Store" type="CenterContainer" node_paths=PackedStringArray("pack_container")]
 offset_right = 1080.0
 offset_bottom = 1920.0
-script = ExtResource("1_oiq8j")
+script = ExtResource("1_7cxv8")
+pack_container = NodePath("PanelContainer/MarginContainer/VBoxContainer")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 2

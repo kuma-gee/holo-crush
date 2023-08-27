@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://qdwfqb2qwrxb"]
+[gd_scene load_steps=39 format=3 uid="uid://qdwfqb2qwrxb"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
@@ -23,6 +23,10 @@
 [ext_resource type="Script" path="res://src/menu/UIButton.gd" id="14_6yhda"]
 [ext_resource type="Texture2D" uid="uid://cj851nf6ocius" path="res://assets/ui/store.svg" id="15_br8ph"]
 [ext_resource type="PackedScene" uid="uid://dx3pmih1fkpfe" path="res://src/menu/store.tscn" id="17_bi2tb"]
+[ext_resource type="PackedScene" uid="uid://pgikighgyjyb" path="res://src/menu/collection.tscn" id="17_oxj4r"]
+[ext_resource type="Script" path="res://src/menu/Showcase.gd" id="18_fmxbm"]
+[ext_resource type="Texture2D" uid="uid://cx267vinn3mfm" path="res://assets/gacha/Myth_Gura.png" id="18_mh04n"]
+[ext_resource type="Shader" path="res://src/rainbow.gdshader" id="19_uhv8d"]
 
 [sub_resource type="Gradient" id="Gradient_h65kn"]
 colors = PackedColorArray(0.0468, 0.22428, 0.36, 1, 0.308, 0.8514, 0.88, 1)
@@ -36,11 +40,28 @@ fill_to = Vector2(0, 0)
 shader = ExtResource("4_samfo")
 shader_parameter/background = SubResource("GradientTexture2D_jd218")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_unebo"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k25ma"]
 shader = ExtResource("7_nxbx0")
 shader_parameter/clip_texture_size = Vector2(256, 256)
-shader_parameter/clip_texture_offset = Vector2(-0.085, 0.025)
+shader_parameter/clip_texture_offset = Vector2(-0.1, 0.02)
 shader_parameter/clip_texture = ExtResource("9_ys5c6")
+
+[sub_resource type="Gradient" id="Gradient_4lcoj"]
+offsets = PackedFloat32Array(0.365854, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0.683333, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_xos2y"]
+gradient = SubResource("Gradient_4lcoj")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cmoea"]
+shader = ExtResource("19_uhv8d")
+shader_parameter/speed = 1.0
+shader_parameter/count = 11.955
+shader_parameter/strength = 0.5
+shader_parameter/smoothing = 0.42
+shader_parameter/size = 0.55
+shader_parameter/scale = Vector2(1, 1.6)
+shader_parameter/color_gradient = SubResource("GradientTexture1D_xos2y")
 
 [sub_resource type="Animation" id="Animation_0sthp"]
 length = 0.001
@@ -263,49 +284,47 @@ layout_mode = 2
 [node name="Points" parent="Top/Top" instance=ExtResource("7_oie0n")]
 layout_mode = 2
 
-[node name="Hexagon" type="MarginContainer" parent="."]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 182.0
-grow_horizontal = 2
-
-[node name="TextureRect" type="TextureRect" parent="Hexagon"]
-material = SubResource("ShaderMaterial_unebo")
-clip_contents = true
-layout_mode = 2
-texture = ExtResource("7_qqkgn")
-expand_mode = 2
-stretch_mode = 5
-
 [node name="Menu" type="CenterContainer" parent="."]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -165.5
+offset_top = -181.5
+offset_right = 165.5
+offset_bottom = 181.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Menu"]
-layout_mode = 2
-
-[node name="Play" type="TextureButton" parent="Menu/VBoxContainer"]
+[node name="Play" type="TextureButton" parent="Menu"]
 layout_mode = 2
 texture_normal = ExtResource("8_dqte7")
 script = ExtResource("14_6yhda")
 
-[node name="Play2" type="Button" parent="Menu/VBoxContainer"]
-visible = false
-layout_mode = 2
-text = "Play"
+[node name="Hexagon" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -152.5
+offset_right = 152.5
+offset_bottom = 246.0
+grow_horizontal = 2
 
-[node name="Store" type="Button" parent="Menu/VBoxContainer"]
-visible = false
+[node name="Collection" type="TextureButton" parent="Hexagon"]
+material = SubResource("ShaderMaterial_k25ma")
+custom_minimum_size = Vector2(256, 183)
 layout_mode = 2
-disabled = true
-text = "Store"
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture_normal = ExtResource("7_qqkgn")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("14_6yhda")
 
-[node name="MenuContainer" type="Control" parent="." node_paths=PackedStringArray("settings", "store", "overlay")]
+[node name="MenuContainer" type="Control" parent="." node_paths=PackedStringArray("settings", "store", "collection", "overlay")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -316,6 +335,7 @@ mouse_filter = 2
 script = ExtResource("12_fdvxc")
 settings = NodePath("Settings")
 store = NodePath("Store")
+collection = NodePath("Collection")
 overlay = NodePath("Overlay")
 
 [node name="Bottom" type="VBoxContainer" parent="MenuContainer"]
@@ -374,8 +394,38 @@ visible = false
 layout_mode = 1
 
 [node name="Store" parent="MenuContainer" instance=ExtResource("17_bi2tb")]
-visible = false
 layout_mode = 0
+
+[node name="Collection" parent="MenuContainer" instance=ExtResource("17_oxj4r")]
+layout_mode = 1
+
+[node name="Showcase" type="MarginContainer" parent="MenuContainer" node_paths=PackedStringArray("tex", "overlay", "shine")]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("18_fmxbm")
+tex = NodePath("TextureRect")
+overlay = NodePath("Overlay")
+shine = NodePath("Shine")
+external = true
+
+[node name="Overlay" type="ColorRect" parent="MenuContainer/Showcase"]
+layout_mode = 2
+color = Color(0, 0, 0, 0.705882)
+
+[node name="Shine" type="ColorRect" parent="MenuContainer/Showcase"]
+material = SubResource("ShaderMaterial_cmoea")
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MenuContainer/Showcase"]
+layout_mode = 2
+texture = ExtResource("18_mh04n")
+expand_mode = 4
+stretch_mode = 5
 
 [node name="PieceSelect" type="Control" parent="."]
 visible = false
@@ -471,10 +521,11 @@ libraries = {
 "": SubResource("AnimationLibrary_j8rit")
 }
 
-[connection signal="pressed" from="Menu/VBoxContainer/Play" to="." method="_on_play_pressed"]
-[connection signal="pressed" from="Menu/VBoxContainer/Play2" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Menu/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Hexagon/Collection" to="MenuContainer" method="_on_collection_pressed"]
 [connection signal="pressed" from="MenuContainer/Bottom/StoreBtn/Store" to="MenuContainer" method="_on_store_pressed"]
 [connection signal="pressed" from="MenuContainer/Bottom/SettingsBtn/Settings" to="MenuContainer" method="_on_settings_pressed"]
+[connection signal="unlocked" from="MenuContainer/Store" to="MenuContainer/Showcase" method="show_piece"]
 [connection signal="hidden" from="PieceSelect" to="PieceSelect/Selectables" method="close"]
 [connection signal="on_hide" from="PieceSelect" to="." method="_on_piece_select_on_hide"]
 [connection signal="pressed" from="PieceSelect/PieceSelect/MarginContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]
