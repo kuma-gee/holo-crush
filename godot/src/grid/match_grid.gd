@@ -13,8 +13,7 @@ signal special_activate(pos, fields)
 
 signal refilled()
 
-@export var width := 9
-@export var height := 9
+@export var level: LevelResource
 @export var debug := false
 
 var _data: GridData
@@ -28,7 +27,7 @@ func get_data():
 
 func create_data(values: Array, init: Array = []):
 	_specials = Specials.new()
-	_data = GridData.new(width, height, init)
+	_data = GridData.new(level.width, level.height, init, level.blocked)
 	if init.size() == 0:
 		_data.values = values.duplicate()
 		_data.refill()
@@ -37,27 +36,25 @@ func create_data(values: Array, init: Array = []):
 
 func get_possible_move():
 	var copy = _data.duplicate()
-	for y in height:
-		for x in width:
-			var pos = Vector2i(x, y)
-			var dir_to_check = [Vector2i.UP, Vector2i.RIGHT]
+	for pos in get_cells():
+		var dir_to_check = [Vector2i.UP, Vector2i.RIGHT]
 
-			for dir in dir_to_check:
-				var dest = pos + dir
-				copy.swap_value(pos, dest)
+		for dir in dir_to_check:
+			var dest = pos + dir
+			copy.swap_value(pos, dest)
 
-				var matches = copy.get_match_counts()
-				if matches.size() > 0:
-					var result = matches.keys()
-					if pos in result:
-						result.erase(pos)
-						result.append(dest)
-					elif dest in result:
-						result.erase(dest)
-						result.append(pos)
-					return result
-				
-				copy.swap_value(pos, dest)
+			var matches = copy.get_match_counts()
+			if matches.size() > 0:
+				var result = matches.keys()
+				if pos in result:
+					result.erase(pos)
+					result.append(dest)
+				elif dest in result:
+					result.erase(dest)
+					result.append(pos)
+				return result
+			
+			copy.swap_value(pos, dest)
 	return null
 
 func get_special_type(p: Vector2i):
@@ -209,13 +206,13 @@ func _append_unique(arr, items: Array):
 				arr.append(i)
 
 func collapse_columns():
-	for x in width:
-		for y in range(height-1, -1, -1):
-			if get_value(x, y) == null:
-				var yy = _first_non_null_above(x, y)
-				if yy == null:
-					break;
+	for cell in get_cells(true):
+		var x = cell.x
+		var y = cell.y
 
+		if get_value(x, y) == null and _data.is_inside(x, y):
+			var yy = _first_non_null_above(x, y)
+			if yy != null:
 				_swap_value_with_special(Vector2i(x, yy), Vector2i(x, y))
 				moved.emit(Vector2i(x, yy), Vector2i(x, y))
 
@@ -228,11 +225,13 @@ func _first_non_null_above(x: int, y: int):
 	return null
 
 func fill_empty():
-	for x in width:
-		for y in range(height-1, -1, -1):
-			if get_value(x, y) == null:
-				var value = _data.fill_random(x, y)
-				filled.emit(Vector2i(x, y), value)
+	for cell in get_cells(true):
+		var x = cell.x
+		var y = cell.y
+
+		if get_value(x, y) == null:
+			var value = _data.fill_random(x, y)
+			filled.emit(Vector2i(x, y), value)
 	
 	_data.print_data('Fill')
 
@@ -248,3 +247,20 @@ func check_deadlock():
 		refilled.emit()
 	
 	return deadlock
+
+func get_cells(reverse = false):
+	var result = []
+	for x in level.width:
+		if reverse:
+			for y in range(level.height-1, -1, -1):
+				result.append(Vector2i(x, y))
+		else:
+			for y in level.height:
+				result.append(Vector2i(x, y))
+	return result
+
+func get_width():
+	return level.width
+
+func get_height():
+	return level.height

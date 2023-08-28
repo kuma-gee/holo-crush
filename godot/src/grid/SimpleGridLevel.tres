@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LevelResource" load_steps=2 format=3 uid="uid://cmiuj3tuuvo5b"]
+
+[ext_resource type="Script" path="res://src/grid/level_resource.gd" id="1_1pc7e"]
+
+[resource]
+script = ExtResource("1_1pc7e")
+width = 6
+height = 6
+blocked = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 5), Vector2i(5, 0), Vector2i(5, 5)])
