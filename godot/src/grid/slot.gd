@@ -62,7 +62,8 @@ func _show_brief(node, time = 0.5, hold_time = 3.0):
 	await tw.finished
 
 func jump():
-	piece.jump()
+	if piece:
+		piece.jump()
 
 func invalid_swap(dir: Vector2i):
 	if piece:
@@ -71,11 +72,13 @@ func invalid_swap(dir: Vector2i):
 		slight_moving = false
 
 func swap_wrong(other_slot: Slot):
-	swap(other_slot)
-	await swap_done
-	swap(other_slot)
-	wrong_sound.play()
-	await swap_done
+	if piece and other_slot.piece:
+		swap(other_slot)
+		await swap_done
+		swap(other_slot)
+		wrong_sound.play()
+		await swap_done
+
 	swap_wrong_done.emit()
 
 func swap(other_slot: Slot):
@@ -97,14 +100,15 @@ func swap(other_slot: Slot):
 	swap_done.emit()
 
 func move(slot: Slot):
-	var temp = piece
-	piece = null
-	slot.piece = temp
-	
-	var dist = abs(slot.pos.y) - abs(pos.y)
-	temp.move(slot.get_pos(), false, BASE_MOVE_TIME)
+	if piece:
+		var temp = piece
+		piece = null
+		slot.piece = temp
+		
+		# var dist = abs(slot.pos.y) - abs(pos.y)
+		temp.move(slot.get_pos(), false, BASE_MOVE_TIME)
 
-	await temp.move_done
+		await temp.move_done
 	move_done.emit()
 
 func capture():
@@ -116,28 +120,28 @@ func capture():
 		
 
 func fill_drop():
-	if piece == null:
-		return
-	
-	capture()
-	var above = abs(pos.y) - height - 1
-	piece.global_position = get_pos() + above * Vector2(0, size.y)
+	if piece:
+		capture()
+		var above = abs(pos.y) - height - 1
+		piece.global_position = get_pos() + above * Vector2(0, size.y)
 
-	var dist = abs(pos.y) - above
-	piece.move(get_pos(), true, BASE_MOVE_TIME)
+		# var dist = abs(pos.y) - above
+		piece.move(get_pos(), true, BASE_MOVE_TIME)
 
-	await piece.move_done
+		await piece.move_done
+
 	fill_done.emit()
 
 func get_pos():
 	return global_position + size / 2
 
 func matched(special_type):
-	if special_type == null:
-		piece.matched()
-		piece = null
-	else:
-		piece.change_to(special_type)
+	if piece:
+		if special_type == null:
+			piece.matched()
+			piece = null
+		else:
+			piece.change_to(special_type)
 
 	match_done.emit()
 

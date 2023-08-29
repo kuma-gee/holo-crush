@@ -263,3 +263,6 @@ func get_width():
 
 func get_height():
 	return level.height
+
+func is_valid_field(x, y):
+	return _data.is_inside(x, y)

@@ -154,7 +154,9 @@ func _create_match_array(pos: Array):
 	return arr
 
 func _filter_match_array(arr: Array, value: int):
-	var filtered = arr.filter(func(a): return a["value"] == value)
+	var filtered = arr.filter(func(a): return a["value"] == value) \
+		.map(func(a): return a["pos"]) \
+		.filter(func(p): return is_inside(p.x, p.y))
 	if filtered.size() > 0:
-		return filtered.map(func(a): return a["pos"])
+		return filtered
 	return []
