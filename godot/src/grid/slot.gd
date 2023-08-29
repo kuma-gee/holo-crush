@@ -24,6 +24,7 @@ var slight_moving = false
 @onready var highlight_rect := $Highlight
 @onready var special_rect := $SpecialMark
 @onready var ring := $Ring
+@onready var panel := $Panel
 
 const piece_size = Vector2(128, 128)
 const BASE_MOVE_TIME = 0.5
@@ -37,6 +38,9 @@ func _ready():
 	highlight_rect.modulate = Color.TRANSPARENT
 	special_rect.modulate = Color.TRANSPARENT
 	ring.modulate = Color.TRANSPARENT
+
+func blocked():
+	panel.hide()
 
 func highlight():
 	_show_brief(highlight_rect)

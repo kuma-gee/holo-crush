@@ -167,12 +167,16 @@ func _init_slots():
 			var slot = slot_scene.instantiate() as Slot
 			add_child(slot)
 			slot.pos = pos
-			slot.height = data.get_height()
-			slot.swiped.connect(func(dir): 
-				processing.emit()
-				if data.swap(pos, pos + dir):
-					turn_used.emit()
-			)
+			
+			if pos in data.level.blocked:
+				slot.blocked()
+			else:
+				slot.height = data.get_height()
+				slot.swiped.connect(func(dir): 
+					processing.emit()
+					if data.swap(pos, pos + dir):
+						turn_used.emit()
+				)
 
 # Should not be called with invalid position, ty
 func _get_slot(pos: Vector2i):
