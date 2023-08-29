@@ -9,8 +9,9 @@ var min_match := 3
 var width := 0
 var height := 0
 var values: Array = []
+var _blocked = []
 
-func _init(w: int, h: int, init_data: Array = []):
+func _init(w: int, h: int, init_data: Array = [], blocked: Array[Vector2i] = []):
 	if init_data.size() == 0:
 		_data = _create_new_empty(w, h)
 	else:
@@ -23,6 +24,10 @@ func _init(w: int, h: int, init_data: Array = []):
 
 	width = _data[0].size()
 	height = _data.size()
+	_blocked = blocked
+
+	for b in blocked:
+		_data[b.y][b.x] = null
 
 func get_data():
 	return _data.duplicate(true)
@@ -78,7 +83,7 @@ func set_value_v(p: Vector2i, value):
 
 func set_value(x: int, y: int, value):
 	if not is_inside(x, y):
-		_logger.warn("Trying to set invalid position %s/%s to %s" % [x, y, value])
+		# _logger.warn("Trying to set invalid position %s/%s to %s" % [x, y, value])
 		return
 
 	_data[y][x] = value
@@ -96,6 +101,9 @@ func is_inside(x: int, y: int):
 		return false
 	
 	if y < 0 or y >= height:
+		return false
+	
+	if Vector2i(x, y) in _blocked:
 		return false
 
 	return true

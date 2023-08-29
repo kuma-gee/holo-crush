@@ -160,14 +160,14 @@ func _update_slots():
 		child.capture()
 
 func _init_slots():
-	columns = data.width
-	for y in range(data.height):
-		for x in range(data.width):
+	columns = data.get_width()
+	for y in data.get_height(): # First loop height to create rows based on GridContainer order
+		for x in data.get_width():
 			var pos = Vector2i(x, y)
 			var slot = slot_scene.instantiate() as Slot
 			add_child(slot)
 			slot.pos = pos
-			slot.height = data.height
+			slot.height = data.get_height()
 			slot.swiped.connect(func(dir): 
 				processing.emit()
 				if data.swap(pos, pos + dir):
@@ -187,10 +187,8 @@ func _spawn_piece(piece):
 	return node
 
 func _create_pieces():
-	for x in data.width:
-		for y in data.height:
-			var pos = Vector2i(x, y)
-			var piece = data.get_value(pos.x, pos.y)
-			var slot = _get_slot(pos)
-			var node = _spawn_piece(piece)
-			slot.replace(node)
+	for pos in data.get_cells():
+		var piece = data.get_value(pos.x, pos.y)
+		var slot = _get_slot(pos)
+		var node = _spawn_piece(piece)
+		slot.replace(node)

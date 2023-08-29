@@ -4,11 +4,15 @@ func before_each():
 	Debug.log_level = Debug.Level.INFO
 	seed(100)
 
-func _create(initial_data: Array) -> MatchGrid:
+func _create(initial_data: Array, blocked: Array[Vector2i] = []) -> MatchGrid:
 	var data = autofree(MatchGrid.new())
+	var level = LevelResource.new()
+	level.width = initial_data[0].size()
+	level.height = initial_data.size()
+	level.blocked = blocked as Array[Vector2i]
+
+	data.level = level
 	data.create_data([], initial_data)
-	data.width = initial_data[0].size()
-	data.height = initial_data.size()
 	return data
 
 func test_collapse(params=use_parameters([
@@ -45,6 +49,22 @@ func test_collapse(params=use_parameters([
 	data.collapse_columns()
 	assert_eq_deep(data.get_data(), params[1])
 
+func test_not_collapse_blocked():
+	var data = _create([
+			[1, 1, 1, 0],
+			[0, 1, 2, 0],
+			[0, 1, 2, 2],
+			[null, 3, 3, null]
+	], [
+		Vector2i(0, 3),
+		Vector2i(3, 3),
+	])
+
+	watch_signals(data)
+	data.collapse_columns()
+	assert_signal_not_emitted(data, 'moved')
+
+
 func test_fill_empty(params=use_parameters([
 	[
 		[
@@ -74,6 +94,18 @@ func test_fill_empty(params=use_parameters([
 	for i in fill.size():
 		var p = get_signal_parameters(data, 'filled', i)
 		assert_eq(p[0], fill[i])
+
+func test_not_fill_blocked():
+	var data = _create([
+		[1, 1, 0, 0],
+		[0, 1, 2, 0],
+		[0, 0, 1, 1],
+		[0, 1, 0, null]
+	], [Vector2(3, 3)])
+	watch_signals(data)
+	data.fill_empty()
+
+	assert_signal_not_emitted(data, 'filled');
 
 func test_swap_not_match():
 	var data = _create([

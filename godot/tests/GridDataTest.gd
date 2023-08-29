@@ -4,8 +4,8 @@ func before_each():
 	Debug.log_level = Debug.Level.INFO
 	seed(100)
 
-func _create(initial_data: Array) -> GridData:
-	return GridData.new(-1, -1, initial_data)
+func _create(initial_data: Array, blocked: Array[Vector2i] = []) -> GridData:
+	return GridData.new(-1, -1, initial_data, blocked)
 
 func test_matches():
 	var data = _create([
@@ -115,3 +115,33 @@ func test_refill_exclude():
 	for _i in range(10):
 		data.refill([Vector2i(0, 0)])
 		assert_eq(data.get_value(0, 0), 1)
+	
+func test_blocked():
+	var data = _create([
+		[1, 1, 1, 0],
+		[0, 1, 2, 0],
+		[0, 2, 1, 1],
+		[0, 1, 0, 2]
+	], [Vector2i(0, 3), Vector2i(3, 3)])
+
+	assert_eq(data.get_value(0, 3), null)
+	assert_eq(data.get_value(3, 3), null)
+
+	assert_eq_deep(data.get_data(), [
+		[1, 1, 1, 0],
+		[0, 1, 2, 0],
+		[0, 2, 1, 1],
+		[null, 1, 0, null]
+	])
+
+func test_not_refill_blocked():
+	var data = _create([
+		[1, 1, 1, 0],
+		[0, 1, 2, 0],
+		[0, 2, 1, 1],
+		[0, 1, 0, 2]
+	], [Vector2i(0, 3), Vector2i(3, 3)])
+
+	data.refill()
+	assert_eq(data.get_value(0, 3), null)
+	assert_eq(data.get_value(3, 3), null)
