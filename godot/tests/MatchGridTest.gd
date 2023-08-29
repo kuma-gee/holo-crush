@@ -95,6 +95,18 @@ func test_fill_empty(params=use_parameters([
 		var p = get_signal_parameters(data, 'filled', i)
 		assert_eq(p[0], fill[i])
 
+func test_not_fill_blocked():
+	var data = _create([
+		[1, 1, 0, 0],
+		[0, 1, 2, 0],
+		[0, 0, 1, 1],
+		[0, 1, 0, null]
+	], [Vector2(3, 3)])
+	watch_signals(data)
+	data.fill_empty()
+
+	assert_signal_not_emitted(data, 'filled');
+
 func test_swap_not_match():
 	var data = _create([
 		[1, 2, 1, 0],

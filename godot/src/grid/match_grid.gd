@@ -14,14 +14,11 @@ signal special_activate(pos, fields)
 signal refilled()
 
 @export var level: LevelResource
-@export var debug := false
 
 var _data: GridData
 var _specials: Specials
 
 # Don't touch! Only for testing
-func set_data(d):
-	_data = d
 func get_data():
 	return _data.get_data()
 
@@ -210,7 +207,7 @@ func collapse_columns():
 		var x = cell.x
 		var y = cell.y
 
-		if get_value(x, y) == null and _data.is_inside(x, y):
+		if get_value(x, y) == null:
 			var yy = _first_non_null_above(x, y)
 			if yy != null:
 				_swap_value_with_special(Vector2i(x, yy), Vector2i(x, y))
@@ -253,10 +250,12 @@ func get_cells(reverse = false):
 	for x in level.width:
 		if reverse:
 			for y in range(level.height-1, -1, -1):
-				result.append(Vector2i(x, y))
+				if _data.is_inside(x, y):
+					result.append(Vector2i(x, y))
 		else:
 			for y in level.height:
-				result.append(Vector2i(x, y))
+				if _data.is_inside(x, y):
+					result.append(Vector2i(x, y))
 	return result
 
 func get_width():
