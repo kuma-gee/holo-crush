@@ -287,11 +287,10 @@ stretch_mode = 0
 script = ExtResource("12_ew4qi")
 
 [node name="Label" type="Label" parent="MenuContainer/GameOver/PanelContainer/MarginContainer/VBoxContainer/Restart"]
-layout_mode = 2
-offset_left = 10.0
-offset_top = 1.0
-offset_right = 309.0
-offset_bottom = 71.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Restart"
@@ -306,11 +305,10 @@ stretch_mode = 0
 script = ExtResource("12_ew4qi")
 
 [node name="Label" type="Label" parent="MenuContainer/GameOver/PanelContainer/MarginContainer/VBoxContainer/Menu"]
-layout_mode = 2
-offset_left = 10.0
-offset_top = 1.0
-offset_right = 309.0
-offset_bottom = 71.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Back"
@@ -318,6 +316,24 @@ horizontal_alignment = 1
 
 [node name="Settings" parent="MenuContainer" instance=ExtResource("16_1nxnw")]
 layout_mode = 1
+
+[node name="Menu2" type="TextureButton" parent="MenuContainer/Settings/PanelContainer/MarginContainer/VBoxContainer" index="1"]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+texture_normal = ExtResource("11_4c72u")
+ignore_texture_size = true
+stretch_mode = 0
+script = ExtResource("12_ew4qi")
+
+[node name="Label" type="Label" parent="MenuContainer/Settings/PanelContainer/MarginContainer/VBoxContainer/Menu2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Back to menu"
+horizontal_alignment = 1
 
 [connection signal="explosion" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_explosion"]
 [connection signal="processing" from="Main/AspectRatioContainer/MarginContainer/MarginContainer2/Grid" to="." method="_on_grid_processing"]
@@ -327,3 +343,6 @@ layout_mode = 1
 [connection signal="pressed" from="MenuContainer/SettingsBtn/Settings" to="MenuContainer" method="_on_settings_pressed"]
 [connection signal="pressed" from="MenuContainer/GameOver/PanelContainer/MarginContainer/VBoxContainer/Restart" to="." method="_on_restart_pressed"]
 [connection signal="pressed" from="MenuContainer/GameOver/PanelContainer/MarginContainer/VBoxContainer/Menu" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="MenuContainer/Settings/PanelContainer/MarginContainer/VBoxContainer/Menu2" to="." method="_on_menu_pressed"]
+
+[editable path="MenuContainer/Settings"]
