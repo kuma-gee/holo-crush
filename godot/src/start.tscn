@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://qdwfqb2qwrxb"]
+[gd_scene load_steps=37 format=3 uid="uid://qdwfqb2qwrxb"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
@@ -13,12 +13,10 @@
 [ext_resource type="PackedScene" uid="uid://dc230wcy1bgpy" path="res://src/menu/settings.tscn" id="8_23aaf"]
 [ext_resource type="Texture2D" uid="uid://da4bdfvrmxj1i" path="res://assets/ui/play.svg" id="8_dqte7"]
 [ext_resource type="Script" path="res://src/menu/overlay.gd" id="9_qgams"]
-[ext_resource type="Texture2D" uid="uid://bwve2nq30wldn" path="res://icon.svg" id="9_ys5c6"]
 [ext_resource type="Script" path="res://src/menu/piece_select/piece_select.gd" id="10_ung14"]
-[ext_resource type="PackedScene" uid="uid://c5mbc2vykt7r7" path="res://src/menu/piece_select/piece_select_slot.tscn" id="11_76xru"]
+[ext_resource type="Texture2D" uid="uid://b3tky1ls601o2" path="res://assets/gacha/profile/Profile_Gura.png" id="10_xnjy7"]
 [ext_resource type="Script" path="res://src/StartMenu.gd" id="12_fdvxc"]
 [ext_resource type="Script" path="res://src/menu/piece_select/piece_selectables.gd" id="12_frfar"]
-[ext_resource type="PackedScene" uid="uid://7fw3rk8y5fn7" path="res://src/menu/piece_select/piece_selectable.tscn" id="13_b40w3"]
 [ext_resource type="Texture2D" uid="uid://b7qsqisg7w3n0" path="res://assets/ui/setting.svg" id="13_lnhgn"]
 [ext_resource type="Script" path="res://src/menu/UIButton.gd" id="14_6yhda"]
 [ext_resource type="Texture2D" uid="uid://cj851nf6ocius" path="res://assets/ui/store.svg" id="15_br8ph"]
@@ -43,8 +41,8 @@ shader_parameter/background = SubResource("GradientTexture2D_jd218")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k25ma"]
 shader = ExtResource("7_nxbx0")
 shader_parameter/clip_texture_size = Vector2(256, 256)
-shader_parameter/clip_texture_offset = Vector2(-0.1, 0.02)
-shader_parameter/clip_texture = ExtResource("9_ys5c6")
+shader_parameter/clip_texture_offset = Vector2(-0.1, 0)
+shader_parameter/clip_texture = ExtResource("10_xnjy7")
 
 [sub_resource type="Gradient" id="Gradient_4lcoj"]
 offsets = PackedFloat32Array(0.365854, 1)
@@ -227,7 +225,7 @@ _data = {
 "show_pieces": SubResource("Animation_20ldf")
 }
 
-[node name="Start" type="Control" node_paths=PackedStringArray("selectables", "select_container")]
+[node name="Start" type="Control" node_paths=PackedStringArray("collection_btn")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -236,8 +234,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_rg8bf")
 script = ExtResource("2_af8bd")
-selectables = NodePath("PieceSelect/Selectables")
-select_container = NodePath("PieceSelect/PieceSelect")
+collection_btn = NodePath("Hexagon/Collection")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_7ekah")
@@ -465,18 +462,16 @@ layout_mode = 2
 theme_override_constants/separation = 40
 alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PieceSelect/PieceSelect/MarginContainer/VBoxContainer" node_paths=PackedStringArray("piece_selectable_container")]
+[node name="HBoxContainer" type="HBoxContainer" parent="PieceSelect/PieceSelect/MarginContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 1
 script = ExtResource("10_ung14")
-piece_selectable_container = NodePath("../../../../Selectables")
-select_slot = ExtResource("11_76xru")
 
 [node name="Start" type="Button" parent="PieceSelect/PieceSelect/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Start"
 
-[node name="Selectables" type="PanelContainer" parent="PieceSelect" node_paths=PackedStringArray("selectable_container")]
+[node name="Selectables" type="PanelContainer" parent="PieceSelect"]
 visible = false
 clip_contents = true
 custom_minimum_size = Vector2(128, 300)
@@ -485,8 +480,6 @@ offset_right = 128.0
 offset_bottom = 300.0
 mouse_filter = 2
 script = ExtResource("12_frfar")
-selectable_container = NodePath("VBoxContainer")
-selectable_scene = ExtResource("13_b40w3")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PieceSelect/Selectables"]
 layout_mode = 2

@@ -1,3 +1,4 @@
+class_name UIButton
 extends TextureButton
 
 var tw: Tween

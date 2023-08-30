@@ -1,10 +1,6 @@
 extends Control
 
-@export var selectables: Control
-@export var select_container: Control
-
-@export var settings_menu: Control
-@export var store_menu: Control
+@export var collection_btn: Control
 
 @onready var bgm := $BGM
 @onready var start_sound := $StartSound
@@ -15,6 +11,13 @@ extends Control
 func _ready():
 	anim.play("RESET")
 	GameManager.game_started.connect(_on_game_start)
+	GameManager.selected_piece_changed.connect(_update_collection_btn)
+	_update_collection_btn(GameManager.selected_piece)
+
+func _update_collection_btn(piece):
+	var tex = GameManager.get_piece_profile(piece)
+	var mat = collection_btn.material as ShaderMaterial
+	mat.set_shader_parameter("clip_texture", tex)
 
 func _on_game_start():
 	create_tween().tween_property(bgm, "volume_db", -50, 1.0).set_trans(Tween.TRANS_CUBIC)
@@ -22,8 +25,6 @@ func _on_game_start():
 
 func _on_play_pressed():
 	GameManager.start_game()
-#	select_container.pivot_offset = select_container.size / 2
-#	anim.play("show_pieces")
 
 func _on_check_energy_timer_timeout():
 	GameManager.energy.restore()

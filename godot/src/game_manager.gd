@@ -3,6 +3,7 @@ extends Node
 const SAVE_SLOT = 0
 
 signal game_started()
+signal selected_piece_changed(piece)
 
 @onready var save_manager := $SaveManager
 @onready var energy := $Energy
@@ -22,6 +23,14 @@ const PIECE_MAP := {
 	Piece.Type.CALLI: preload("res://src/piece/calli.tscn"),
 }
 
+const PIECE_PROFILE := {
+	Piece.Type.INA: preload("res://assets/gacha/profile/Profile_Ina.png"),
+	Piece.Type.AME: preload("res://assets/gacha/profile/Profile_Ame.png"),
+	Piece.Type.GURA: preload("res://assets/gacha/profile/Profile_Gura.png"),
+	Piece.Type.KIARA: preload("res://assets/gacha/profile/Profile_Kiara.png"),
+	Piece.Type.CALLI: preload("res://assets/gacha/profile/Profile_Calli.png"),
+}
+
 var default_pieces = [
 	Piece.Type.BLUE,
 	Piece.Type.RED,
@@ -32,7 +41,7 @@ var default_pieces = [
 
 var unlocked_pieces = []
 var selected_pieces = []
-var selected_piece = null
+var selected_piece = null : set = _set_selected_piece
 
 func _ready():
 	_load_game()
@@ -56,14 +65,15 @@ func unlock_piece(p):
 		unlocked_pieces.append(p)
 	_save_game()
 
-func set_selected_piece(idx: int, piece):
-	selected_pieces[idx] = piece
+func _set_selected_piece(piece):
+	selected_piece = piece
+	selected_piece_changed.emit(piece)
 	_save_game()
 
-func get_selectable_pieces():
-	var result = unlocked_pieces.duplicate()
-	result.append_array(default_pieces)
-	return result
+func get_piece_profile(piece):
+	if not piece in PIECE_PROFILE:
+		return null
+	return PIECE_PROFILE[piece]
 
 
 func start_game():

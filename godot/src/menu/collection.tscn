@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://pgikighgyjyb"]
+[gd_scene load_steps=6 format=3 uid="uid://pgikighgyjyb"]
 
 [ext_resource type="Script" path="res://src/menu/Collection.gd" id="1_ex6bl"]
 [ext_resource type="StyleBox" uid="uid://bd0c76q5d7ocf" path="res://theme/dialog.tres" id="2_6nmk1"]
+[ext_resource type="Texture2D" uid="uid://d137bpa5slacv" path="res://assets/gacha/profile/Profile_Ame.png" id="3_atod5"]
 [ext_resource type="Texture2D" uid="uid://bdotu11c1jmm" path="res://assets/ui/close.svg" id="3_bkctx"]
 [ext_resource type="Script" path="res://src/menu/UIButton.gd" id="4_nk2lk"]
 
@@ -30,6 +31,76 @@ layout_mode = 2
 theme_override_constants/h_separation = 30
 theme_override_constants/v_separation = 30
 columns = 5
+
+[node name="TextureButton" type="TextureButton" parent="PanelContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture_normal = ExtResource("3_atod5")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureButton2" type="TextureButton" parent="PanelContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture_normal = ExtResource("3_atod5")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureButton3" type="TextureButton" parent="PanelContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture_normal = ExtResource("3_atod5")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureButton4" type="TextureButton" parent="PanelContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture_normal = ExtResource("3_atod5")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureButton5" type="TextureButton" parent="PanelContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture_normal = ExtResource("3_atod5")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureButton6" type="TextureButton" parent="PanelContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture_normal = ExtResource("3_atod5")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureButton7" type="TextureButton" parent="PanelContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture_normal = ExtResource("3_atod5")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureButton8" type="TextureButton" parent="PanelContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture_normal = ExtResource("3_atod5")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureButton9" type="TextureButton" parent="PanelContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture_normal = ExtResource("3_atod5")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureButton10" type="TextureButton" parent="PanelContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+texture_normal = ExtResource("3_atod5")
+ignore_texture_size = true
+stretch_mode = 5
 
 [node name="MarginContainer2" type="MarginContainer" parent="PanelContainer"]
 layout_mode = 2
