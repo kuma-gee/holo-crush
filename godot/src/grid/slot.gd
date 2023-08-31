@@ -22,7 +22,7 @@ var slight_moving = false
 @onready var wrong_sound := $WrongSound
 @onready var swipe_control := $SwipeControl
 @onready var highlight_rect := $Highlight
-@onready var special_rect := $SpecialMark
+@onready var icing := $Icing
 @onready var ring := $Ring
 @onready var panel := $Panel
 
@@ -30,31 +30,33 @@ const piece_size = Vector2(128, 128)
 const BASE_MOVE_TIME = 0.5
 
 var showing_special = false
+var icing_count = 0 : set = _set_icing_count
 
 func _ready():
-	var mat = special_rect.get_material() as ShaderMaterial
-	special_rect.material = mat.duplicate()
+	icing.material = icing.get_material().duplicate()
+	icing.hide()
 	
 	highlight_rect.modulate = Color.TRANSPARENT
-	special_rect.modulate = Color.TRANSPARENT
 	ring.modulate = Color.TRANSPARENT
+
+func _set_icing_count(c):
+	icing_count = c
+	update_icing()
+
+func update_icing():
+	if icing_count <= 0:
+		icing.hide()
+		return
+	
+	icing.show()
+	var mat = icing.material as ShaderMaterial
+	mat.set_shader_parameter("radius", 1.3 - (icing_count - 1) * 0.2)
 
 func blocked():
 	panel.hide()
 
 func highlight():
 	_show_brief(highlight_rect)
-
-func special(top: bool, right: bool, bot: bool, left: bool):
-	if showing_special:
-		return
-	var mat = special_rect.get_material() as ShaderMaterial
-	mat.set_shader_parameter("top", top)
-	mat.set_shader_parameter("right", right)
-	mat.set_shader_parameter("bot", bot)
-	mat.set_shader_parameter("left", left)
-	await _show_brief(special_rect, 0.2, 0.2)
-	showing_special = false
 
 func _show_brief(node, time = 0.5, hold_time = 3.0):
 	var tw = create_tween()
@@ -150,7 +152,7 @@ func matched(special_type):
 	match_done.emit()
 
 func icing_matched():
-	pass
+	self.icing_count -= 1
 
 func pulse_ring():
 	var tw = create_tween()

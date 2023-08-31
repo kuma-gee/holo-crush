@@ -5,9 +5,9 @@
 [ext_resource type="Script" path="res://src/grid/SwipeControl.gd" id="2_arkt7"]
 [ext_resource type="AudioStream" uid="uid://bdvv60tqtat27" path="res://assets/sound/カーソル移動9.mp3" id="3_iqce0"]
 [ext_resource type="AudioStream" uid="uid://d1nk5wmji7rr0" path="res://assets/sound/カーソル移動3.mp3" id="4_bo2sh"]
+[ext_resource type="Shader" path="res://src/grid/icing.gdshader" id="4_pypgq"]
 [ext_resource type="AudioStream" uid="uid://d12kbr3s2031k" path="res://assets/sound/ニュッ2.mp3" id="5_002jb"]
 [ext_resource type="Script" path="res://src/grid/special_mark.gd" id="7_3ro44"]
-[ext_resource type="Shader" path="res://src/grid/special.gdshader" id="7_7kj06"]
 [ext_resource type="Shader" path="res://src/piece/ring.gdshader" id="9_aicj2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hyg07"]
@@ -32,17 +32,15 @@ shader_parameter/alpha = 0.5
 shader = ExtResource("2_aqplq")
 shader_parameter/frequency = 7.0
 shader_parameter/phase = -6.635
-shader_parameter/size = 0.45
+shader_parameter/size = 0.4
 shader_parameter/speed = 3.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pihnw"]
-shader = ExtResource("7_7kj06")
-shader_parameter/size = 0.45
-shader_parameter/speed = 0.0
-shader_parameter/top = true
-shader_parameter/left = true
-shader_parameter/right = true
-shader_parameter/bot = true
+shader = ExtResource("4_pypgq")
+shader_parameter/radius = 1.3
+shader_parameter/smoothness = 1.0
+shader_parameter/border_width = 0.0
+shader_parameter/border_smoothness = 0.05
 
 [node name="Slot" type="Control"]
 layout_mode = 3
@@ -88,7 +86,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SpecialMark" type="ColorRect" parent="."]
+[node name="Icing" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_pihnw")
 layout_mode = 1
 anchors_preset = 15
@@ -97,6 +95,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(20, 20)
+color = Color(0.85098, 0.94902, 1, 1)
 script = ExtResource("7_3ro44")
 
 [node name="SwipeControl" type="Control" parent="."]

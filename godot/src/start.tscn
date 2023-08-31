@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://qdwfqb2qwrxb"]
+[gd_scene load_steps=30 format=3 uid="uid://qdwfqb2qwrxb"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
@@ -12,11 +12,8 @@
 [ext_resource type="AudioStream" uid="uid://bnsctl8drghdb" path="res://assets/ui/ニュースタイトル表示3.mp3" id="8_5k2wf"]
 [ext_resource type="PackedScene" uid="uid://dc230wcy1bgpy" path="res://src/menu/settings.tscn" id="8_23aaf"]
 [ext_resource type="Texture2D" uid="uid://da4bdfvrmxj1i" path="res://assets/ui/play.svg" id="8_dqte7"]
-[ext_resource type="Script" path="res://src/menu/overlay.gd" id="9_qgams"]
-[ext_resource type="Script" path="res://src/menu/piece_select/piece_select.gd" id="10_ung14"]
 [ext_resource type="Texture2D" uid="uid://b3tky1ls601o2" path="res://assets/gacha/profile/Profile_Gura.png" id="10_xnjy7"]
 [ext_resource type="Script" path="res://src/StartMenu.gd" id="12_fdvxc"]
-[ext_resource type="Script" path="res://src/menu/piece_select/piece_selectables.gd" id="12_frfar"]
 [ext_resource type="Texture2D" uid="uid://b7qsqisg7w3n0" path="res://assets/ui/setting.svg" id="13_lnhgn"]
 [ext_resource type="Script" path="res://src/menu/UIButton.gd" id="14_6yhda"]
 [ext_resource type="Texture2D" uid="uid://cj851nf6ocius" path="res://assets/ui/store.svg" id="15_br8ph"]
@@ -61,170 +58,6 @@ shader_parameter/smoothing = 0.42
 shader_parameter/size = 0.55
 shader_parameter/scale = Vector2(1, 1.6)
 shader_parameter/color_gradient = SubResource("GradientTexture1D_xos2y")
-
-[sub_resource type="Animation" id="Animation_0sthp"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("PieceSelect:visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("PieceSelect/PieceSelect:scale")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(1e-05, 1e-05)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("PieceSelect/Blocker:visible")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("PieceSelect/Selectables:visible")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("MenuContainer/Overlay:modulate")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_2a0pg"]
-resource_name = "show_menu"
-length = 0.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("MenuContainer:visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("MenuContainer/Overlay:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_20ldf"]
-resource_name = "show_pieces"
-length = 0.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("PieceSelect:visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("PieceSelect/PieceSelect:scale")
-tracks/1/interp = 2
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(3, 3),
-"update": 0,
-"values": [Vector2(1e-05, 1e-05), Vector2(1, 1)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("PieceSelect/Blocker:visible")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.4, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [true, true, false]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("PieceSelect/Selectables:visible")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/4/type = "method"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("PieceSelect/Selectables")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0.5),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [],
-"method": &"close"
-}]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_j8rit"]
-_data = {
-"RESET": SubResource("Animation_0sthp"),
-"show_menu": SubResource("Animation_2a0pg"),
-"show_pieces": SubResource("Animation_20ldf")
-}
 
 [node name="Start" type="Control" node_paths=PackedStringArray("collection_btn")]
 layout_mode = 3
@@ -425,77 +258,6 @@ texture = ExtResource("18_mh04n")
 expand_mode = 4
 stretch_mode = 5
 
-[node name="PieceSelect" type="Control" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("1_rg8bf")
-script = ExtResource("9_qgams")
-external = true
-
-[node name="PieceSelect" type="PanelContainer" parent="PieceSelect"]
-custom_minimum_size = Vector2(0, 100)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_top = -50.0
-offset_bottom = 50.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1e-05, 1e-05)
-
-[node name="MarginContainer" type="MarginContainer" parent="PieceSelect/PieceSelect"]
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="VBoxContainer" type="VBoxContainer" parent="PieceSelect/PieceSelect/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 40
-alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="PieceSelect/PieceSelect/MarginContainer/VBoxContainer"]
-layout_mode = 2
-alignment = 1
-script = ExtResource("10_ung14")
-
-[node name="Start" type="Button" parent="PieceSelect/PieceSelect/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Start"
-
-[node name="Selectables" type="PanelContainer" parent="PieceSelect"]
-visible = false
-clip_contents = true
-custom_minimum_size = Vector2(128, 300)
-layout_mode = 0
-offset_right = 128.0
-offset_bottom = 300.0
-mouse_filter = 2
-script = ExtResource("12_frfar")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="PieceSelect/Selectables"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-alignment = 1
-
-[node name="Blocker" type="Control" parent="PieceSelect"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
 [node name="CheckEnergyTimer" type="Timer" parent="."]
 autostart = true
 
@@ -510,17 +272,9 @@ stream = ExtResource("8_5k2wf")
 volume_db = -15.0
 bus = &"SFX"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_j8rit")
-}
-
 [connection signal="pressed" from="Menu/Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Hexagon/Collection" to="MenuContainer" method="_on_collection_pressed"]
 [connection signal="pressed" from="MenuContainer/Bottom/StoreBtn/Store" to="MenuContainer" method="_on_store_pressed"]
 [connection signal="pressed" from="MenuContainer/Bottom/SettingsBtn/Settings" to="MenuContainer" method="_on_settings_pressed"]
 [connection signal="unlocked" from="MenuContainer/Store" to="MenuContainer/Showcase" method="show_piece"]
-[connection signal="hidden" from="PieceSelect" to="PieceSelect/Selectables" method="close"]
-[connection signal="on_hide" from="PieceSelect" to="." method="_on_piece_select_on_hide"]
-[connection signal="pressed" from="PieceSelect/PieceSelect/MarginContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]
 [connection signal="timeout" from="CheckEnergyTimer" to="." method="_on_check_energy_timer_timeout"]

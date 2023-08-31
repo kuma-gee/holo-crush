@@ -199,3 +199,4 @@ func _create_pieces():
 		var slot = _get_slot(pos)
 		var node = _spawn_piece(piece)
 		slot.replace(node)
+		slot.icing_count = data.get_icing_count(pos)
