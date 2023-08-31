@@ -53,6 +53,9 @@ func _ready():
 
 	data.special_activate.connect(func(pos, fields): _activate_special(pos, fields))
 
+	data.icing_matched.connect(func(m):
+		_get_slot(m).icing_matched()
+	)
 	data.matched.connect(func(m, special):
 		var slot = _get_slot(m) as Slot
 		slot.matched(special)

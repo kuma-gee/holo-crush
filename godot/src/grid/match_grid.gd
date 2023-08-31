@@ -9,6 +9,7 @@ signal moved(pos, dest)
 signal filled(pos, value)
 signal created()
 signal matched(pos, special)
+signal icing_matched(pos)
 signal special_activate(pos, fields)
 
 signal refilled()
@@ -17,6 +18,7 @@ signal refilled()
 
 var _data: GridData
 var _specials: Specials
+var _icings: Dictionary
 
 # Don't touch! Only for testing
 func get_data():
@@ -25,6 +27,7 @@ func get_data():
 func create_data(values: Array, init: Array = []):
 	_specials = Specials.new()
 	_data = GridData.new(level.width, level.height, init, level.blocked)
+	_icings = level.icings.duplicate()
 	if init.size() == 0:
 		_data.values = values.duplicate()
 		_data.refill()
@@ -127,10 +130,19 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 				remove_matched.append(s)
 		
 		for m in remove_matched:
+			if get_icing_count(m) > 0:
+				_icings[m] -= 1
+				icing_matched.emit(m)
 			matched.emit(m, _specials.get_special_type(m))
 		_data.print_data('Match')
 
 	return has_matched
+
+func get_icing_count(pos: Vector2i):
+	return _icings[pos] if pos in _icings else 0
+
+func has_icings():
+	return not _icings.values().filter(func(x): return x > 0).is_empty()
 
 func _get_special_match_data(all_matched: Array, dest: Vector2i):
 	var special_matches = []
@@ -263,6 +275,3 @@ func get_width():
 
 func get_height():
 	return level.height
-
-func is_valid_field(x, y):
-	return _data.is_inside(x, y)

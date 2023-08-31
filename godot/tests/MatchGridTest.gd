@@ -4,12 +4,13 @@ func before_each():
 	Debug.log_level = Debug.Level.INFO
 	seed(100)
 
-func _create(initial_data: Array, blocked: Array[Vector2i] = []) -> MatchGrid:
+func _create(initial_data: Array, blocked: Array[Vector2i] = [], icing = {}) -> MatchGrid:
 	var data = autofree(MatchGrid.new())
 	var level = LevelResource.new()
 	level.width = initial_data[0].size()
 	level.height = initial_data.size()
 	level.blocked = blocked as Array[Vector2i]
+	level.icings = icing
 
 	data.level = level
 	data.create_data([], initial_data)
@@ -467,3 +468,35 @@ func test_get_possible_move(params=use_parameters([
 		assert_contains_exact(move, params[1])
 	else:
 		assert_null(move)
+
+func test_icing():
+	var data = _create([
+		[0, 1, 2],
+		[1, 2, 1],
+		[0, 2, 2],
+	], [], {Vector2i(2, 2): 2, Vector2i(2, 1): 1})
+
+	watch_signals(data)
+
+	data.swap(Vector2i(1, 1), Vector2i(2, 1))
+	data.check_matches()
+
+	assert_signal_emitted_in_any_order(data, 'icing_matched', [Vector2i(2, 2), Vector2i(2, 1)])
+	assert_eq(data.get_icing_count(Vector2i(2, 2)), 1)
+	assert_eq(data.get_icing_count(Vector2i(2, 1)), 0)
+	assert_eq(data.get_icing_count(Vector2i(2, 0)), 0)
+	assert_true(data.has_icings())
+
+
+func test_no_icing():
+	var data = _create([
+		[0, 1, 2],
+		[1, 2, 1],
+		[0, 2, 2],
+	], [], {Vector2i(2, 2): 1})
+
+	watch_signals(data)
+
+	data.swap(Vector2i(1, 1), Vector2i(2, 1))
+	data.check_matches()
+	assert_false(data.has_icings())

@@ -149,6 +149,9 @@ func matched(special_type):
 
 	match_done.emit()
 
+func icing_matched():
+	pass
+
 func pulse_ring():
 	var tw = create_tween()
 	ring.modulate = Color.WHITE
