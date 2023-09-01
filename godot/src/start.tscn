@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://qdwfqb2qwrxb"]
+[gd_scene load_steps=37 format=3 uid="uid://qdwfqb2qwrxb"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
@@ -12,6 +12,7 @@
 [ext_resource type="AudioStream" uid="uid://bnsctl8drghdb" path="res://assets/ui/ニュースタイトル表示3.mp3" id="8_5k2wf"]
 [ext_resource type="PackedScene" uid="uid://dc230wcy1bgpy" path="res://src/menu/settings.tscn" id="8_23aaf"]
 [ext_resource type="Texture2D" uid="uid://da4bdfvrmxj1i" path="res://assets/ui/play.svg" id="8_dqte7"]
+[ext_resource type="Shader" path="res://src/white.gdshader" id="9_lr3s0"]
 [ext_resource type="Texture2D" uid="uid://b3tky1ls601o2" path="res://assets/gacha/profile/Profile_Gura.png" id="10_xnjy7"]
 [ext_resource type="Script" path="res://src/StartMenu.gd" id="12_fdvxc"]
 [ext_resource type="Texture2D" uid="uid://b7qsqisg7w3n0" path="res://assets/ui/setting.svg" id="13_lnhgn"]
@@ -34,6 +35,33 @@ fill_to = Vector2(0, 0)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7ekah"]
 shader = ExtResource("4_samfo")
 shader_parameter/background = SubResource("GradientTexture2D_jd218")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2iow3"]
+shader = ExtResource("9_lr3s0")
+
+[sub_resource type="Gradient" id="Gradient_kl5ax"]
+offsets = PackedFloat32Array(0, 0.133333, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_0xr3d"]
+gradient = SubResource("Gradient_kl5ax")
+
+[sub_resource type="Curve" id="Curve_u5k7a"]
+min_value = 0.3
+_data = [Vector2(0, 0.3), 0.0, 0.313631, 0, 0, Vector2(0.530121, 0.81579), 1.00474, 1.00474, 0, 0, Vector2(1, 1), 0.111196, -1.36751, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_sc0vi"]
+curve = SubResource("Curve_u5k7a")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_eddf2"]
+particle_flag_disable_z = true
+direction = Vector3(0, 0, 0)
+gravity = Vector3(0, 0, 0)
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+scale_curve = SubResource("CurveTexture_sc0vi")
+color_ramp = SubResource("GradientTexture1D_0xr3d")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k25ma"]
 shader = ExtResource("7_nxbx0")
@@ -59,7 +87,7 @@ shader_parameter/size = 0.55
 shader_parameter/scale = Vector2(1, 1.6)
 shader_parameter/color_gradient = SubResource("GradientTexture1D_xos2y")
 
-[node name="Start" type="Control" node_paths=PackedStringArray("collection_btn")]
+[node name="Start" type="Control" node_paths=PackedStringArray("collection_btn", "collection_hint")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -69,6 +97,7 @@ grow_vertical = 2
 theme = ExtResource("1_rg8bf")
 script = ExtResource("2_af8bd")
 collection_btn = NodePath("Hexagon/Collection")
+collection_hint = NodePath("Hexagon/Control/CollectionHint")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_7ekah")
@@ -143,6 +172,23 @@ offset_left = -152.5
 offset_right = 152.5
 offset_bottom = 246.0
 grow_horizontal = 2
+
+[node name="Control" type="Control" parent="Hexagon"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="CollectionHint" type="GPUParticles2D" parent="Hexagon/Control"]
+material = SubResource("ShaderMaterial_2iow3")
+position = Vector2(0, 91)
+scale = Vector2(0.1, 0.1)
+emitting = false
+amount = 3
+process_material = SubResource("ParticleProcessMaterial_eddf2")
+texture = ExtResource("7_qqkgn")
+lifetime = 0.3
+one_shot = true
+speed_scale = 0.3
 
 [node name="Collection" type="TextureButton" parent="Hexagon"]
 material = SubResource("ShaderMaterial_k25ma")
@@ -276,5 +322,6 @@ bus = &"SFX"
 [connection signal="pressed" from="Hexagon/Collection" to="MenuContainer" method="_on_collection_pressed"]
 [connection signal="pressed" from="MenuContainer/Bottom/StoreBtn/Store" to="MenuContainer" method="_on_store_pressed"]
 [connection signal="pressed" from="MenuContainer/Bottom/SettingsBtn/Settings" to="MenuContainer" method="_on_settings_pressed"]
+[connection signal="hidden" from="MenuContainer/Store" to="." method="_on_store_hidden"]
 [connection signal="unlocked" from="MenuContainer/Store" to="MenuContainer/Showcase" method="show_piece"]
 [connection signal="timeout" from="CheckEnergyTimer" to="." method="_on_check_energy_timer_timeout"]

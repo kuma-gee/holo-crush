@@ -4,6 +4,7 @@ const SAVE_SLOT = 0
 
 signal game_started()
 signal selected_piece_changed(piece)
+signal first_unlocked()
 
 @onready var save_manager := $SaveManager
 @onready var energy := $Energy
@@ -61,8 +62,12 @@ func _exit_tree():
 	_save_game()
 
 func unlock_piece(p):
-	if not p in unlocked_pieces:
-		unlocked_pieces.append(p)
+	if p in unlocked_pieces:
+		return
+	
+	if unlocked_pieces.size() == 0:
+		first_unlocked.emit()
+	unlocked_pieces.append(p)
 	_save_game()
 
 func _set_selected_piece(piece):

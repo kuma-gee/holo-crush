@@ -8,7 +8,7 @@
 [ext_resource type="Shader" path="res://src/starfield.gdshader" id="3_jvk2f"]
 [ext_resource type="Script" path="res://src/grid/match_grid.gd" id="4_egjxx"]
 [ext_resource type="PackedScene" uid="uid://dqw32jg4upbcp" path="res://src/menu/score.tscn" id="4_gaq27"]
-[ext_resource type="Resource" uid="uid://cmiuj3tuuvo5b" path="res://src/grid/HoleLevel.tres" id="5_gomi5"]
+[ext_resource type="Resource" uid="uid://cmiuj3tuuvo5b" path="res://src/grid/SimpleGridLevel.tres" id="5_gomi5"]
 [ext_resource type="Shader" path="res://src/grid/shockwave.gdshader" id="6_2vgwy"]
 [ext_resource type="StyleBox" uid="uid://bd0c76q5d7ocf" path="res://theme/dialog.tres" id="9_qa60b"]
 [ext_resource type="AudioStream" uid="uid://b7ilfb8f6t6wg" path="res://assets/sound/Shiny Smily Story_Inst_hololive_202308151841.mp3" id="10_chsc8"]
