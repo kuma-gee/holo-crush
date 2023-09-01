@@ -219,19 +219,32 @@ func collapse_columns():
 		var x = cell.x
 		var y = cell.y
 
+		var dest = Vector2i(x, y)
 		if get_value(x, y) == null:
-			var yy = _first_non_null_above(x, y)
-			if yy != null:
-				_swap_value_with_special(Vector2i(x, yy), Vector2i(x, y))
-				moved.emit(Vector2i(x, yy), Vector2i(x, y))
+			var yy = _collapse_for(Vector2i(x, y), dest)
+			if yy != null: # currently only reason for not null is when it's blocked
+				yy = _collapse_for(Vector2i(x-1, yy+1), dest)
+				if yy != null:
+					yy = _collapse_for(Vector2i(x+1, yy+1), dest)
+
+
 
 	_data.print_data('Collapse')
 
+func _collapse_for(start: Vector2i, dest: Vector2i):
+	var yy = _first_non_null_above(start.x, start.y)
+	if yy != null and get_value(start.x, yy) != null:
+		_swap_value_with_special(Vector2i(start.x, yy), dest)
+		moved.emit(Vector2i(start.x, yy), dest)
+		return null
+	return yy
+
 func _first_non_null_above(x: int, y: int):
 	for yy in range(y-1, -1, -1):
-		if get_value(x, yy) != null:
+		if get_value(x, yy) != null or _data.is_blocked(x, yy):
 			return yy
 	return null
+
 
 func fill_empty():
 	for cell in get_cells(true):

@@ -52,10 +52,10 @@ func test_collapse(params=use_parameters([
 
 func test_not_collapse_blocked():
 	var data = _create([
-			[1, 1, 1, 0],
-			[0, 1, 2, 0],
-			[0, 1, 2, 2],
-			[null, 3, 3, null]
+		[1, 1, 1, 0],
+		[0, 1, 2, 0],
+		[0, 1, 2, 2],
+		[null, 3, 3, null]
 	], [
 		Vector2i(0, 3),
 		Vector2i(3, 3),
@@ -64,6 +64,46 @@ func test_not_collapse_blocked():
 	watch_signals(data)
 	data.collapse_columns()
 	assert_signal_not_emitted(data, 'moved')
+
+func test_collapse_below_blocked(params=use_parameters([
+	[
+		[
+			[1, 1, 1, 0],
+			[0, 1, 2, 0],
+			[1, null, null, 3],
+			[2, null, 3, 1]
+		],
+		[Vector2i(1, 3), 1]
+	],
+	[
+		[
+			[1, 1, 1, 0],
+			[0, 1, 2, 0],
+			[1, null, null, 3],
+			[2, 1, null, 1]
+		],
+		[Vector2i(2, 3), 3]
+	],
+	[
+		[
+			[1, 1, 1, 0],
+			[null, 1, 2, 0],
+			[null, null, null, 3],
+			[2, null, 3, 1]
+		],
+		[Vector2i(1, 3), 1]
+	]
+])):
+	var data = _create(params[0], [
+		Vector2i(1, 2),
+		Vector2i(2, 2),
+	])
+
+	watch_signals(data)
+	data.collapse_columns()
+
+	var expected = params[1]
+	assert_eq(data.get_value(expected[0].x, expected[0].y), expected[1])
 
 
 func test_fill_empty(params=use_parameters([

@@ -103,10 +103,14 @@ func is_inside(x: int, y: int):
 	if y < 0 or y >= height:
 		return false
 	
-	if Vector2i(x, y) in _blocked:
+	if is_blocked(x, y):
 		return false
 
 	return true
+
+
+func is_blocked(x: int, y: int):
+	return Vector2i(x, y) in _blocked
 
 func get_match_counts():
 	var counts = {}
