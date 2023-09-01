@@ -11,13 +11,16 @@ var vol_offset = 15
 func _ready():
 	master_id = AudioServer.get_bus_index(bus_name)
 	value_changed.connect(_volume_changed)
-	value = get_volume_percentage()
+	update()
 	
 	if _has_button():
 		button.toggled.connect(func(mute):
 			AudioServer.set_bus_mute(master_id, mute)
 			_update_states()
 		)
+
+func update():
+	value = get_volume_percentage()
 
 func _has_button():
 	return button and button.toggle_mode

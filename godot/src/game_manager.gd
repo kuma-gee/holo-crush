@@ -55,10 +55,11 @@ func _ready():
 	
 	SceneManager.scene_loaded.connect(func():
 		points.add_scored_points()
-		_save_game()
+		#_save_game()
 	)
 
 func _exit_tree():
+	points.add_scored_points()
 	_save_game()
 
 func unlock_piece(p):
@@ -68,12 +69,12 @@ func unlock_piece(p):
 	if unlocked_pieces.size() == 0:
 		first_unlocked.emit()
 	unlocked_pieces.append(p)
-	_save_game()
+	#_save_game()
 
 func _set_selected_piece(piece):
 	selected_piece = piece
 	selected_piece_changed.emit(piece)
-	_save_game()
+	#_save_game()
 
 func get_piece_profile(piece):
 	if not piece in PIECE_PROFILE:

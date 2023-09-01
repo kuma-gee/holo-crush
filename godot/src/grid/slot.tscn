@@ -109,15 +109,18 @@ script = ExtResource("2_arkt7")
 
 [node name="ClickSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_iqce0")
+bus = &"SFX"
 
 [node name="SwipeSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_bo2sh")
 volume_db = -20.0
 pitch_scale = 0.7
+bus = &"SFX"
 
 [node name="WrongSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_002jb")
 volume_db = -10.0
+bus = &"SFX"
 
 [connection signal="press_click" from="SwipeControl" to="." method="_on_swipe_control_press_click"]
 [connection signal="press_released" from="SwipeControl" to="." method="_on_swipe_control_press_released"]
