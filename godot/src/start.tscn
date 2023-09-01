@@ -65,9 +65,10 @@ color_ramp = SubResource("GradientTexture1D_0xr3d")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k25ma"]
 shader = ExtResource("7_nxbx0")
-shader_parameter/clip_texture_size = Vector2(256, 256)
-shader_parameter/clip_texture_offset = Vector2(-0.1, 0)
-shader_parameter/alpha_cutoff = 0.4
+shader_parameter/clip_texture_size = Vector2(300, 300)
+shader_parameter/clip_texture_offset = Vector2(-0.006, 0.15)
+shader_parameter/background = Color(0.105882, 0.164706, 0.290196, 1)
+shader_parameter/alpha_cutoff = 0.5
 shader_parameter/clip_texture = ExtResource("10_xnjy7")
 
 [sub_resource type="Gradient" id="Gradient_4lcoj"]

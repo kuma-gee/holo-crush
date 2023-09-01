@@ -3,6 +3,7 @@ shader_type canvas_item;
 uniform sampler2D clip_texture;
 uniform vec2 clip_texture_size;
 uniform vec2 clip_texture_offset;
+uniform vec4 background: source_color;
 uniform float alpha_cutoff : hint_range(0.0, 1.0, 0.1) = 0.5;
 
 void fragment() {
@@ -12,13 +13,10 @@ void fragment() {
 
 	vec4 color = COLOR;
 	vec4 tex = texture(clip_texture, clip_UV);
-	float alpha = color.a;
-	if (clip_UV.x > 1.0 || clip_UV.x < 0.0 || clip_UV.y > 1.0 || clip_UV.y < 0.0 || tex.a <= alpha_cutoff) {
-		tex = vec4(0.0, 0.0, 0.0, 0.0);
-	}
-	float mix_tex = 1.0 - step(color.r, 1.0-tex.a);
-	if (mix_tex == 0.0 && color.b > 0.0) {
-		mix_tex = color.a;
-	}
-	COLOR=vec4(mix(tex.rgb, color.rgb, mix_tex), alpha);
+	
+	tex.a = step(alpha_cutoff, tex.a); // Clean up edges
+	tex.rgb = mix(background.rgb, tex.rgb, step(0.01, tex.a)); // Set background for transparent pixels
+	
+	float mix_tex = smoothstep(0.1, 1.5, color.r); // Keep white border
+	COLOR=vec4(mix(tex.rgb, color.rgb, mix_tex), color.a);
 }
