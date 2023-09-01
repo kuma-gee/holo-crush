@@ -130,13 +130,16 @@ func check_matches(dest: Vector2i = Vector2i(-1, -1)):
 				remove_matched.append(s)
 		
 		for m in remove_matched:
-			if get_icing_count(m) > 0:
-				_icings[m] -= 1
-				icing_matched.emit(m)
-			matched.emit(m, _specials.get_special_type(m))
+			_match(m, _specials.get_special_type(m))
 		_data.print_data('Match')
 
 	return has_matched
+
+func _match(m, special):
+	if get_icing_count(m) > 0:
+		_icings[m] -= 1
+		icing_matched.emit(m)
+	matched.emit(m, special)
 
 func get_icing_count(pos: Vector2i):
 	return _icings[pos] if pos in _icings else 0
@@ -189,7 +192,7 @@ func activate_all_specials():
 		
 	_data.print_data('Activate specials')
 	for m in removed:
-		matched.emit(m, null)
+		_match(m, null)
 
 func _remove_value(p: Vector2i):
 	var removed = []
