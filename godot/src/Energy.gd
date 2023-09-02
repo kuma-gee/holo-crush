@@ -59,6 +59,9 @@ func restore(now: DateTime = DateTime.now()):
 	_logger.debug("New last used time %s " % _last_used)
 
 func get_remaining_time(now: DateTime = DateTime.now()):
+	if _last_used == null:
+		return "00:00"
+	
 	var diff_sec = (restore_minutes * 60) - _last_used.get_diff_in_seconds(now)
 	var dict = Time.get_datetime_dict_from_unix_time(diff_sec)
 	return "%s:%s" % [_prefix_zero(dict.minute), _prefix_zero(dict.second)]
