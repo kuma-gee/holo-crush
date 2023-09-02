@@ -1,7 +1,11 @@
 extends Overlay
 
 const PIECE_TEX = {
-	Piece.Type.GURA: preload("res://assets/gacha/Myth_Gura.png")
+	Piece.Type.GURA: preload("res://assets/gacha/Myth_Gura.png"),
+	Piece.Type.INA: preload("res://assets/gacha/Myth_Ina.png"),
+	Piece.Type.AME: preload("res://assets/gacha/Myth_Ame.png"),
+	Piece.Type.KIARA: preload("res://assets/gacha/Myth_Kiara.png"),
+	Piece.Type.CALLI: preload("res://assets/gacha/Myth_Calli.png"),
 }
 
 @export var tex: TextureRect

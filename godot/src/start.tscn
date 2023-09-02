@@ -73,7 +73,7 @@ shader_parameter/clip_texture = ExtResource("10_xnjy7")
 
 [sub_resource type="Gradient" id="Gradient_4lcoj"]
 offsets = PackedFloat32Array(0.365854, 1)
-colors = PackedColorArray(1, 1, 1, 1, 0, 0.683333, 1, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.564706)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_xos2y"]
 gradient = SubResource("Gradient_4lcoj")
