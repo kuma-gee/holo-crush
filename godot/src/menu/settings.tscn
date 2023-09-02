@@ -106,5 +106,6 @@ texture_normal = ExtResource("3_0f6sa")
 ignore_texture_size = true
 stretch_mode = 5
 script = ExtResource("4_lwv1e")
+close_button = true
 
 [connection signal="pressed" from="Audio/MarginContainer2/TextureButton" to="." method="_on_texture_button_pressed"]

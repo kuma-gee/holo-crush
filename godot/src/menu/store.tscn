@@ -40,5 +40,6 @@ texture_normal = ExtResource("3_wepua")
 ignore_texture_size = true
 stretch_mode = 5
 script = ExtResource("4_3mes3")
+close_button = true
 
 [connection signal="pressed" from="MarginContainer/MarginContainer2/TextureButton" to="." method="_on_texture_button_pressed"]

@@ -173,7 +173,7 @@ vertical_alignment = 1
 [node name="Points" parent="Top/Top" instance=ExtResource("7_oie0n")]
 layout_mode = 2
 
-[node name="Menu" type="CenterContainer" parent="."]
+[node name="MainPlay" type="CenterContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -187,10 +187,11 @@ offset_bottom = 181.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Play" type="TextureButton" parent="Menu"]
+[node name="Play" type="TextureButton" parent="MainPlay"]
 layout_mode = 2
 texture_normal = ExtResource("8_dqte7")
 script = ExtResource("14_6yhda")
+play_sound = false
 
 [node name="Hexagon" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -347,7 +348,7 @@ stream = ExtResource("8_5k2wf")
 volume_db = -15.0
 bus = &"SFX"
 
-[connection signal="pressed" from="Menu/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="MainPlay/Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Hexagon/Collection" to="MenuContainer" method="_on_collection_pressed"]
 [connection signal="pressed" from="MenuContainer/Bottom/StoreBtn/Store" to="MenuContainer" method="_on_store_pressed"]
 [connection signal="pressed" from="MenuContainer/Bottom/SettingsBtn/Settings" to="MenuContainer" method="_on_settings_pressed"]

@@ -44,7 +44,7 @@ func restore(now: DateTime = DateTime.now()):
 
 	var diff_min = _last_used.get_diff_in_minutes(now)
 	if diff_min < restore_minutes:
-		_logger.debug("%sm since last used, still %sm left" % [diff_min, restore_minutes - diff_min])
+		#_logger.debug("%sm since last used, still %sm left" % [diff_min, restore_minutes - diff_min])
 		return
 
 	var restore_count = int(diff_min / restore_minutes)

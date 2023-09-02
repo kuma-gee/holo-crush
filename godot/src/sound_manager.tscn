@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://b3wrtja7akth5"]
+[gd_scene load_steps=8 format=3 uid="uid://b3wrtja7akth5"]
 
 [ext_resource type="Script" path="res://src/sound_manager.gd" id="1_odwfr"]
 [ext_resource type="AudioStream" uid="uid://dsudgro5syiqh" path="res://assets/sound/パッ.mp3" id="2_mukpa"]
 [ext_resource type="Script" path="res://src/sound/DebounceAudio.gd" id="3_0bakx"]
 [ext_resource type="AudioStream" uid="uid://b1w3j723xv810" path="res://assets/sound/ペタッ.mp3" id="4_lypla"]
 [ext_resource type="AudioStream" uid="uid://drbxlok4m3kks" path="res://assets/sound/bomb.wav" id="5_sd5hr"]
+[ext_resource type="AudioStream" uid="uid://b4hb6dpevh0vy" path="res://assets/sound/決定ボタンを押す50.mp3" id="6_5pn11"]
+[ext_resource type="AudioStream" uid="uid://b3tuls6emm0gv" path="res://assets/sound/決定ボタンを押す48.mp3" id="6_d546n"]
 
 [node name="SoundManager" type="Node"]
 script = ExtResource("1_odwfr")
@@ -25,5 +27,17 @@ script = ExtResource("3_0bakx")
 stream = ExtResource("5_sd5hr")
 volume_db = -15.0
 pitch_scale = 1.5
+bus = &"SFX"
+script = ExtResource("3_0bakx")
+
+[node name="CloseSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_5pn11")
+volume_db = -10.0
+bus = &"SFX"
+script = ExtResource("3_0bakx")
+
+[node name="ClickSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_d546n")
+volume_db = -10.0
 bus = &"SFX"
 script = ExtResource("3_0bakx")

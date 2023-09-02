@@ -1,6 +1,9 @@
 class_name UIButton
 extends TextureButton
 
+@export var play_sound := true
+@export var close_button := false
+
 var tw: Tween
 
 func _ready():
@@ -13,6 +16,11 @@ func _ready():
 		_tween()
 		tw.tween_property(self, "scale", Vector2(1, 1), 0.25)
 		tw.tween_property(self, "modulate", Color.WHITE, 0.25)
+		if play_sound:
+			if close_button:
+				SoundManager.play_close()
+			else:
+				SoundManager.play_click()
 	)
 
 func _tween():
