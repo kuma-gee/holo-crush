@@ -6,7 +6,6 @@
 [node name="GachaPack" type="TextureButton" node_paths=PackedStringArray("price_label")]
 texture_normal = ExtResource("1_3h1l1")
 script = ExtResource("2_csdyi")
-price = 20
 price_label = NodePath("MarginContainer/Price")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]

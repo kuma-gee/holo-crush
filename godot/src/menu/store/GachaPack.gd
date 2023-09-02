@@ -1,7 +1,7 @@
 class_name GachaPack
 extends UIButton
 
-@export var price := 0
+@export var price := 5000
 @export var pieces: Array[Piece.Type] = []
 @export var price_label: Label
 

@@ -24,7 +24,7 @@ theme_override_constants/separation = 50
 
 [node name="AllPack" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_2e1y3")]
 layout_mode = 2
-price = 5000
+price = 8000
 
 [node name="MarginContainer2" type="MarginContainer" parent="MarginContainer"]
 layout_mode = 2
