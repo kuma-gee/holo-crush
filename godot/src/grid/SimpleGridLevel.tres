@@ -4,10 +4,7 @@
 
 [resource]
 script = ExtResource("1_1pc7e")
-width = 6
-height = 6
-blocked = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 5), Vector2i(5, 0), Vector2i(5, 5)])
-icings = {
-Vector2i(2, 2): 2,
-Vector2i(3, 3): 1
-}
+width = 9
+height = 8
+blocked = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 7), Vector2i(8, 0), Vector2i(8, 7), Vector2i(0, 6), Vector2i(1, 7), Vector2i(7, 7), Vector2i(8, 6), Vector2i(4, 0)])
+icings = {}

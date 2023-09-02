@@ -21,6 +21,7 @@ func add_scored_points():
 		return
 	
 	self.points += scored_points
+	scored_points = 0
 	_logger.debug("Adding scored to points %s" % points)
 
 func get_points():

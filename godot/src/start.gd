@@ -6,6 +6,8 @@ extends Control
 @onready var bgm := $BGM
 @onready var start_sound := $StartSound
 
+const EMPTY = preload("res://assets/ui/empty.svg")
+
 var play_hint = false
 
 func _ready():
@@ -17,7 +19,7 @@ func _ready():
 func _update_collection_btn(piece):
 	var tex = GameManager.get_piece_profile(piece)
 	var mat = collection_btn.material as ShaderMaterial
-	mat.set_shader_parameter("clip_texture", tex)
+	mat.set_shader_parameter("clip_texture", tex if tex else EMPTY)
 
 func _on_game_start():
 	create_tween().tween_property(bgm, "volume_db", -50, 1.0).set_trans(Tween.TRANS_CUBIC)

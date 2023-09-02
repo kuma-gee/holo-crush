@@ -1,12 +1,12 @@
 class_name GachaPack
-extends TextureButton
+extends UIButton
 
 @export var price := 0
 @export var pieces: Array[Piece.Type] = []
-
-@onready var price_label := $Price
+@export var price_label: Label
 
 func _ready():
+	super._ready()
 	price_label.text = str(price)
 
 func get_pieces():
