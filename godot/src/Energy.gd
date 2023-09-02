@@ -7,7 +7,7 @@ signal energy_updated(energy)
 @export var max_energy := 5
 @onready var energy := max_energy : set = _set_energy
 
-@export var restore_minutes := 60
+@export var restore_minutes := 30
 
 var _logger = Logger.new("Energy")
 var _last_used
@@ -57,3 +57,8 @@ func restore(now: DateTime = DateTime.now()):
 	
 	_last_used = _last_used.add_minutes(restore_count * restore_minutes)
 	_logger.debug("New last used time %s " % _last_used)
+
+func get_remaining_time(now: DateTime = DateTime.now()):
+	var diff_sec = now.get_diff_in_seconds(_last_used)
+	var dict = Time.get_datetime_dict_from_unix_time(diff_sec)
+	return "%s:%s" % [dict.minute, dict.second]

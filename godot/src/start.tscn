@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://qdwfqb2qwrxb"]
+[gd_scene load_steps=38 format=3 uid="uid://qdwfqb2qwrxb"]
 
 [ext_resource type="Theme" uid="uid://cvvavdkxk7llv" path="res://theme/theme.tres" id="1_rg8bf"]
 [ext_resource type="Script" path="res://src/start.gd" id="2_af8bd"]
@@ -35,6 +35,11 @@ fill_to = Vector2(0, 0)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7ekah"]
 shader = ExtResource("4_samfo")
 shader_parameter/background = SubResource("GradientTexture2D_jd218")
+
+[sub_resource type="LabelSettings" id="LabelSettings_gfatm"]
+font_size = 22
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2iow3"]
 shader = ExtResource("9_lr3s0")
@@ -88,7 +93,7 @@ shader_parameter/size = 0.55
 shader_parameter/scale = Vector2(1, 1.6)
 shader_parameter/color_gradient = SubResource("GradientTexture1D_xos2y")
 
-[node name="Start" type="Control" node_paths=PackedStringArray("collection_btn", "collection_hint")]
+[node name="Start" type="Control" node_paths=PackedStringArray("collection_btn", "collection_hint", "energy_time_label")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -99,6 +104,7 @@ theme = ExtResource("1_rg8bf")
 script = ExtResource("2_af8bd")
 collection_btn = NodePath("Hexagon/Collection")
 collection_hint = NodePath("Hexagon/Control/CollectionHint")
+energy_time_label = NodePath("Top/Top/Control/MarginContainer/EnergyTime")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_7ekah")
@@ -128,19 +134,41 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Energy" type="HBoxContainer" parent="Top/Top"]
+[node name="Control" type="Control" parent="Top/Top"]
 layout_mode = 2
+
+[node name="Energy" type="HBoxContainer" parent="Top/Top/Control"]
+layout_mode = 2
+offset_right = 1060.0
+offset_bottom = 71.0
 theme_override_constants/separation = -40
 
-[node name="TextureRect" type="TextureRect" parent="Top/Top/Energy"]
+[node name="TextureRect" type="TextureRect" parent="Top/Top/Control/Energy"]
 modulate = Color(1, 0.533333, 0.14902, 1)
 layout_mode = 2
 texture = ExtResource("4_10xj2")
 expand_mode = 2
 stretch_mode = 5
 
-[node name="EnergyContainer" parent="Top/Top/Energy" instance=ExtResource("5_m4gqq")]
+[node name="EnergyContainer" parent="Top/Top/Control/Energy" instance=ExtResource("5_m4gqq")]
 layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Top/Top/Control"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -20.0
+offset_right = 91.0
+offset_bottom = 20.0
+grow_vertical = 2
+theme_override_constants/margin_left = 60
+
+[node name="EnergyTime" type="Label" parent="Top/Top/Control/MarginContainer"]
+layout_mode = 2
+text = "00:00"
+label_settings = SubResource("LabelSettings_gfatm")
+vertical_alignment = 1
 
 [node name="Points" parent="Top/Top" instance=ExtResource("7_oie0n")]
 layout_mode = 2

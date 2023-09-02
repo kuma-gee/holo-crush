@@ -3,6 +3,8 @@ extends Control
 @export var collection_btn: Control
 @export var collection_hint: GPUParticles2D
 
+@export var energy_time_label: Label
+
 @onready var bgm := $BGM
 @onready var start_sound := $StartSound
 
@@ -15,6 +17,8 @@ func _ready():
 	GameManager.selected_piece_changed.connect(_update_collection_btn)
 	GameManager.first_unlocked.connect(func(): play_hint = true)
 	_update_collection_btn(GameManager.selected_piece)
+	
+	energy_time_label.visible = GameManager.energy.energy == 0
 
 func _update_collection_btn(piece):
 	var tex = GameManager.get_piece_profile(piece)
@@ -30,6 +34,7 @@ func _on_play_pressed():
 
 func _on_check_energy_timer_timeout():
 	GameManager.energy.restore()
+	energy_time_label.text = GameManager.energy.get_remaining_time()
 
 func _on_start_pressed():
 	GameManager.start_game()
