@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cmwklckfgwegu"]
+[gd_scene load_steps=23 format=3 uid="uid://cmwklckfgwegu"]
 
 [ext_resource type="PackedScene" uid="uid://c0o3d7dki4axs" path="res://src/piece/ina.tscn" id="1_hiotm"]
 [ext_resource type="Script" path="res://src/piece/basic.gd" id="2_1hvhb"]
@@ -8,15 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://c6vm2u4qhfw8b" path="res://assets/Piece__Basic_Bomb.png" id="6_2wluf"]
 [ext_resource type="Shader" path="res://src/piece/rainbow.gdshader" id="7_wjrow"]
 [ext_resource type="Shader" path="res://src/piece/pop_circle.gdshader" id="8_kn5mu"]
+[ext_resource type="Texture2D" uid="uid://dqwdbqw3mt2uo" path="res://assets/hololive.svg" id="8_qotk5"]
 [ext_resource type="Texture2D" uid="uid://3gxx3fuvygy5" path="res://assets/circle.png" id="9_hp3tc"]
 [ext_resource type="Texture2D" uid="uid://dwofmghe1u30e" path="res://assets/star_08.png" id="11_w00wj"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_tnkub"]
-shader = ExtResource("8_kn5mu")
-shader_parameter/ring_radius = 0.4
-shader_parameter/thickness_scalar = 0.7
-shader_parameter/color = Color(1, 1, 1, 1)
-shader_parameter/progress = 1.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yj06x"]
 shader = ExtResource("7_wjrow")
@@ -25,6 +19,13 @@ shader_parameter/count = 10.0
 shader_parameter/strength = 0.8
 shader_parameter/smoothing = 1.5
 shader_parameter/size = 0.5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tnkub"]
+shader = ExtResource("8_kn5mu")
+shader_parameter/ring_radius = 0.4
+shader_parameter/thickness_scalar = 0.7
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/progress = 1.0
 
 [sub_resource type="Animation" id="Animation_yytgt"]
 length = 0.001
@@ -203,18 +204,16 @@ point_count = 3
 curve = SubResource("Curve_7rocm")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_31y3t"]
+particle_flag_disable_z = true
 emission_shape = 3
 emission_box_extents = Vector3(40, 40, 40)
-particle_flag_disable_z = true
 direction = Vector3(0, 0, 0)
 spread = 180.0
-gravity = Vector3(0, 50, 0)
 initial_velocity_min = 20.0
 initial_velocity_max = 50.0
 angular_velocity_min = 150.0
 angular_velocity_max = 200.0
-orbit_velocity_min = 0.0
-orbit_velocity_max = 0.0
+gravity = Vector3(0, 50, 0)
 scale_min = 0.3
 scale_max = 0.3
 scale_curve = SubResource("CurveTexture_xe8ul")
@@ -227,18 +226,18 @@ row_texture = ExtResource("3_6fepw")
 col_texture = ExtResource("4_k8n1j")
 bomb_texture = ExtResource("6_2wluf")
 
-[node name="Sprite2D" parent="." index="0"]
-modulate = Color(0.176471, 0.603922, 0.701961, 1)
-material = SubResource("ShaderMaterial_tnkub")
-texture = ExtResource("2_la2jm")
-
-[node name="BackColor" type="ColorRect" parent="." index="1"]
+[node name="BackColor" type="ColorRect" parent="." index="0"]
 material = SubResource("ShaderMaterial_yj06x")
 offset_left = -80.0
 offset_top = -80.0
 offset_right = 80.0
 offset_bottom = 80.0
 mouse_filter = 2
+
+[node name="Sprite2D" parent="." index="1"]
+modulate = Color(0.176471, 0.603922, 0.701961, 1)
+material = SubResource("ShaderMaterial_tnkub")
+texture = ExtResource("8_qotk5")
 
 [node name="Sprite2D3" type="Sprite2D" parent="." index="2"]
 visible = false
